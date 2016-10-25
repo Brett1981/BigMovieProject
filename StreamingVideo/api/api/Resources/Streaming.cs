@@ -8,19 +8,20 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
+using api.Controllers;
 
 namespace api.Resources
 {
     public class Streaming
     {
-        public static HttpResponseMessage streamingContent(MovieData movie, string movieDir)
+        public static HttpResponseMessage streamingContent(MovieData movie, RangeHeaderValue header)
         {
             // This can prevent some unnecessary accesses. 
             // These kind of file names won't be existing at all. 
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var path = movieDir + movie.movie_ext + @"\";
+            var path = VideoController.movieDir + movie.movie_ext + @"\";
             FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
             //FileInfo fileInfo = new FileInfo(file);
 
@@ -29,7 +30,7 @@ namespace api.Resources
 
             long totalLength = fileInfo.Length;
 
-            RangeHeaderValue rangeHeader = Request.Headers.Range;
+            RangeHeaderValue rangeHeader = header;
             HttpResponseMessage response = new HttpResponseMessage();
 
             response.Headers.AcceptRanges.Add("bytes");

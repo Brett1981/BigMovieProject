@@ -8,6 +8,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.IO;
+using System.Data.SqlClient;
+using api.Controllers;
 
 namespace api.Resources
 {
@@ -15,7 +17,8 @@ namespace api.Resources
     {
         public static MovieData movie;
         private static MDBSQLEntities db = new MDBSQLEntities();
-        private static string moviesPath = @"E:\Diplomska\StreamingVideo\movies";
+        private static string moviesPath = VideoController.movieDir;
+
         private static List<MovieData> _movies;
 
         public static List<MovieData> allMovies
@@ -29,7 +32,7 @@ namespace api.Resources
         {
             try
             {
-                var item = await db.MovieData.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
+                var item = await db.MovieDatas.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
                 if (item != null)
                 {
                     return item;
@@ -49,7 +52,7 @@ namespace api.Resources
             {
                 while (true)
                 {
-                    if(DateTime.Now > time.AddMinutes(5)) { allMovies = await db.MovieData.Select(x => x).ToListAsync();  }
+                    if(DateTime.Now > time.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync();  }
                     await Task.Delay(new TimeSpan(0, 2, 0));
                 }
             }
@@ -66,34 +69,48 @@ namespace api.Resources
                 time = DateTime.Now;
                 while (true)
                 {
-                    if(DateTime.Now > time.AddMinutes(30))
+                    
+                    if (DateTime.Now > time.AddMinutes(2))
                     {
                         Debug.WriteLine("Checking database for new entries!");
                         var dirs = Directory.GetDirectories(moviesPath);
+                        List<MovieData> temp = new List<MovieData>();
                         foreach (var d in dirs)
                         {
                             var files = Directory.GetFiles(d);
                             foreach (var f in files)
                             {
+                                
                                 var item = new FileInfo(f);
-                                var mName = item.Name.Split('.');
-                                var name = mName[0];
-                                var m = db.MovieData.Where(x => x.movie_name == name).FirstOrDefault();
-                                if (m == null)
+                                int idx = item.Name.LastIndexOf('.');
+                                var name = item.Name.Substring(0, idx);
+                                var ext = item.Name.Substring(idx + 1);
+                                if(ext == "mp4")
                                 {
-                                    MovieData mData = new MovieData() { movie_name = mName[0], movie_ext = mName[1], movie_guid = CreateGuid(mName[0]).ToString() };
-                                    db.MovieData.Add(mData);
-                                    db.SaveChanges();
+                                    var m = db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefault();
+                                    if (m == null)
+                                    {
+                                        MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString() };
+                                        temp.Add(mData);
+                                    }
                                 }
                             }
+                           
                         }
+                        if(temp.Count != 0)
+                        {
+                            db.MovieDatas.AddRange(temp);
+                            await db.SaveChangesAsync();
+                        }
+                        
                     }
-                    Debug.WriteLine("Waiting 10 minutes.");
-                    await Task.Delay(new TimeSpan(0, 10, 0));
+                    
+                    Debug.WriteLine("Done checking / creating , waiting 10 minutes.");
+                    await Task.Delay(new TimeSpan(0, 0, 10));
 
                 }
             }
-            catch (Exception e)
+            catch (InvalidOperationException e)
             {
                 Debug.WriteLine(e.Message);
             }

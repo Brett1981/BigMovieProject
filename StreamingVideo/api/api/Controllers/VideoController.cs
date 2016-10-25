@@ -15,7 +15,7 @@ namespace api.Controllers
     
     public class VideoController : ApiController
     {
-        private const string movieDir = @"E:\Diplomska\StreamingVideo\movies\";
+        public const string movieDir = @"E:\Torrent2\Streaming\";
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string id)
         {

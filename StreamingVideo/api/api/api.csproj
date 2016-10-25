@@ -241,30 +241,31 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MDBADO.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MDBADO.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MDBADO.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MDBADO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MDBADO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="MovieData.cs">
-      <DependentUpon>MovieDB_ADO.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MovieDB_ADO.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MovieDB_ADO.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MovieDB_ADO.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MovieDB_ADO.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MovieDB_ADO.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MovieDB_ADO.edmx</DependentUpon>
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Resources\Database.cs" />
+    <Compile Include="Resources\Library.cs" />
     <Compile Include="Resources\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
@@ -280,15 +281,15 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="MovieDB_ADO.Context.tt">
+    <Content Include="MDBADO.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MovieDB_ADO.edmx</DependentUpon>
-      <LastGenOutput>MovieDB_ADO.Context.cs</LastGenOutput>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
+      <LastGenOutput>MDBADO.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="MovieDB_ADO.tt">
+    <Content Include="MDBADO.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MovieDB_ADO.edmx</DependentUpon>
-      <LastGenOutput>MovieDB_ADO.cs</LastGenOutput>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
+      <LastGenOutput>MDBADO.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -316,12 +317,12 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="MovieDB_ADO.edmx">
+    <EntityDeploy Include="MDBADO.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MovieDB_ADO.Designer.cs</LastGenOutput>
+      <LastGenOutput>MDBADO.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="MovieDB_ADO.edmx.diagram">
-      <DependentUpon>MovieDB_ADO.edmx</DependentUpon>
+    <Content Include="MDBADO.edmx.diagram">
+      <DependentUpon>MDBADO.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
