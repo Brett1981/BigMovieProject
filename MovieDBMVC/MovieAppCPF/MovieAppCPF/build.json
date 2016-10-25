@@ -1,0 +1,11 @@
+{
+     "android": {
+         "release": {
+             "keystore": "c:\\my-release-key.keystore",
+             "storePassword": "pwd123",
+             "alias": "zanP",
+             "password" : "pwd123",
+             "keystoreType": ""
+         }
+     }
+ }

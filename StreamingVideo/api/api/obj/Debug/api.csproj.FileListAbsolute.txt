@@ -1,0 +1,180 @@
+E:\Diplomska\StreamingVideo\api\api\bin\ApplicationInsights.config
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\csc.exe
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CSharp.Core.targets
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.VisualBasic.Core.targets
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\System.Collections.Immutable.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\System.Reflection.Metadata.dll
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\vbc.exe
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\VBCSCompiler.exe
+E:\Diplomska\StreamingVideo\api\api\bin\roslyn\VBCSCompiler.exe.config
+E:\Diplomska\StreamingVideo\api\api\bin\api.dll.config
+E:\Diplomska\StreamingVideo\api\api\bin\api.dll
+E:\Diplomska\StreamingVideo\api\api\bin\api.pdb
+E:\Diplomska\StreamingVideo\api\api\bin\Antlr3.Runtime.dll
+E:\Diplomska\StreamingVideo\api\api\bin\EntityFramework.dll
+E:\Diplomska\StreamingVideo\api\api\bin\EntityFramework.SqlServer.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Agent.Intercept.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.DependencyCollector.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.PerfCounterCollector.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.ServerTelemetryChannel.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Web.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.WindowsServer.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.ApplicationInsights.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Core.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Owin.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Cookies.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Facebook.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Google.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.OAuth.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Twitter.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Web.Infrastructure.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Newtonsoft.Json.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Owin.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Net.Http.Formatting.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Helpers.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.Owin.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.WebHost.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Mvc.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Optimization.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Razor.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Deployment.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.dll
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Razor.dll
+E:\Diplomska\StreamingVideo\api\api\bin\WebGrease.dll
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.DependencyCollector.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.ServerTelemetryChannel.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Web.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.WindowsServer.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.ApplicationInsights.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Newtonsoft.Json.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Net.Http.Formatting.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Helpers.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.WebHost.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Mvc.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Optimization.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Razor.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Deployment.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Razor.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Antlr3.Runtime.pdb
+E:\Diplomska\StreamingVideo\api\api\bin\EntityFramework.xml
+E:\Diplomska\StreamingVideo\api\api\bin\EntityFramework.SqlServer.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Core.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Owin.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Facebook.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Cookies.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.OAuth.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Google.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Twitter.xml
+E:\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+E:\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.Owin.xml
+E:\Diplomska\StreamingVideo\api\api\obj\Debug\api.csprojResolveAssemblyReference.cache
+E:\Diplomska\StreamingVideo\api\api\obj\Debug\api.dll
+E:\Diplomska\StreamingVideo\api\api\obj\Debug\api.pdb
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\ApplicationInsights.config
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\csc.exe
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\vbc.exe
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\VBCSCompiler.exe
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\api.dll.config
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\api.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\api.pdb
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Antlr3.Runtime.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\EntityFramework.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\EntityFramework.SqlServer.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Agent.Intercept.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.DependencyCollector.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.PerfCounterCollector.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.ServerTelemetryChannel.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Web.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.WindowsServer.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.ApplicationInsights.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Core.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Owin.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Host.SystemWeb.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Cookies.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Facebook.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Google.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.OAuth.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Twitter.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Newtonsoft.Json.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Owin.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Net.Http.Formatting.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Helpers.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.Owin.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.WebHost.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Mvc.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Optimization.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Razor.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Deployment.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Razor.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\WebGrease.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.DependencyCollector.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.ServerTelemetryChannel.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.Web.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AI.WindowsServer.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.ApplicationInsights.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Newtonsoft.Json.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Net.Http.Formatting.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Helpers.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.WebHost.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Mvc.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Optimization.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Razor.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Deployment.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.WebPages.Razor.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Antlr3.Runtime.pdb
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\EntityFramework.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\EntityFramework.SqlServer.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Core.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.Owin.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Host.SystemWeb.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Facebook.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Cookies.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.OAuth.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Google.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.Twitter.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\bin\System.Web.Http.Owin.xml
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\obj\Debug\api.csprojResolveAssemblyReference.cache
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\obj\Debug\api.dll
+C:\Users\zpangrsic\Google Drive\Diplomska\StreamingVideo\api\api\obj\Debug\api.pdb
