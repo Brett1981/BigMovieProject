@@ -1,126 +1,98 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Net.Http;
-using System.Net;
-using System.IO;
-using System.Collections.ObjectModel;
-using System.Web.Configuration;
-using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
+using System.Web.Http;
 
 namespace api.Resources
 {
-    public class VideoLibrary
+    public class Streaming
     {
-        private string _filename;
-        public string filename
+        public static HttpResponseMessage streamingContent(MovieData movie, string movieDir)
         {
-            get { return _filename; }
-            set { _filename = value; }
-        }
-        public string VideoStream(string filename, string ext)
-        {
-            //find file with that id!
+            // This can prevent some unnecessary accesses. 
+            // These kind of file names won't be existing at all. 
+            if (movie == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            //only testing
-            filename = @"E:\Diplomska\StreamingVideo\movies\big-buck-bunny_trailer.webm";
-            return filename;
-        }
-    }
-    public class MediaLibrary
-    {
-        public const int ReadStreamBufferSize = 1024 * 1024;
-        public static readonly IReadOnlyDictionary<string, string> MimeNames;
-        // We will discuss this later.
-        public static readonly IReadOnlyCollection<char> InvalidFileNameChars;
-        // Where are your videos located at? Change the value to any folder you want.
-        public static readonly string InitialDirectory;
+            var path = movieDir + movie.movie_ext + @"\";
+            FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
+            //FileInfo fileInfo = new FileInfo(file);
 
-        static MediaLibrary()
-        {
-            var mimeNames = new Dictionary<string, string>();
+            if (!fileInfo.Exists)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            mimeNames.Add(".mp3", "audio/mpeg");    // List all supported media types; 
-            mimeNames.Add(".mp4", "video/mp4");
-            mimeNames.Add(".ogg", "application/ogg");
-            mimeNames.Add(".ogv", "video/ogg");
-            mimeNames.Add(".oga", "audio/ogg");
-            mimeNames.Add(".wav", "audio/x-wav");
-            mimeNames.Add(".webm", "video/webm");
+            long totalLength = fileInfo.Length;
 
-            MimeNames = new ReadOnlyDictionary<string, string>(mimeNames);
+            RangeHeaderValue rangeHeader = Request.Headers.Range;
+            HttpResponseMessage response = new HttpResponseMessage();
 
-            InvalidFileNameChars = Array.AsReadOnly(Path.GetInvalidFileNameChars());
-            //InitialDirectory = WebConfigurationManager.AppSettings["InitialDirectory"];
-        }
+            response.Headers.AcceptRanges.Add("bytes");
 
-        public static MediaTypeHeaderValue GetMimeNameFromExt(string ext)
-        {
-            string value;
-
-            if (MimeNames.TryGetValue(ext.ToLowerInvariant(), out value))
-                return new MediaTypeHeaderValue(value);
-            else
-                return new MediaTypeHeaderValue(MediaTypeNames.Application.Octet);
-        }
-        private static bool AnyInvalidFileNameChars(string fileName)
-        {
-            return InvalidFileNameChars.Intersect(fileName).Any();
-        }
-
-        public static bool TryReadRangeItem(RangeItemHeaderValue range, long contentLength,
-            out long start, out long end)
-        {
-            if (range.From != null)
+            // The request will be treated as normal request if there is no Range header.
+            if (rangeHeader == null || !rangeHeader.Ranges.Any())
             {
-                start = range.From.Value;
-                if (range.To != null)
-                    end = range.To.Value;
-                else
-                    end = contentLength - 1;
-            }
-            else
-            {
-                end = contentLength - 1;
-                if (range.To != null)
-                    start = contentLength - range.To.Value;
-                else
-                    start = 0;
-            }
-            return (start < contentLength && end < contentLength);
-        }
-
-        public static void CreatePartialContent(Stream inputStream, Stream outputStream,
-            long start, long end)
-        {
-            int count = 0;
-            long remainingBytes = end - start + 1;
-            long position = start;
-            byte[] buffer = new byte[ReadStreamBufferSize];
-
-            inputStream.Position = start;
-            do
-            {
-                try
+                response.StatusCode = HttpStatusCode.OK;
+                response.Content = new PushStreamContent((outputStream, httpContent, transpContext)
+                =>
                 {
-                    if (remainingBytes > ReadStreamBufferSize)
-                        count = inputStream.Read(buffer, 0, ReadStreamBufferSize);
-                    else
-                        count = inputStream.Read(buffer, 0, (int)remainingBytes);
-                    outputStream.Write(buffer, 0, count);
-                }
-                catch (Exception error)
-                {
-                    Debug.WriteLine(error);
-                    break;
-                }
-                position = inputStream.Position;
-                remainingBytes = end - position + 1;
-            } while (position <= end);
-        }
+                    using (outputStream) // Copy the file to output stream straightforward. 
+                    using (Stream inputStream = fileInfo.OpenRead())
+                    {
+                        try
+                        {
+                            inputStream.CopyTo(outputStream, MediaLibrary.ReadStreamBufferSize);
+                        }
+                        catch (Exception error)
+                        {
+                            Debug.WriteLine(error);
+                        }
+                    }
+                }, MediaLibrary.GetMimeNameFromExt(fileInfo.Extension));
 
+                response.Content.Headers.ContentLength = totalLength;
+                return response;
+            }
+
+            long start = 0, end = 0;
+
+            // 1. If the unit is not 'bytes'.
+            // 2. If there are multiple ranges in header value.
+            // 3. If start or end position is greater than file length.
+            if (rangeHeader.Unit != "bytes" || rangeHeader.Ranges.Count > 1 ||
+                !MediaLibrary.TryReadRangeItem(rangeHeader.Ranges.First(), totalLength, out start, out end))
+            {
+                response.StatusCode = HttpStatusCode.RequestedRangeNotSatisfiable;
+                response.Content = new StreamContent(Stream.Null);  // No content for this status.
+                response.Content.Headers.ContentRange = new ContentRangeHeaderValue(totalLength);
+                response.Content.Headers.ContentType = MediaLibrary.GetMimeNameFromExt(fileInfo.Extension);
+
+                return response;
+            }
+
+            var contentRange = new ContentRangeHeaderValue(start, end, totalLength);
+
+            // We are now ready to produce partial content.
+            response.StatusCode = HttpStatusCode.PartialContent;
+            response.Content = new PushStreamContent((outputStream, httpContent, transpContext)
+            =>
+            {
+                using (outputStream) // Copy the file to output stream in indicated range.
+                using (Stream inputStream = fileInfo.OpenRead())
+                    MediaLibrary.CreatePartialContent(inputStream, outputStream, start, end);
+
+            }, MediaLibrary.GetMimeNameFromExt(fileInfo.Extension));
+
+            response.Content.Headers.ContentLength = end - start + 1;
+            response.Content.Headers.ContentRange = contentRange;
+
+            return response;
+        }
+    
     }
 }
