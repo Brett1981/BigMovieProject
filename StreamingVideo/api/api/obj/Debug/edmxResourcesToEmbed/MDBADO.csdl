@@ -8,8 +8,49 @@
     <Property Name="movie_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="movie_ext" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="movie_guid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MovieInfo" Relationship="MDBSQLModel.FK_MovieInfo_ToMovieData" FromRole="MovieData" ToRole="MovieInfo" />
   </EntityType>
   <EntityContainer Name="MDBSQLEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="MovieDatas" EntityType="Self.MovieData" />
+    <EntitySet Name="MovieInfoes" EntityType="MDBSQLModel.MovieInfo" />
+    <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="MDBSQLModel.FK_MovieInfo_ToMovieData">
+      <End Role="MovieData" EntitySet="MovieDatas" />
+      <End Role="MovieInfo" EntitySet="MovieInfoes" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="MovieInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="adult" Type="Boolean" />
+    <Property Name="backdrop_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="budget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="homepage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="imdb_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="original_title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="popularity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="poster_path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="release_date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="revenue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="tagline" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="vote_average" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="vote_count" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MovieData" Relationship="MDBSQLModel.FK_MovieInfo_ToMovieData" FromRole="MovieInfo" ToRole="MovieData" />
+  </EntityType>
+  <Association Name="FK_MovieInfo_ToMovieData">
+    <End Type="MDBSQLModel.MovieData" Role="MovieData" Multiplicity="1" />
+    <End Type="MDBSQLModel.MovieInfo" Role="MovieInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MovieData">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieInfo">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

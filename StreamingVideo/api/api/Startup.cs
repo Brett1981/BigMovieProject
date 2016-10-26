@@ -25,9 +25,9 @@ namespace api
             t1.Priority = ThreadPriority.Normal;
             t1.Start();
 
-            Thread t2 = new Thread(async () => await Database.CreateList());
+            /*Thread t2 = new Thread(async () => await Database.CreateList());
             t2.Priority = ThreadPriority.Normal;
-            t2.Start();
+            t2.Start();*/
         }
     }
 }

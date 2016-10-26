@@ -11,5 +11,28 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="MovieInfoes">
+      <EntityTypeMapping TypeName="MDBSQLModel.MovieInfo">
+        <MappingFragment StoreEntitySet="MovieInfo">
+          <ScalarProperty Name="vote_count" ColumnName="vote_count" />
+          <ScalarProperty Name="vote_average" ColumnName="vote_average" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="tagline" ColumnName="tagline" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="revenue" ColumnName="revenue" />
+          <ScalarProperty Name="release_date" ColumnName="release_date" />
+          <ScalarProperty Name="poster_path" ColumnName="poster_path" />
+          <ScalarProperty Name="popularity" ColumnName="popularity" />
+          <ScalarProperty Name="overview" ColumnName="overview" />
+          <ScalarProperty Name="original_title" ColumnName="original_title" />
+          <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
+          <ScalarProperty Name="homepage" ColumnName="homepage" />
+          <ScalarProperty Name="budget" ColumnName="budget" />
+          <ScalarProperty Name="backdrop_path" ColumnName="backdrop_path" />
+          <ScalarProperty Name="adult" ColumnName="adult" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

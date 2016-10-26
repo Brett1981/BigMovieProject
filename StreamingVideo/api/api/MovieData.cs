@@ -18,5 +18,7 @@ namespace api
         public string movie_name { get; set; }
         public string movie_ext { get; set; }
         public string movie_guid { get; set; }
+    
+        public virtual MovieInfo MovieInfo { get; set; }
     }
 }

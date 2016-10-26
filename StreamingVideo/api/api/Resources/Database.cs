@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.SqlClient;
 using api.Controllers;
+using System.Data.Entity.Validation;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace api.Resources
 {
@@ -94,39 +98,76 @@ namespace api.Resources
         }
 
         private static async Task<int> checkDatabase(){
-
-            Debug.WriteLine("Checking database for new entries!");
-            var dirs = Directory.GetDirectories(moviesPath);
-            List<MovieData> temp = new List<MovieData>();
-            foreach (var d in dirs)
+            try
             {
-                var files = Directory.GetFiles(d);
-                foreach (var f in files)
+                Debug.WriteLine("Checking database for new entries!");
+                var dirs = Directory.GetDirectories(moviesPath);
+                List<MovieData> temp = new List<MovieData>();
+                foreach (var d in dirs)
                 {
-
-                    var item = new FileInfo(f);
-                    int idx = item.Name.LastIndexOf('.');
-                    var name = item.Name.Substring(0, idx);
-                    var ext = item.Name.Substring(idx + 1);
-                    if (ext == "mp4" || ext == "webm")
+                    var files = Directory.GetFiles(d);
+                    foreach (var f in files)
                     {
-                        var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
-                        if (m == null)
+                        var item = new FileInfo(f);
+                        int idx = item.Name.LastIndexOf('.');
+                        var name = item.Name.Substring(0, idx);
+                        var ext = item.Name.Substring(idx + 1);
+                        if (ext == "mp4" || ext == "webm")
                         {
-                            MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString() };
-                            temp.Add(mData);
+                            var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
+                            if (m == null)
+                            {
+                                //get movieinfo from api 
+                                if (MoviesAPI.countAPICalls > 30) {
+                                    await Task.Delay(5000); MoviesAPI.countAPICalls = 0;
+                                }
+                                MovieInfo mInfo = await MoviesAPI.getMovieInfo(name);
+                                MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString(), MovieInfo = mInfo };
+                                temp.Add(mData);
+                            }
                         }
+
                     }
+
                 }
+                int retValue = 0;
+                if (temp.Count != 0)
+                {
+                    try
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        XPathNavigator nav = doc.CreateNavigator();
+                        using (XmlWriter w = nav.AppendChild())
+                        {
+                            XmlSerializer ser = new XmlSerializer(typeof(List<MovieData>));
+                            ser.Serialize(w, temp);
+                            doc.Save(@"C:\VisualStudioProjekti\BigMovieProject\StreamingVideo\movies.xml");
+                        }
 
+                        db.MovieDatas.AddRange(temp);
+                        retValue = await db.SaveChangesAsync();
+                    }
+                    catch (DbEntityValidationException dbEx)
+                    {
+                        foreach (var validationErrors in dbEx.EntityValidationErrors)
+                        {
+                            foreach (var validationError in validationErrors.ValidationErrors)
+                            {
+                                Debug.WriteLine("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                            }
+                        }
+                        retValue = -99999;
+                    }
+
+                }
+                return retValue;
             }
-            if (temp.Count != 0)
+            catch(Exception ex)
             {
-                db.MovieDatas.AddRange(temp);
-                checkDbCount++;
-            }
-            return await db.SaveChangesAsync();
+                Debug.WriteLine(ex.Message);
+                return ex.HResult;
 
+            }
         }
         private static Guid CreateGuid(string movieName)
         {

@@ -6,6 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="e2453b97cc944cf69933b04d12b3d6c8" Name="Diagram1">
         <EntityTypeShape EntityType="MDBSQLModel.MovieData" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MDBSQLModel.MovieInfo" Width="1.5" PointX="3" PointY="3.5" />
+        <AssociationConnector Association="MDBSQLModel.FK_MovieInfo_ToMovieData" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -9,7 +9,46 @@
     <Property Name="movie_ext" Type="nvarchar" MaxLength="50" />
     <Property Name="movie_guid" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="MovieInfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="adult" Type="bit" />
+    <Property Name="backdrop_path" Type="nvarchar(max)" />
+    <Property Name="budget" Type="nvarchar" MaxLength="50" />
+    <Property Name="homepage" Type="nvarchar" MaxLength="100" />
+    <Property Name="imdb_id" Type="nvarchar" MaxLength="50" />
+    <Property Name="original_title" Type="nvarchar" MaxLength="50" />
+    <Property Name="overview" Type="nvarchar(max)" />
+    <Property Name="popularity" Type="nvarchar" MaxLength="50" />
+    <Property Name="poster_path" Type="nvarchar" MaxLength="50" />
+    <Property Name="release_date" Type="nvarchar" MaxLength="50" />
+    <Property Name="revenue" Type="nvarchar" MaxLength="50" />
+    <Property Name="status" Type="nvarchar" MaxLength="50" />
+    <Property Name="tagline" Type="varchar" MaxLength="128" />
+    <Property Name="title" Type="nvarchar" MaxLength="50" />
+    <Property Name="vote_average" Type="nvarchar" MaxLength="50" />
+    <Property Name="vote_count" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_MovieInfo_ToMovieData">
+    <End Role="MovieData" Type="Self.MovieData" Multiplicity="1" />
+    <End Role="MovieInfo" Type="Self.MovieInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="MovieData">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="MovieInfo">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="MDBSQLModelStoreContainer">
     <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
+      <End Role="MovieData" EntitySet="MovieData" />
+      <End Role="MovieInfo" EntitySet="MovieInfo" />
+    </AssociationSet>
   </EntityContainer>
 </Schema>
