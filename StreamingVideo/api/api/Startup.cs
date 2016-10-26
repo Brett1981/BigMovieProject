@@ -21,8 +21,6 @@ namespace api
 
         public async Task DatabaseMovieCheck()
         {
-
-            await Task.Delay(0);
             Thread t1 = new Thread(async() => await Database.CheckDB());
             t1.Priority = ThreadPriority.Normal;
             t1.Start();

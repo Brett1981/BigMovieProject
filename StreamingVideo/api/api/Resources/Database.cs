@@ -18,6 +18,8 @@ namespace api.Resources
         public static MovieData movie;
         private static MDBSQLEntities db = new MDBSQLEntities();
         private static string moviesPath = VideoController.movieDir;
+        private static int createListCount = 0;
+        private static int checkDbCount = 0;
 
         private static List<MovieData> _movies;
 
@@ -36,6 +38,14 @@ namespace api.Resources
                 if (item != null)
                 {
                     return item;
+                    /*if(type == 0) {
+                        return item;
+                    }
+                    else if(type == 1){
+                        
+
+                    }*/
+                    
                 }
                 return new MovieData();
             }
@@ -52,8 +62,9 @@ namespace api.Resources
             {
                 while (true)
                 {
-                    if(DateTime.Now > time.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync();  }
-                    await Task.Delay(new TimeSpan(0, 2, 0));
+                    if (createListCount == 0) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; }
+                    if(DateTime.Now > time.AddSeconds(20)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; }
+                    await Task.Delay(new TimeSpan(0, 0, 10));
                 }
             }
             catch(Exception e)
@@ -69,44 +80,10 @@ namespace api.Resources
                 time = DateTime.Now;
                 while (true)
                 {
-                    
-                    if (DateTime.Now > time.AddMinutes(2))
-                    {
-                        Debug.WriteLine("Checking database for new entries!");
-                        var dirs = Directory.GetDirectories(moviesPath);
-                        List<MovieData> temp = new List<MovieData>();
-                        foreach (var d in dirs)
-                        {
-                            var files = Directory.GetFiles(d);
-                            foreach (var f in files)
-                            {
-                                
-                                var item = new FileInfo(f);
-                                int idx = item.Name.LastIndexOf('.');
-                                var name = item.Name.Substring(0, idx);
-                                var ext = item.Name.Substring(idx + 1);
-                                if(ext == "mp4")
-                                {
-                                    var m = db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefault();
-                                    if (m == null)
-                                    {
-                                        MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString() };
-                                        temp.Add(mData);
-                                    }
-                                }
-                            }
-                           
-                        }
-                        if(temp.Count != 0)
-                        {
-                            db.MovieDatas.AddRange(temp);
-                            await db.SaveChangesAsync();
-                        }
-                        
-                    }
-                    
-                    Debug.WriteLine("Done checking / creating , waiting 10 minutes.");
-                    await Task.Delay(new TimeSpan(0, 0, 10));
+                    if (checkDbCount == 0) { await checkDatabase(); checkDbCount++; }
+                    if (DateTime.Now > time.AddMinutes(10)) { await checkDatabase(); checkDbCount++; }
+                    Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
+                    await Task.Delay(new TimeSpan(0, 1, 0));
 
                 }
             }
@@ -116,6 +93,41 @@ namespace api.Resources
             }
         }
 
+        private static async Task<int> checkDatabase(){
+
+            Debug.WriteLine("Checking database for new entries!");
+            var dirs = Directory.GetDirectories(moviesPath);
+            List<MovieData> temp = new List<MovieData>();
+            foreach (var d in dirs)
+            {
+                var files = Directory.GetFiles(d);
+                foreach (var f in files)
+                {
+
+                    var item = new FileInfo(f);
+                    int idx = item.Name.LastIndexOf('.');
+                    var name = item.Name.Substring(0, idx);
+                    var ext = item.Name.Substring(idx + 1);
+                    if (ext == "mp4" || ext == "webm")
+                    {
+                        var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
+                        if (m == null)
+                        {
+                            MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString() };
+                            temp.Add(mData);
+                        }
+                    }
+                }
+
+            }
+            if (temp.Count != 0)
+            {
+                db.MovieDatas.AddRange(temp);
+                checkDbCount++;
+            }
+            return await db.SaveChangesAsync();
+
+        }
         private static Guid CreateGuid(string movieName)
         {
             using (MD5 md5 = MD5.Create())
