@@ -14,23 +14,28 @@
     <EntitySetMapping Name="MovieInfoes">
       <EntityTypeMapping TypeName="MDBSQLModel.MovieInfo">
         <MappingFragment StoreEntitySet="MovieInfo">
-          <ScalarProperty Name="vote_count" ColumnName="vote_count" />
-          <ScalarProperty Name="vote_average" ColumnName="vote_average" />
-          <ScalarProperty Name="title" ColumnName="title" />
-          <ScalarProperty Name="tagline" ColumnName="tagline" />
-          <ScalarProperty Name="status" ColumnName="status" />
-          <ScalarProperty Name="revenue" ColumnName="revenue" />
-          <ScalarProperty Name="release_date" ColumnName="release_date" />
-          <ScalarProperty Name="poster_path" ColumnName="poster_path" />
-          <ScalarProperty Name="popularity" ColumnName="popularity" />
-          <ScalarProperty Name="overview" ColumnName="overview" />
-          <ScalarProperty Name="original_title" ColumnName="original_title" />
-          <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
-          <ScalarProperty Name="homepage" ColumnName="homepage" />
-          <ScalarProperty Name="budget" ColumnName="budget" />
-          <ScalarProperty Name="backdrop_path" ColumnName="backdrop_path" />
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_movie" ColumnName="id_movie" />
           <ScalarProperty Name="adult" ColumnName="adult" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="backdrop_path" ColumnName="backdrop_path" />
+          <ScalarProperty Name="budget" ColumnName="budget" />
+          <ScalarProperty Name="homepage" ColumnName="homepage" />
+          <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
+          <ScalarProperty Name="original_title" ColumnName="original_title" />
+          <ScalarProperty Name="overview" ColumnName="overview" />
+          <ScalarProperty Name="popularity" ColumnName="popularity" />
+          <ScalarProperty Name="poster_path" ColumnName="poster_path" />
+          <ScalarProperty Name="release_date" ColumnName="release_date" />
+          <ScalarProperty Name="revenue" ColumnName="revenue" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="tagline" ColumnName="tagline" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="vote_average" ColumnName="vote_average" />
+          <ScalarProperty Name="vote_count" ColumnName="vote_count" />
+          <ScalarProperty Name="genres" ColumnName="genres" />
+          <ScalarProperty Name="production_countries" ColumnName="production_countries" />
+          <ScalarProperty Name="production_companies" ColumnName="production_companies" />
+          <ScalarProperty Name="spoken_languages" ColumnName="spoken_languages" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

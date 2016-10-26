@@ -20,6 +20,7 @@ namespace api.Controllers
     {
         //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
         public const string movieDir = @"E:\Torrent2\Movies";
+        public const string streamDir = @"E:\Torrent2\Streaming";
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string id)
         {
@@ -29,7 +30,7 @@ namespace api.Controllers
             return Streaming.streamingContent(movie, base.Request.Headers.Range);
         }
         [HttpGet, ActionName("AllMovies")]
-        public List<MovieData> AllMovies()
+        public MovieData[] AllMovies()
         {
             return Database.allMovies;
         }

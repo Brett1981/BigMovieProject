@@ -8,21 +8,14 @@
     <Property Name="movie_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="movie_ext" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="movie_guid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="MovieInfo" Relationship="MDBSQLModel.FK_MovieInfo_ToMovieData" FromRole="MovieData" ToRole="MovieInfo" />
+    <NavigationProperty Name="MovieInfo" Relationship="Self.FK_MovieInfo_ToMovieData" FromRole="MovieData" ToRole="MovieInfo" />
   </EntityType>
-  <EntityContainer Name="MDBSQLEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="MovieDatas" EntityType="Self.MovieData" />
-    <EntitySet Name="MovieInfoes" EntityType="MDBSQLModel.MovieInfo" />
-    <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="MDBSQLModel.FK_MovieInfo_ToMovieData">
-      <End Role="MovieData" EntitySet="MovieDatas" />
-      <End Role="MovieInfo" EntitySet="MovieInfoes" />
-    </AssociationSet>
-  </EntityContainer>
   <EntityType Name="MovieInfo">
     <Key>
-      <PropertyRef Name="Id" />
+      <PropertyRef Name="id_movie" />
     </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id" Type="Int32" />
+    <Property Name="id_movie" Type="Int32" Nullable="false" />
     <Property Name="adult" Type="Boolean" />
     <Property Name="backdrop_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="budget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -39,18 +32,29 @@
     <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="vote_average" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="vote_count" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="MovieData" Relationship="MDBSQLModel.FK_MovieInfo_ToMovieData" FromRole="MovieInfo" ToRole="MovieData" />
+    <Property Name="genres" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="production_countries" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="production_companies" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="spoken_languages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <Association Name="FK_MovieInfo_ToMovieData">
-    <End Type="MDBSQLModel.MovieData" Role="MovieData" Multiplicity="1" />
-    <End Type="MDBSQLModel.MovieInfo" Role="MovieInfo" Multiplicity="0..1" />
+    <End Role="MovieData" Type="Self.MovieData" Multiplicity="1" />
+    <End Role="MovieInfo" Type="Self.MovieInfo" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="MovieData">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="MovieInfo">
-        <PropertyRef Name="Id" />
+        <PropertyRef Name="id_movie" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityContainer Name="MDBSQLEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="MovieDatas" EntityType="Self.MovieData" />
+    <EntitySet Name="MovieInfoes" EntityType="Self.MovieInfo" />
+    <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
+      <End Role="MovieData" EntitySet="MovieDatas" />
+      <End Role="MovieInfo" EntitySet="MovieInfoes" />
+    </AssociationSet>
+  </EntityContainer>
 </Schema>

@@ -14,7 +14,8 @@ namespace api
     
     public partial class MovieInfo
     {
-        public int Id { get; set; }
+        public Nullable<int> id { get; set; }
+        public int id_movie { get; set; }
         public Nullable<bool> adult { get; set; }
         public string backdrop_path { get; set; }
         public string budget { get; set; }
@@ -31,7 +32,9 @@ namespace api
         public string title { get; set; }
         public string vote_average { get; set; }
         public string vote_count { get; set; }
-    
-        public virtual MovieData MovieData { get; set; }
+        public string genres { get; set; }
+        public string production_countries { get; set; }
+        public string production_companies { get; set; }
+        public string spoken_languages { get; set; }
     }
 }

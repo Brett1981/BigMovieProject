@@ -22,8 +22,8 @@ namespace api.Resources
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             string path;
-            if (!VideoController.movieDir.EndsWith(@"\")) {path = VideoController.movieDir + movie.movie_ext + @"\"; }
-            else { path = VideoController.movieDir + movie.movie_ext; }
+            if (VideoController.streamDir.EndsWith(@"\")) {path = VideoController.streamDir + movie.movie_ext + @"\"; }
+            else { path = VideoController.streamDir + @"\" + movie.movie_ext + @"\"; }
 
             FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
             //FileInfo fileInfo = new FileInfo(file);

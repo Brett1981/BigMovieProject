@@ -14,6 +14,8 @@ using System.Data.Entity.Validation;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using System.Xml.Linq;
+using System.Threading;
 
 namespace api.Resources
 {
@@ -25,9 +27,11 @@ namespace api.Resources
         private static int createListCount = 0;
         private static int checkDbCount = 0;
 
-        private static List<MovieData> _movies;
+        private static int databaseMovieCount = 0;
 
-        public static List<MovieData> allMovies
+        private static MovieData[] _movies;
+
+        public static MovieData[] allMovies
         {
             get { return _movies; }
             set { _movies = value; }
@@ -42,14 +46,6 @@ namespace api.Resources
                 if (item != null)
                 {
                     return item;
-                    /*if(type == 0) {
-                        return item;
-                    }
-                    else if(type == 1){
-                        
-
-                    }*/
-                    
                 }
                 return new MovieData();
             }
@@ -66,8 +62,8 @@ namespace api.Resources
             {
                 while (true)
                 {
-                    if (createListCount == 0) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; }
-                    if(DateTime.Now > time.AddSeconds(20)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; }
+                    if (createListCount == 0) { allMovies = db.MovieDatas.Select(x => x).ToArray(); createListCount++; }
+                    if(DateTime.Now > time.AddSeconds(20)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; }
                     await Task.Delay(new TimeSpan(0, 0, 10));
                 }
             }
@@ -84,11 +80,16 @@ namespace api.Resources
                 time = DateTime.Now;
                 while (true)
                 {
-                    if (checkDbCount == 0) { await checkDatabase(); checkDbCount++; }
-                    if (DateTime.Now > time.AddMinutes(10)) { await checkDatabase(); checkDbCount++; }
+                    if (checkDbCount == 0) {
+                        await databaseMovieCheck();
+                        Thread t2 = new Thread(async () => await Database.CreateList());
+                        t2.Priority = ThreadPriority.Normal;
+                        t2.Start();
+                    }
+                    if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); }
                     Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
                     await Task.Delay(new TimeSpan(0, 1, 0));
-
+                    checkDbCount++;
                 }
             }
             catch (InvalidOperationException e)
@@ -97,12 +98,30 @@ namespace api.Resources
             }
         }
 
-        private static async Task<int> checkDatabase(){
+        private static async Task<int> databaseMovieCheck(){
             try
             {
                 Debug.WriteLine("Checking database for new entries!");
                 var dirs = Directory.GetDirectories(moviesPath);
                 List<MovieData> temp = new List<MovieData>();
+                var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//SerializationOverview.xml";
+
+                var dbCount = db.MovieDatas.Count();
+                if (dbCount == 0) { databaseMovieCount = 0; } else { databaseMovieCount = db.MovieDatas.Count(); }
+
+                /*if (File.Exists(path) && new FileInfo(path).Length == 0)
+                {
+                    FileStream f = File.Open(path, FileMode.Open, FileAccess.Read);
+                    var reader = XmlReader.Create(f);
+                    XElement doc = XElement.Load(reader);
+                    //doc.Descendants("MovieData").Where(x => x.Descendants("") )
+                    foreach(var item in doc.Descendants("MovieData"))
+                    {
+
+                    }
+                    return 1;
+                }
+                else{*/
                 foreach (var d in dirs)
                 {
                     var files = Directory.GetFiles(d);
@@ -118,11 +137,23 @@ namespace api.Resources
                             if (m == null)
                             {
                                 //get movieinfo from api 
-                                if (MoviesAPI.countAPICalls > 30) {
+                                if (MoviesAPI.countAPICalls > 30)
+                                {
                                     await Task.Delay(5000); MoviesAPI.countAPICalls = 0;
                                 }
-                                MovieInfo mInfo = await MoviesAPI.getMovieInfo(name);
-                                MovieData mData = new MovieData() { movie_name = name, movie_ext = ext, movie_guid = CreateGuid(name).ToString(), MovieInfo = mInfo };
+                                MovieInfo mInfo = editMovieInfo(
+                                    await MoviesAPI.getMovieInfo(name,databaseMovieCount), 
+                                    databaseMovieCount
+                                );
+                                MovieData mData = new MovieData() {
+                                    Id = databaseMovieCount,
+                                    movie_name = name,
+                                    movie_ext = ext,
+                                    movie_guid = CreateGuid(name).ToString(),
+                                    MovieInfo = mInfo
+                                };
+                                db.MovieDatas.Add(mData);
+                                databaseMovieCount++;
                                 temp.Add(mData);
                             }
                         }
@@ -135,17 +166,21 @@ namespace api.Resources
                 {
                     try
                     {
-                        XmlDocument doc = new XmlDocument();
-                        XPathNavigator nav = doc.CreateNavigator();
-                        using (XmlWriter w = nav.AppendChild())
+                        var dbSaveInt = await db.SaveChangesAsync();
+                        var writer = new XmlSerializer(typeof(List<MovieData>));
+                        if (File.Exists(path))
                         {
-                            XmlSerializer ser = new XmlSerializer(typeof(List<MovieData>));
-                            ser.Serialize(w, temp);
-                            doc.Save(@"C:\VisualStudioProjekti\BigMovieProject\StreamingVideo\movies.xml");
+                            FileStream file = new FileStream(path, FileMode.Open,FileAccess.ReadWrite);
+                            writer.Serialize(file, temp);
+                            file.Close();
                         }
-
-                        db.MovieDatas.AddRange(temp);
-                        retValue = await db.SaveChangesAsync();
+                        else
+                        {
+                            var file = File.Create(path);
+                            writer.Serialize(file, temp);
+                            file.Close();
+                        }
+                        retValue = dbSaveInt;
                     }
                     catch (DbEntityValidationException dbEx)
                     {
@@ -161,6 +196,7 @@ namespace api.Resources
 
                 }
                 return retValue;
+                //}
             }
             catch(Exception ex)
             {
@@ -175,6 +211,12 @@ namespace api.Resources
             {
                 return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(movieName)));
             }
+        }
+
+        private static MovieInfo editMovieInfo(MovieInfo data, int id)
+        {
+            data.id_movie = id;
+            return data;
         }
     }
 }
