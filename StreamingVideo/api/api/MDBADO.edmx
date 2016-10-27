@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="MovieData">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,6 +13,7 @@
           <Property Name="movie_name" Type="nvarchar(max)" />
           <Property Name="movie_ext" Type="nvarchar" MaxLength="50" />
           <Property Name="movie_guid" Type="nvarchar(max)" />
+          <Property Name="movie_folder" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="MovieInfo">
           <Key>
@@ -61,8 +62,7 @@
             <End Role="MovieInfo" EntitySet="MovieInfo" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MDBSQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -75,6 +75,7 @@
           <Property Name="movie_ext" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="movie_guid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="MovieInfo" Relationship="Self.FK_MovieInfo_ToMovieData" FromRole="MovieData" ToRole="MovieInfo" />
+          <Property Name="movie_folder" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" Nullable="true" />
         </EntityType>
         <EntityType Name="MovieInfo">
           <Key>
@@ -132,6 +133,7 @@
           <EntitySetMapping Name="MovieDatas">
             <EntityTypeMapping TypeName="MDBSQLModel.MovieData">
               <MappingFragment StoreEntitySet="MovieData">
+                <ScalarProperty Name="movie_folder" ColumnName="movie_folder" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="movie_name" ColumnName="movie_name" />
                 <ScalarProperty Name="movie_ext" ColumnName="movie_ext" />

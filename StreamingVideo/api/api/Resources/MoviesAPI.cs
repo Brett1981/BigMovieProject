@@ -133,7 +133,6 @@ namespace api.Resources
             return  new MovieInfo()
             {
                 id = data.id,
-                id_movie = id,
                 adult = data.adult,
                 backdrop_path = data.backdrop_path,
                 budget = data.budget,
@@ -212,13 +211,4 @@ namespace api.Resources
         public string poster_path { get; set; }
     }
 
-    public class DataGenre
-    {
-        public List<GenresList> genres { get; set; }
-    }
-    public class GenresList
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-    }
 }

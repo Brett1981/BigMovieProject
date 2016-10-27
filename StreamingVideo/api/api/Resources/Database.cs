@@ -63,8 +63,8 @@ namespace api.Resources
                 while (true)
                 {
                     if (createListCount == 0) { allMovies = db.MovieDatas.Select(x => x).ToArray(); createListCount++; }
-                    if(DateTime.Now > time.AddSeconds(20)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; }
-                    await Task.Delay(new TimeSpan(0, 0, 10));
+                    if(DateTime.Now > time.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; }
+                    await Task.Delay(new TimeSpan(0, 1, 0));
                 }
             }
             catch(Exception e)
@@ -141,18 +141,17 @@ namespace api.Resources
                                 {
                                     await Task.Delay(5000); MoviesAPI.countAPICalls = 0;
                                 }
-                                MovieInfo mInfo = editMovieInfo(
-                                    await MoviesAPI.getMovieInfo(name,databaseMovieCount), 
-                                    databaseMovieCount
-                                );
+                                MovieInfo mInfo = await MoviesAPI.getMovieInfo(name, databaseMovieCount);//editMovieInfo(
+
                                 MovieData mData = new MovieData() {
-                                    Id = databaseMovieCount,
                                     movie_name = name,
                                     movie_ext = ext,
                                     movie_guid = CreateGuid(name).ToString(),
+                                    movie_folder = item.Directory.Name.ToString(),
                                     MovieInfo = mInfo
                                 };
                                 db.MovieDatas.Add(mData);
+                                var dbSaveInt = await db.SaveChangesAsync();
                                 databaseMovieCount++;
                                 temp.Add(mData);
                             }

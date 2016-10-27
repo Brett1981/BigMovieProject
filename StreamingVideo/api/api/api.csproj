@@ -330,6 +330,7 @@
     <Content Include="MDBADO.edmx.diagram">
       <DependentUpon>MDBADO.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\MovieDB.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

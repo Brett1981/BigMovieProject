@@ -18,17 +18,21 @@ namespace api.Controllers
     
     public class VideoController : ApiController
     {
-        public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
-        public const string streamDir = @"E:\Git\BigMovieProject\StreamingVideo\movies";
-        //public const string movieDir = @"E:\Torrent2\Movies";
-        //public const string streamDir = @"E:\Torrent2\Streaming";
+        //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
+        //public const string streamDir = @"E:\Git\BigMovieProject\StreamingVideo\movies";
+        public const string movieDir = @"E:\Torrent2\Movies";
+        public const string streamDir = @"E:\Torrent2\Movies";
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string id)
         {
             //Getting movie from DB
             var movie = await Database.Get(id);
-            //streaming content to client
-            return Streaming.streamingContent(movie, base.Request.Headers.Range);
+            if(movie != null)
+            {
+                //streaming content to client
+                return Streaming.streamingContent(movie, base.Request.Headers.Range);
+            }
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
         [HttpGet, ActionName("AllMovies")]
         public MovieData[] AllMovies()
