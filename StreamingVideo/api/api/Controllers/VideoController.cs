@@ -18,9 +18,10 @@ namespace api.Controllers
     
     public class VideoController : ApiController
     {
-        //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
-        public const string movieDir = @"E:\Torrent2\Movies";
-        public const string streamDir = @"E:\Torrent2\Streaming";
+        public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
+        public const string streamDir = @"E:\Git\BigMovieProject\StreamingVideo\movies";
+        //public const string movieDir = @"E:\Torrent2\Movies";
+        //public const string streamDir = @"E:\Torrent2\Streaming";
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string id)
         {
@@ -35,9 +36,9 @@ namespace api.Controllers
             return Database.allMovies;
         }
         [HttpGet,ActionName("GetMovie")]
-        public async  Task<string> GetMovie([FromUri]string id)
+        public async  Task<MovieData> GetMovie([FromUri]string id)
         {
-            return JsonConvert.SerializeObject(await Database.Get(id));
+            return await Database.Get(id);
         }
     }
 }

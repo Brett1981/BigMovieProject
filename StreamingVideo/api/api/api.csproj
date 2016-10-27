@@ -273,7 +273,6 @@
     <Compile Include="Resources\Library.cs" />
     <Compile Include="Resources\MoviesAPI.cs" />
     <Compile Include="Resources\Streaming.cs" />
-    <Compile Include="Resources\XMLSerializer.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -358,6 +357,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Movies\Index.cshtml" />
+    <Content Include="Views\Movies\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

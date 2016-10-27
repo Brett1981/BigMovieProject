@@ -12,6 +12,9 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.MovieInfo.poster_path)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.movie_name)
         </th>
         <th>
@@ -26,6 +29,8 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
+        <td>
             @Html.DisplayFor(modelItem => item.movie_name)
         </td>
         <td>
@@ -35,9 +40,9 @@
             @Html.DisplayFor(modelItem => item.movie_guid)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { guid=item.movie_guid }) |
+            @Html.ActionLink("Details", "Details", new { guid=item.movie_guid }) |
+            @Html.ActionLink("Delete", "Delete", new { guid=item.movie_guid })
         </td>
     </tr>
 }
