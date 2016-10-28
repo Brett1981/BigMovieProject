@@ -40,8 +40,10 @@
             @Html.DisplayFor(modelItem => item.movie_guid)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { guid=item.movie_guid }) |
-            @Html.ActionLink("Details", "Details", new { guid=item.movie_guid }) |
+            @Html.ActionLink("Edit", "Edit", new { guid=item.movie_guid }) 
+            <br />
+            @Html.ActionLink("Details", "Details", new { guid=item.movie_guid }) 
+            <br />
             @Html.ActionLink("Delete", "Delete", new { guid=item.movie_guid })
         </td>
     </tr>
