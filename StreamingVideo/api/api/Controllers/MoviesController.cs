@@ -15,12 +15,12 @@ namespace api.Controllers
         // GET: Movies
         public async Task<ActionResult> Index()
         {
-            return View(JsonConvert.DeserializeObject<List<MovieData>>(await client.GetStringAsync("http://localhost:53851/api/video/allmovies")));
+            return View(JsonConvert.DeserializeObject<List<MovieData>>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/allmovies")));
         }
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         public async Task<ActionResult> Edit(string guid)
         {
-            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://localhost:53851/api/video/getmovie?id=" + guid)));
+            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/getmovie?id=" + guid)));
         }
         // POST: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         [HttpPost]

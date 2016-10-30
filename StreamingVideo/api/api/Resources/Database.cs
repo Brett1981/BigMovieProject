@@ -37,6 +37,7 @@ namespace api.Resources
             set { _movies = value; }
         }
         private static DateTime time;
+        private static DateTime CreateListTime;
 
         public static async Task<MovieData> Get(string guid)
         {
@@ -63,7 +64,7 @@ namespace api.Resources
                 while (true)
                 {
                     if (createListCount == 0) { allMovies = db.MovieDatas.Select(x => x).ToArray(); createListCount++; }
-                    if(DateTime.Now > time.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; }
+                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; CreateListTime = DateTime.Now; }
                     await Task.Delay(new TimeSpan(0, 1, 0));
                 }
             }
@@ -77,16 +78,17 @@ namespace api.Resources
         {
             try
             {
-                time = DateTime.Now;
+                
                 while (true)
                 {
                     if (checkDbCount == 0) {
                         await databaseMovieCheck();
+                        time = DateTime.Now;
                         Thread t2 = new Thread(async () => await Database.CreateList());
                         t2.Priority = ThreadPriority.Normal;
                         t2.Start();
                     }
-                    if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); }
+                    if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
                     Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
                     await Task.Delay(new TimeSpan(0, 1, 0));
                     checkDbCount++;

@@ -24,7 +24,6 @@ namespace api.Resources
             string path;
             /*if (VideoController.streamDir.EndsWith(@"\")) {path = VideoController.streamDir + movie.movie_ext + @"\"; }
             else { path = VideoController.streamDir + @"\" + movie.movie_ext + @"\"; }*/
-
             if (VideoController.streamDir.EndsWith(@"\")) { path = VideoController.streamDir + movie.movie_name + @"\"; }
             else { path = VideoController.streamDir + @"\" + movie.movie_folder + @"\"; }
 

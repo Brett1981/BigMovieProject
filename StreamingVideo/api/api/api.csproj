@@ -392,7 +392,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53851</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53851/</IISUrl>
+          <IISUrl>http://192.168.1.10:53851/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
