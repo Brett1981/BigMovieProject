@@ -1,11 +1,9 @@
 ﻿@model IEnumerable<api.MovieData>
-
-@{
-    ViewBag.Title = "Index";
+@{ 
+    ViewBag.Title = "Movies";
 }
 
-<h2>Index</h2>
-
+<h2>Movies</h2>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -26,27 +24,28 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
-        <td>
-            @Html.DisplayFor(modelItem => item.movie_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.movie_ext)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.movie_guid)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { guid=item.movie_guid }) 
-            <br />
-            @Html.ActionLink("Details", "Details", new { guid=item.movie_guid }) 
-            <br />
-            @Html.ActionLink("Delete", "Delete", new { guid=item.movie_guid })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
+            <td>
+                @Html.DisplayFor(modelItem => item.movie_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.movie_ext)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.movie_guid)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { guid = item.movie_guid })
+                <br />
+                @Html.ActionLink("Details", "Details", new { guid = item.movie_guid })
+                <br />
+                @Html.ActionLink("Delete", "Delete", new { guid = item.movie_guid })
+            </td>
+        </tr>
+    }
 
 </table>

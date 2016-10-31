@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using api.Resources;
 
 namespace api.Controllers
 {
@@ -15,32 +16,31 @@ namespace api.Controllers
         // GET: Movies
         public async Task<ActionResult> Index()
         {
-            return View(JsonConvert.DeserializeObject<List<MovieData>>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/allmovies")));
+            return View(Database.allMovies);
         }
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         public async Task<ActionResult> Edit(string guid)
         {
-            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/getmovie?id=" + guid)));
+            return View(await Database.Get(guid));
         }
         // POST: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         [HttpPost]
-        public ActionResult Edit(string guid, FormCollection collection)
+        public async Task<ActionResult> Edit(string guid, FormCollection collection)
         {
             try
             {
                 // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                return View(await Database.Edit(guid, collection));
             }
             catch
             {
-                return View();
+                return View(new MovieData());
             }
         }
         // GET: Movies/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string guid)
         {
-            return View();
+            return View(await Database.Get(guid));
         }
 
         // GET: Movies/Create
@@ -69,9 +69,20 @@ namespace api.Controllers
         
 
         // GET: Movies/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(string guid)
         {
-            return View();
+            try
+            {
+                await Database.Remove(await Database.Get(guid));
+                Database.ForceCreateList();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+            
+            
         }
 
         // POST: Movies/Delete/5

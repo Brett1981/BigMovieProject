@@ -21,11 +21,17 @@ namespace api.Resources
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            string path;
+            string path = "";
             /*if (VideoController.streamDir.EndsWith(@"\")) {path = VideoController.streamDir + movie.movie_ext + @"\"; }
             else { path = VideoController.streamDir + @"\" + movie.movie_ext + @"\"; }*/
-            if (VideoController.streamDir.EndsWith(@"\")) { path = VideoController.streamDir + movie.movie_name + @"\"; }
-            else { path = VideoController.streamDir + @"\" + movie.movie_folder + @"\"; }
+
+            foreach(var mDir in VideoController.movieDir)
+            {
+                if(Directory.Exists(mDir + @"\"+ movie.movie_folder)) { path = mDir + @"\" + movie.movie_folder; break; }
+                if(path != "") { break;}
+            }
+            /*if (VideoController.movieDir.EndsWith(@"\")) { path = VideoController.streamDir + movie.movie_name + @"\"; }
+            else { path = VideoController.streamDir + @"\" + movie.movie_folder + @"\"; }*/
 
             FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
             //FileInfo fileInfo = new FileInfo(file);

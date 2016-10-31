@@ -1,0 +1,60 @@
+﻿@model api.MovieData
+
+<div>
+    <h4>MovieData</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.movie_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.movie_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.movie_ext)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.movie_ext)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.movie_guid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.movie_guid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.movie_folder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.movie_folder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieInfo.backdrop_path)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieInfo.backdrop_path)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieInfo.adult)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieInfo.adult)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
