@@ -123,4 +123,13 @@ namespace api.Resources
         }
 
     }
+
+    public class UserLibrary
+    {
+        public int Id { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string profile_image { get; set; }
+        public string image_url { get; set; }
+    }
 }

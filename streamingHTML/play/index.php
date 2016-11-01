@@ -1,17 +1,24 @@
 <?php 
 session_start();
+$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.php');
     $api;
     $guid;
-
+    $watching = array();
     if(isset($_GET['id']) && $_GET['id'] != null){
-        $guid = $_GET['id'];
+        $mGuid = $_GET['id'];
         try {
-        $api = file_get_contents('http://31.15.224.24:53851/api/video/getmovie?id='.$guid);
+        $api = file_get_contents('http://31.15.224.24:53851/api/video/getmovie?id='.$mGuid);
         
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
         $data = json_decode($api,true);
+    }
+
+    if(isset($data) && $data != null){
+        $watching['movie_name'] = $data['MovieInfo']['title'];
+        $watching['homepage'] = $data['MovieInfo']['homepage'];
+        $watching['vote_average'] = $data['MovieInfo']['vote_average'];
     }
     
    
@@ -27,7 +34,12 @@ session_start();
                 echo $data["movie_name"]; 
             }else{ echo "Unknown movie";}  
         }?></title>
+        
+        <link href="http://vjs.zencdn.net/5.11.9/video-js.css" rel="stylesheet">
+        <!-- If you'd like to support IE8 -->
+        <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -45,30 +57,49 @@ session_start();
     <body>
         <div id="wrapper">
             <!-- Sidebar -->
-            <div class="navigation_left">
-                <div class="user">
-                    <img class="user_img" href=""/>
-                    <p class="user_username">Test</p>
-                </div>
-            </div>
+            <?php include $dir_nav; ?>
             <!-- /#sidebar-wrapper -->
             <!-- Page Content -->
             <div class="content_wrapper">
                 <div>
-                
+                    <?php if(isset($data)){
+                        echo "<div class='play_movie_header'>
+                                <img alt='movie_poster' src='https://image.tmdb.org/t/p/w300/".$data["MovieInfo"]["backdrop_path"]."'>
+                            </div>
+                            <div class='movie_information'>
+                                <h1>".$data["MovieInfo"]["title"]."</h1>
+                                <p>".$data["MovieInfo"]["tagline"]."</p>
+                                <p>Release: ".$data["MovieInfo"]["release_date"]."</p>
+                                <span>
+                                    <p>".$data["MovieInfo"]["overview"]."</p>
+                                </span>
+                            </div>
+                        ";
+                    }
+                    
+                    ?>
                 </div>
                 <div>
-                    <video id="mainPlayer" width="800" style="position:absolute; left:300px; top:100px"
-                    autoplay="autoplay" controls="controls" onloadeddata="onLoad()">
-                        <source src="http://31.15.224.24:53851/api/video/play?id=<?php echo $data["movie_guid"];  ?>" />
+                    <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup="{}">
+                        <?php if(isset($data)){
+                            $guid = $data["movie_guid"];
+                            if($data["movie_ext"] == "mp4"){ 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play?id=".$guid."' type='video/mp4'/>"; 
+                            }elseif($data["movie_ext"] == "webm"){
+                                echo "<source src='http://31.15.224.24:53851/api/video/play?id=".$guid."'  type='video/mp4'>"; 
+                            } 
+                        } ?>
+                        <p class="vjs-no-js">
+                          To view this video please enable JavaScript, and consider upgrading to a web browser that
+                          <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                        </p>
                     </video>
+
+                    <script src="http://vjs.zencdn.net/5.11.9/video.js"></script>
                 </div>
                 
             
             </div>
-            
-            <!-- 83ba8796-57e0-4465-d462-5be019a3376c -->
-            <!-- fbb10db9-6932-b38d-b3e1-fc34c109c91f -->
             <!-- /#page-content-wrapper -->
         </div>
         <script type="application/javascript">

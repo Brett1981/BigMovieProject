@@ -11,11 +11,14 @@ body{
 /*----------------------USER----------------------*/
 
 .navigation_left{
-    position: absolute;
+    position: fixed;
     width:240px;
     min-height: 100vh;
+    max-height: 100vh;
     background-color: black;
     color: white;
+    z-index:1;
+    box-shadow: -5px -10px 10px -10px white;
 }
 
 .navigation_left .user{
@@ -26,6 +29,15 @@ body{
     margin-top: 15px;
     display:block;
     
+}
+
+.navigation_left .user a{
+    border-radius: 70px;
+    width: 50%;
+    margin: 0 auto;
+    padding: 0;
+    align-content: center;
+    display:block;
 }
 .navigation_left .user img{
     border-radius: 75px;
@@ -48,7 +60,7 @@ body{
 }
 
 .navigation_left .user p:first-child{
-    margin-left: 40px;
+    margin-left: 60px;
 }
 
 .navigation_left .user .user_username{
@@ -122,6 +134,52 @@ body{
 .hvr-underline-from-center:hover:before, .hvr-underline-from-center:focus:before, .hvr-underline-from-center:active:before {
   left: 0;
   right: 0;
+}
+
+.navigation_left .movie_watching{
+    position: relative;
+    top:200px !important;
+    text-align: center;
+}
+
+.navigation_left .movie_information{
+    position: relative;
+    top:200px !important;
+    text-decoration: none;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.navigation_left .movie_information .homepage{
+    display: block;
+    width:240px;
+}
+
+.navigation_left .movie_information .homepage a{
+    display: inline-flex;
+    flex-direction: row;
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+
+.navigation_left .movie_information .homepage a i{
+    margin: 15px 20px;
+}
+.navigation_left .movie_information .vote_average{
+    display: inline-flex;
+    flex-direction: row;
+    width:240px;
+    font-size: 24px;
+}
+.navigation_left .movie_information .vote_average i{
+    position: relative;
+    width: 30px;
+    margin:27px 20px 20px 55px;
 }
 
 
@@ -235,11 +293,69 @@ body{
 /*----------------------PLAY----------------------*/
 
 .content_wrapper{
-    position: absolute;
-    height: 98vh;
-    width: auto;
-    left:23.3%;
+    position:absolute;
+    height: auto;
+    left:239px;
+    margin-left: auto;
+    width: 87.5%;
     
 }
 
+.content_wrapper .play_movie_header{
+    position:relative;
+    display:block;
+    height: 190px;
+    width: 100%;
+    overflow: hidden;
+    
+}
+
+.content_wrapper .play_movie_header img{
+    position: relative;
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+    display: block;
+    width: 100% !important;
+   
+}
+
+.content_wrapper .movie_information{
+    position: relative;
+    color:white;
+    margin: 30px;
+}
+.content_wrapper .movie_information  h1{
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+.content_wrapper .movie_information  p{
+    
+}
+.content_wrapper .movie_information  p:last-child{
+    
+}
+#my-video{
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    top:50px;
+    width:800px;
+    height: 400px;
+}
+
 /*---------------------!PLAY----------------------*/
+
+/*---------------------PROFILE----------------------*/
+
+.user_profile{
+    position: absolute;
+    width: 80%;
+    left:300px;
+    top:100px;
+}
+/*---------------------!PROFILE----------------------*/

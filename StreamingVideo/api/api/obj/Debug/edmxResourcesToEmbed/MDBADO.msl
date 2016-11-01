@@ -40,5 +40,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="MDBSQLModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="user_birthday" ColumnName="user_birthday" />
+          <ScalarProperty Name="last_logon" ColumnName="last_logon" />
+          <ScalarProperty Name="profile_created" ColumnName="profile_created" />
+          <ScalarProperty Name="user_display_name" ColumnName="user_display_name" />
+          <ScalarProperty Name="unique_id" ColumnName="unique_id" />
+          <ScalarProperty Name="profile_image" ColumnName="profile_image" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

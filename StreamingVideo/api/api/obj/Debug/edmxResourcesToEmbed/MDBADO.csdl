@@ -20,17 +20,17 @@
     <Property Name="adult" Type="Boolean" />
     <Property Name="backdrop_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="budget" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="homepage" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="homepage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="imdb_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="original_title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="popularity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="poster_path" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="poster_path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="release_date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="revenue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="tagline" Type="String" MaxLength="240" FixedLength="false" Unicode="false" />
-    <Property Name="title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="tagline" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="vote_average" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="vote_count" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="genres" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -57,5 +57,20 @@
       <End Role="MovieData" EntitySet="MovieDatas" />
       <End Role="MovieInfo" EntitySet="MovieInfoes" />
     </AssociationSet>
+    <EntitySet Name="Users" EntityType="MDBSQLModel.User" />
   </EntityContainer>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="profile_image" Type="Binary" Nullable="true" MaxLength="Max" FixedLength="false" />
+    <Property Name="unique_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="user_display_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="profile_created" Type="DateTime" Precision="0" />
+    <Property Name="last_logon" Type="DateTime" Precision="3" />
+    <Property Name="user_birthday" Type="DateTime" Precision="0" />
+  </EntityType>
 </Schema>

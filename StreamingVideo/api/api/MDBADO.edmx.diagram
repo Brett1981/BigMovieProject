@@ -8,6 +8,7 @@
         <EntityTypeShape EntityType="MDBSQLModel.MovieData" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="MDBSQLModel.MovieInfo" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="MDBSQLModel.FK_MovieInfo_ToMovieData" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MDBSQLModel.User" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

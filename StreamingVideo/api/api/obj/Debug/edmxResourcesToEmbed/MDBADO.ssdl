@@ -37,6 +37,20 @@
     <Property Name="production_companies" Type="nvarchar(max)" />
     <Property Name="spoken_languages" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="unique_id" Type="nvarchar" MaxLength="50" />
+    <Property Name="username" Type="nvarchar" MaxLength="50" />
+    <Property Name="password" Type="nvarchar(max)" />
+    <Property Name="profile_image" Type="varbinary(max)" />
+    <Property Name="user_display_name" Type="nvarchar" MaxLength="50" />
+    <Property Name="profile_created" Type="date" />
+    <Property Name="last_logon" Type="datetime" />
+    <Property Name="user_birthday" Type="date" />
+  </EntityType>
   <Association Name="FK_MovieInfo_ToMovieData">
     <End Role="MovieData" Type="Self.MovieData" Multiplicity="1" />
     <End Role="MovieInfo" Type="Self.MovieInfo" Multiplicity="0..1" />
@@ -52,6 +66,7 @@
   <EntityContainer Name="MDBSQLModelStoreContainer">
     <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
       <End Role="MovieData" EntitySet="MovieData" />
       <End Role="MovieInfo" EntitySet="MovieInfo" />

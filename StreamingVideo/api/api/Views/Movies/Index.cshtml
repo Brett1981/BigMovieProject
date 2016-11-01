@@ -1,17 +1,16 @@
 ﻿@model IEnumerable<api.MovieData>
-@{ 
-    ViewBag.Title = "Movies";
+
+@{
+    ViewBag.Title = "Index";
 }
 
-<h2>Movies</h2>
+<h2>Index</h2>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.MovieInfo.poster_path)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.movie_name)
         </th>
@@ -21,31 +20,36 @@
         <th>
             @Html.DisplayNameFor(model => model.movie_guid)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.movie_folder)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MovieInfo.backdrop_path)
+        </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
-            <td>
-                @Html.DisplayFor(modelItem => item.movie_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.movie_ext)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.movie_guid)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { guid = item.movie_guid })
-                <br />
-                @Html.ActionLink("Details", "Details", new { guid = item.movie_guid })
-                <br />
-                @Html.ActionLink("Delete", "Delete", new { guid = item.movie_guid })
-            </td>
-        </tr>
-    }
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
+        <td>
+            @Html.DisplayFor(modelItem => item.movie_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.movie_ext)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.movie_guid)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { guid = item.movie_guid })
+            <br />
+            @Html.ActionLink("Details", "Details", new { guid = item.movie_guid })
+            <br />
+            @Html.ActionLink("Delete", "Delete", new { guid = item.movie_guid })
+        </td>
+    </tr>
+}
 
 </table>

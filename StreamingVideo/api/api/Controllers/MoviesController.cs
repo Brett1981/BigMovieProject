@@ -16,12 +16,12 @@ namespace api.Controllers
         // GET: Movies
         public async Task<ActionResult> Index()
         {
-            return View(Database.allMovies);
+            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/allmovies")));
         }
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         public async Task<ActionResult> Edit(string guid)
         {
-            return View(await Database.Get(guid));
+            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/getmovie?id="+guid)));
         }
         // POST: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         [HttpPost]
@@ -43,30 +43,6 @@ namespace api.Controllers
             return View(await Database.Get(guid));
         }
 
-        // GET: Movies/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Movies/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        
-        
 
         // GET: Movies/Delete/5
         public async Task<ActionResult> Delete(string guid)

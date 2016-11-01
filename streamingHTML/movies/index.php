@@ -1,7 +1,11 @@
 <?php
 session_start();
-$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.php');
+$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
 
+$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";
+if(isset($_POST['user'])){
+    
+}
 
 ?>
 <!DOCTYPE html>
@@ -18,7 +22,7 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.p
     <body>
         <div id="wrapper">
             <!-- Sidebar -->
-            <?php include $dir_nav; ?>
+            <?php include $dir_nav.'website/navigation_left.php'; ?>
             <!-- /#sidebar-wrapper -->
             <!-- Page Content -->
             <div class="movielist">

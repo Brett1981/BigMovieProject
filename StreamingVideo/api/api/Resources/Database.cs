@@ -17,21 +17,30 @@ using System.Xml.XPath;
 using System.Xml.Linq;
 using System.Threading;
 using Microsoft.Owin;
-using System.Web.Mvc;
+using System.Net.Http;
+using System.Net;
+using System.Web.Http;
 
 namespace api.Resources
 {
     public class Database
     {
+
+        #region Movie database methods
         public static MovieData movie;
         private static MDBSQLEntities db = new MDBSQLEntities();
         private static int createListCount = 0;
         private static int checkDbCount = 0;
 
+        private static bool projectDebug = true;
+
         private static int databaseMovieCount = 0;
 
         private static MovieData[] _movies;
-
+        
+        /// <summary>
+        /// Movie Database methods
+        /// </summary>
         public static MovieData[] allMovies
         {
             get { if (_movies != null) { return _movies; } else return new MovieData[] { }; }
@@ -149,14 +158,23 @@ namespace api.Resources
                 
                 while (true)
                 {
-                    if (checkDbCount == 0) {
+                    if (!projectDebug)
+                    {
+                        if (checkDbCount == 0) {
                         await databaseMovieCheck();
                         time = DateTime.Now;
                         Thread t2 = new Thread(async () => await Database.CreateList());
                         t2.Priority = ThreadPriority.Normal;
                         t2.Start();
+                        }
+                        if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
                     }
-                    if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
+                    else
+                    {
+                        Thread t2 = new Thread(async () => await Database.CreateList());
+                        t2.Priority = ThreadPriority.Normal;
+                        t2.Start();
+                    }
                     Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
                     await Task.Delay(new TimeSpan(0, 1, 0));
                     checkDbCount++;
@@ -277,5 +295,60 @@ namespace api.Resources
             data.id_movie = id;
             return data;
         }
+
+        #endregion
+
+        #region User database methods
+        public static async Task<User> GetUser(string username, string password)
+        {
+            return await db.Users.Where(x => (x.username == username && x.password == password)).FirstOrDefaultAsync();
+        }
+
+        public static async Task<User> CreateUser(UserLibrary data)
+        {
+            User u = new User();
+            if(data.username != "" && data.password != ""){
+                u.username = data.username;
+                u.password = data.password;
+                if (data.profile_image != null)
+                {
+                    try
+                    {
+                        HttpClient client = new HttpClient();
+                        u.profile_image = await client.GetByteArrayAsync(data.profile_image);
+                    }
+                    catch (HttpException ex)
+                    {
+                        Debug.WriteLine("HttpException --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
+                    }
+                }
+            }
+            return u;
+        }
+
+        public static async Task<string>ChangeUserPicture(UserLibrary user)
+        {
+
+            var uData = await db.Users.Where(x => x.username == user.username).FirstOrDefaultAsync();
+            if (uData != null && uData.password == user.password)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    uData.profile_image = await client.GetByteArrayAsync(user.image_url);
+                    db.Entry(uData).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+                    return "OK";
+                }
+                catch (HttpException ex)
+                {
+                    Debug.WriteLine("HttpException --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
+                    return "Exception";
+                }
+            }
+            return "NotAuthorized";
+        }
+        #endregion
+        
     }
 }
