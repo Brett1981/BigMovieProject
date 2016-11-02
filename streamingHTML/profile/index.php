@@ -22,32 +22,33 @@ if(isset($_GET['user']) && $_GET['user'] != null){
   crossorigin="anonymous"></script>
     </head>
     <body>
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <?php include $dir_nav.'website/navigation_left.php'; ?>
-            <!-- /#sidebar-wrapper -->
-            <!-- Page Content -->
-            <div class="profile_wrapper">
-                <?php 
-                    if(isset($data) && $data != null){
-                        $display_name = $data["user_display_name"];
-                        $img = $data["profile_image"];
-                        echo "<div class='user_profile'>
-                                <div class='profile_picture'>
-                                    <img alt='".$display_name."_picture' src='data:image/jpeg;base64, $img' />
-                                </div>
-                        
-                        </div>";
-                    }
-                ?>
-            </div>
-            <!-- /#page-content-wrapper -->
+        <div class="hamburger" id="hamburger" onclick="toggleSidenav();">
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
+        <!-- Sidebar -->
+        <?php include $dir_nav.'website/navigation_left.php'; ?>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div class="main">
+            <?php 
+                if(isset($data) && $data != null){
+                    $display_name = $data["user_display_name"];
+                    $img = $data["profile_image"];
+                    echo "<div class='user_profile'>
+                            <div class='profile_picture'>
+                                <img alt='".$display_name."_picture' src='data:image/jpeg;base64, $img' />
+                            </div>
+
+                    </div>";
+                }
+            ?>
+        </div>
+        <!-- /#page-content-wrapper -->
         <script type="application/javascript">
-            function movie(x){
-               var text = $(x).children(".movie_data").children(".id")[0].innerHTML;
-                window.location.href = "../play/index.php?id="+text;
-                console.log(text);
+            function toggleSidenav() {
+              document.body.classList.toggle('sidenav-active');
             }
         </script>
     </body>

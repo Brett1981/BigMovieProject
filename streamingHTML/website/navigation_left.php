@@ -1,6 +1,6 @@
 <?php 
 $server_path = 'http://'.$_SERVER['HTTP_HOST'];
-$def = $server_path.'/streamingHTML/assets/icons/';
+$icons = $server_path.'/streamingHTML/assets/icons/';
 
 $home = $server_path.'/streamingHTML/movies/';
 
@@ -10,38 +10,24 @@ $profile = $server_path.'/streamingHTML/profile/index.php?user='.$user["unique_i
 
 
 if(isset($username) && $username != null){ $user[0] = $username; }else{ $user[0] = "Username";}
+
+$navigation = "<nav>
+          <div class='user'>
+            <a href='$profile'>
+                <img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>
+            </a>
+            <span>
+                <p>Welcome:</p>
+                <p class='user_username'>".$user["username"]."</p>
+            </span>
+          </div>
+          <div class='links'>
+            <a class='active' href='".$server_path."/streamingHTML/'>Home</a>
+            <a href='#'>Search</a>
+            <a href='#'>About</a>
+            <a href='#'>Logout</a>
+          </div>";
 //src='".$def."user_default_icon.png'
-$navigation= "<div class='navigation_left'>
-                <div class='user'>
-                    <a href='$profile'>
-                        <img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>
-                    </a>
-                    <span>
-                        <p>Welcome:</p>
-                        <p class='user_username'>".$user["username"]."</p>
-                    </span>
-                </div>
-                <div class='navigation_items'>
-                    <div class='hvr-underline-from-center'>
-                        <a href='$home'>
-                            <img alt='Home' src='".$def."home.png'/>
-                            <p>Home</p>
-                        </a>
-                    </div>
-                    <div class='hvr-underline-from-center'>
-                        <a href='*'>
-                            <img alt='Search' src='".$def."magnifying-glass.png'/>
-                            <p>Search</p>
-                        </a>
-                    </div>
-                    <div class='hvr-underline-from-center'>
-                        <a href='*'>
-                            <img alt='Logout' src='".$def."logout.png'/>
-                            <p>Logout</p>
-                        </a>
-                    </div>
-                </div>";
-            
 if(isset($watching) && $watching != null){
     $navigation .= "
                 <div class='movie_watching'>
@@ -60,6 +46,6 @@ if(isset($watching) && $watching != null){
                     </div>
                </div>";
 }
- echo $navigation."</div>";
+ echo $navigation."</nav>";
 
 ?>

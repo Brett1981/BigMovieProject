@@ -1,6 +1,6 @@
 <?php 
 session_start();
-$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.php');
+$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
     $api;
     $guid;
     $watching = array();
@@ -55,12 +55,16 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.p
         </script>
     </head>
     <body>
-        <div id="wrapper">
-            <!-- Sidebar -->
-            <?php include $dir_nav; ?>
-            <!-- /#sidebar-wrapper -->
-            <!-- Page Content -->
-            <div class="content_wrapper">
+        <div class="hamburger" id="hamburger" onclick="toggleSidenav();">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <!-- Sidebar -->
+        <?php include $dir_nav.'website/navigation_left.php'; ?>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div class="main">
                 <div>
                     <?php if(isset($data)){
                         echo "<div class='play_movie_header'>
@@ -80,6 +84,7 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.p
                     ?>
                 </div>
                 <div>
+                    <?php if(isset($data)){ ?>
                     <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup="{}">
                         <?php if(isset($data)){
                             $guid = $data["movie_guid"];
@@ -96,13 +101,14 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/website/navigation_left.p
                     </video>
 
                     <script src="http://vjs.zencdn.net/5.11.9/video.js"></script>
+                    <?php } ?>
                 </div>
-                
-            
             </div>
             <!-- /#page-content-wrapper -->
-        </div>
         <script type="application/javascript">
+            function toggleSidenav() {
+              document.body.classList.toggle('sidenav-active');
+            }
         </script>
     </body>
 </html>
