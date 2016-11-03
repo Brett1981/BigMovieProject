@@ -282,7 +282,7 @@ namespace api.Resources
 
             }
         }
-        private static Guid CreateGuid(string movieName)
+        public static Guid CreateGuid(string movieName)
         {
             using (MD5 md5 = MD5.Create())
             {
@@ -310,12 +310,12 @@ namespace api.Resources
             if(data.username != "" && data.password != ""){
                 u.username = data.username;
                 u.password = data.password;
-                if (data.profile_image != null)
+                if (data.image_url != null)
                 {
                     try
                     {
                         HttpClient client = new HttpClient();
-                        u.profile_image = await client.GetByteArrayAsync(data.profile_image);
+                        u.profile_image = await client.GetByteArrayAsync(data.image_url);
                     }
                     catch (HttpException ex)
                     {
@@ -329,8 +329,8 @@ namespace api.Resources
         public static async Task<string>ChangeUserPicture(UserLibrary user)
         {
 
-            var uData = await db.Users.Where(x => x.username == user.username).FirstOrDefaultAsync();
-            if (uData != null && uData.password == user.password)
+            var uData = await db.Users.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync();
+            if (uData != null)
             {
                 try
                 {

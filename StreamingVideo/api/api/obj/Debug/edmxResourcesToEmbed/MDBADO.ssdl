@@ -50,6 +50,7 @@
     <Property Name="profile_created" Type="date" />
     <Property Name="last_logon" Type="datetime" />
     <Property Name="user_birthday" Type="date" />
+    <Property Name="user_email" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <Association Name="FK_MovieInfo_ToMovieData">
     <End Role="MovieData" Type="Self.MovieData" Multiplicity="1" />

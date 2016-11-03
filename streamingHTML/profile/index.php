@@ -39,9 +39,18 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                     echo "<div class='user_profile'>
                             <div class='profile_picture'>
                                 <img alt='".$display_name."_picture' src='data:image/jpeg;base64, $img' />
-                            </div>
-
-                    </div>";
+                                <form action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data'>
+                                    Select image to upload:
+                                    <input type='file' name='avatar' id='avatar'>
+                                    <input type='submit' value='Upload Image' name='submit'>
+                                </form>";
+                                
+                    if(isset($_SESSION['post_message'])){
+                        echo $_SESSION['post_message'];
+                        $_SESSION['post_message'] = "";
+                    }
+                                    
+                    echo "</div></div>";
                 }
             ?>
         </div>

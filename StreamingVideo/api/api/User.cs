@@ -23,5 +23,6 @@ namespace api
         public Nullable<System.DateTime> profile_created { get; set; }
         public Nullable<System.DateTime> last_logon { get; set; }
         public Nullable<System.DateTime> user_birthday { get; set; }
+        public string user_email { get; set; }
     }
 }

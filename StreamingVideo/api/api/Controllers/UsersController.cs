@@ -26,6 +26,45 @@ namespace api.Controllers
             return db.Users;
         }
 
+        //POST: api/Users/Login
+        [HttpPost,ActionName("Login")]
+        public async Task<IHttpActionResult> Login([FromBody] UserLibrary data)
+        {
+            var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            if(user != null)
+            {
+                if(user.username == data.username && user.password == data.password) { user.last_logon = DateTime.Now; db.SaveChanges(); return Ok(user); }
+                else { return Unauthorized(); }
+            }
+            else { return NotFound(); }
+        }
+        //POST: api/Users/Create
+        [HttpPost, ActionName("Create")]
+        public async Task<IHttpActionResult> Create([FromBody] UserLibrary data)
+        {
+            var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            if(user == null)
+            {
+                if (data.password != null && data.user_email != null)
+                {
+                    user = new api.User() { username = data.username, password = data.password, user_email = data.user_email };
+                    if (data.image_url != null)
+                    {
+                        HttpClient client = new HttpClient();
+                        user.profile_image = await client.GetByteArrayAsync(data.image_url);
+                    }
+                    if (data.user_birthday != null) { try { user.user_birthday = Convert.ToDateTime(data.user_birthday); } catch { user.user_birthday = DateTime.Now; } }
+                    if (data.user_display_name != null) { user.user_display_name = data.user_display_name; }
+                    user.unique_id = api.Resources.Database.CreateGuid(data.username).ToString();
+                    user.profile_created = DateTime.Now;
+                    db.Users.Add(user);
+                    await db.SaveChangesAsync();
+                    return Ok(db.Users.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
+                }
+            }
+            return Unauthorized();
+        }
+        
         // GET: api/Users/5
         [HttpGet,ActionName("GetUser"),ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(string guid)
@@ -38,18 +77,18 @@ namespace api.Controllers
             return Ok(user);
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
-        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]string data)
+        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]UserLibrary data)
         { 
             try
             {
                 string status = "BadRequest";
-                var user = JsonConvert.DeserializeObject<UserLibrary>(data);
-                if (data != null) {status = await Resources.Database.ChangeUserPicture(user); }
+                if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.ChangeUserPicture(data); }
                 switch (status){
 
                     case "OK": { return Ok(); } 
                     case "NotAuthorized": { return Unauthorized(); } 
-                    case "Exception": { return BadRequest(); } 
+                    case "Exception": { return BadRequest(); }
+                    case "BadRequest": { return BadRequest(); }
                 }
                 return BadRequest();
             }

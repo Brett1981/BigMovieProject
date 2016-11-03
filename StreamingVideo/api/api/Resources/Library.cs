@@ -127,9 +127,15 @@ namespace api.Resources
     public class UserLibrary
     {
         public int Id { get; set; }
+        
         public string username { get; set; }
         public string password { get; set; }
-        public string profile_image { get; set; }
+        public string unique_id { get; set; }
         public string image_url { get; set; }
+        public string user_display_name { get; set; }
+        public Nullable<System.DateTime> profile_created { get; set; }
+        public Nullable<System.DateTime> user_birthday { get; set; }
+        public string user_email { get; set; }
+
     }
 }

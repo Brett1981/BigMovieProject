@@ -1,11 +1,13 @@
 <?php
 session_start();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
-
-$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";
-if(isset($_POST['user'])){
+/*$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";*/
+if(!isset($_SESSION['guid']) && $_SESSION['guid'] == null)
+{
+    header('Location: ../login/');
     
 }
+
 
 ?>
 <!DOCTYPE html>

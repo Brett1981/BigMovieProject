@@ -1,10 +1,11 @@
 <?php 
 session_start();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
-    $api;
-    $guid;
-    $watching = array();
-    if(isset($_GET['id']) && $_GET['id'] != null){
+$api;
+$guid;
+$watching = array();
+if(isset($_SESSION['guid']) && isset($_GET['id'])){
+    if($_GET['id'] != null){
         $mGuid = $_GET['id'];
         try {
         $api = file_get_contents('http://31.15.224.24:53851/api/video/getmovie?id='.$mGuid);
@@ -13,13 +14,20 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
         $data = json_decode($api,true);
+        
+        if(isset($data) && $data != null){
+            $watching['movie_name'] = $data['MovieInfo']['title'];
+            $watching['homepage'] = $data['MovieInfo']['homepage'];
+            $watching['vote_average'] = $data['MovieInfo']['vote_average'];
+        }
     }
+    
+}
+else{
+    header('location: ../movies');
+}
 
-    if(isset($data) && $data != null){
-        $watching['movie_name'] = $data['MovieInfo']['title'];
-        $watching['homepage'] = $data['MovieInfo']['homepage'];
-        $watching['vote_average'] = $data['MovieInfo']['vote_average'];
-    }
+    
     
    
 ?>
@@ -67,7 +75,7 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
         <div class="main">
                 <div>
                     <?php if(isset($data)){
-                        echo "<div class='play_movie_header'>
+                        /*echo "<div class='play_movie_header'>
                                 <img alt='movie_poster' src='https://image.tmdb.org/t/p/w300/".$data["MovieInfo"]["backdrop_path"]."'>
                             </div>
                             <div class='movie_information'>
@@ -78,14 +86,14 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
                                     <p>".$data["MovieInfo"]["overview"]."</p>
                                 </span>
                             </div>
-                        ";
+                        ";*/
                     }
                     
                     ?>
                 </div>
                 <div>
                     <?php if(isset($data)){ ?>
-                    <video id="my-video" class="video-js" controls preload="auto" width="640" height="264" poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup="{}">
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
                         <?php if(isset($data)){
                             $guid = $data["movie_guid"];
                             if($data["movie_ext"] == "mp4"){ 

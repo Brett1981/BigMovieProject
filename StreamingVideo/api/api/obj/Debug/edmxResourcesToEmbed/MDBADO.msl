@@ -43,6 +43,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="MDBSQLModel.User">
         <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="user_email" ColumnName="user_email" />
           <ScalarProperty Name="user_birthday" ColumnName="user_birthday" />
           <ScalarProperty Name="last_logon" ColumnName="last_logon" />
           <ScalarProperty Name="profile_created" ColumnName="profile_created" />
