@@ -9,6 +9,7 @@
     <Property Name="movie_ext" Type="nvarchar" MaxLength="50" />
     <Property Name="movie_guid" Type="nvarchar(max)" />
     <Property Name="movie_folder" Type="nvarchar(max)" />
+    <Property Name="movie_views" Type="int" />
   </EntityType>
   <EntityType Name="MovieInfo">
     <Key>

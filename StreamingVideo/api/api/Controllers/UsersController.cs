@@ -13,11 +13,15 @@ using api;
 using api.Resources;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Web.Http.Cors;
+using api.Models;
 
 namespace api.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UsersController : ApiController
     {
+        
         private MDBSQLEntities db = new MDBSQLEntities();
 
         // GET: api/Users
@@ -33,7 +37,10 @@ namespace api.Controllers
             var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)
             {
-                if(user.username == data.username && user.password == data.password) { user.last_logon = DateTime.Now; db.SaveChanges(); return Ok(user); }
+                if(user.username == data.username && user.password == data.password) {
+                    user.last_logon = DateTime.Now; db.SaveChanges();
+                    return Ok(new AuthorizationUserModels() { user_id = user.unique_id });
+                }
                 else { return Unauthorized(); }
             }
             else { return NotFound(); }

@@ -358,3 +358,6 @@ E:\Git\BigMovieProject\StreamingVideo\api\api\bin\System.Web.Http.Owin.xml
 E:\Git\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.csprojResolveAssemblyReference.cache
 E:\Git\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.dll
 E:\Git\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.pdb
+C:\VisualStudioProjekti\BigMovieProject\StreamingVideo\api\api\bin\System.Web.Cors.dll
+C:\VisualStudioProjekti\BigMovieProject\StreamingVideo\api\api\bin\System.Web.Http.Cors.dll
+C:\VisualStudioProjekti\BigMovieProject\StreamingVideo\api\api\bin\System.Web.Http.Cors.xml

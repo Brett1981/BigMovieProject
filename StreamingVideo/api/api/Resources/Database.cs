@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data.SqlClient;
 using api.Controllers;
+using api.Models;
 using System.Data.Entity.Validation;
 using System.Xml;
 using System.Xml.Serialization;
@@ -114,6 +115,63 @@ namespace api.Resources
             }
         }
 
+        public static async Task<MovieData> GetMovie(string guid)
+        {
+            var movie = await db.MovieDatas.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
+            if(movie != null) {
+                if (movie.movie_views == null){ movie.movie_views = 1; }
+                else { movie.movie_views += 1; }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch(Exception e)
+                {
+                    Debug.WriteLine("Exception: GetMovie(string) --> " + e.Message);
+                }
+                finally
+                {
+                    movie = await db.MovieDatas.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
+                }
+                if(movie == null)
+                {
+                    return new MovieData();
+                }
+                return movie;
+            }
+            return new MovieData();
+            
+        }
+
+        public static async Task<MovieData> GetMovie(AuthorizationUserModels data)
+        {
+            var user = await db.Users.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                Debug.WriteLine("User " + user.username + " with : guid '" + user.unique_id + "' is trying to view content :" + data.movie_id);
+                var movie = await db.MovieDatas.Where(x => x.movie_guid == data.movie_id).FirstOrDefaultAsync();
+                if (movie.movie_views == null) { movie.movie_views = 1; }
+                else { movie.movie_views += 1; }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("Exception: GetMovie (object) --> " + e.Message);
+                }
+                finally
+                {
+                    movie = await db.MovieDatas.Where(x => x.movie_guid == data.movie_id).FirstOrDefaultAsync();
+                }
+                if (movie == null)
+                {
+                    return new MovieData();
+                }
+                return movie;
+            }
+            return new MovieData();
+        }
         public static async Task<int> Remove(MovieData item)
         {
             try
@@ -158,7 +216,7 @@ namespace api.Resources
                 
                 while (true)
                 {
-                    if (!projectDebug)
+                    if (!projectDebug && checkDbCount == 0)
                     {
                         if (checkDbCount == 0) {
                         await databaseMovieCheck();
@@ -169,7 +227,7 @@ namespace api.Resources
                         }
                         if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
                     }
-                    else
+                    else if(projectDebug)
                     {
                         Thread t2 = new Thread(async () => await Database.CreateList());
                         t2.Priority = ThreadPriority.Normal;
@@ -228,10 +286,21 @@ namespace api.Resources
                                         movie_folder = item.Directory.Name.ToString(),
                                         MovieInfo = mInfo
                                     };
-                                    db.MovieDatas.Add(mData);
+                                    try
+                                    {
+                                        db.MovieDatas.Add(mData);
+                                        databaseMovieCount++;
+                                        temp.Add(mData);
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
+                                    }
+                                    finally
+                                    {
+
+                                    }
                                     //var dbSaveInt = await db.SaveChangesAsync();
-                                    databaseMovieCount++;
-                                    temp.Add(mData);
                                 }
                             }
 

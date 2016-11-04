@@ -6,16 +6,18 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using api.Resources;
+using api.Models;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Net.Http.Formatting;
 using System.Data.Entity.Core.Objects;
 using Newtonsoft.Json;
+using System.Web.Http.Cors;
 
 namespace api.Controllers
 {
-    
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class VideoController : ApiController
     {
         //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
@@ -23,15 +25,16 @@ namespace api.Controllers
 
         public static string[] movieDir = { @"E:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
-
+        
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string id)
         {
-            Debug.WriteLine("User connected from {0}", base.Request.RequestUri);
+            Debug.WriteLine("User requesting to watch movie: " + id);
             //Getting movie from DB
             var movie = await Database.Get(id);
             if(movie != null)
             {
+                Debug.WriteLine("Movie "+id+" is being served.");
                 //streaming content to client
                 return Streaming.streamingContent(movie, base.Request.Headers.Range);
             }
@@ -42,10 +45,30 @@ namespace api.Controllers
         {
             return Database.allMovies;
         }
+        //GET: api/video/getmovie?id=
         [HttpGet,ActionName("GetMovie")]
         public async  Task<MovieData> GetMovie([FromUri]string id)
         {
-            return await Database.Get(id);
+            return await Database.GetMovie(id);
+        }
+        //POST: api/video/getmovie (object)
+        [HttpPost,ActionName("GetMovie")]
+        public async Task<IHttpActionResult> GetMovie([FromBody] AuthorizationUserModels data)
+        {
+            var movie = await Database.GetMovie(data);
+            if(movie == null)
+            {
+                Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
+                return NotFound();
+            }
+            Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.movie_name);
+            return Ok(movie);
+        }
+
+        [HttpGet,ActionName("Subs")]
+        public async Task<IHttpActionResult> Subs([FromUri]string id)
+        {
+            return Ok();
         }
     }
 }

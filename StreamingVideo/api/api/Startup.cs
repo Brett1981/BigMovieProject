@@ -31,7 +31,7 @@ namespace api
             }
             catch(Exception ex)
             {
-                Debug.WriteLine("Exception --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
+                Debug.WriteLine("Exception : Startup.cs --> {0}", ex.Message);
             }
             
            

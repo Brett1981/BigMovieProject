@@ -68,6 +68,7 @@ namespace api.Resources
                 }, MediaLibrary.GetMimeNameFromExt(fileInfo.Extension));
 
                 response.Content.Headers.ContentLength = totalLength;
+                Debug.WriteLine("Movie served successfully.");
                 return response;
             }
 
@@ -79,11 +80,12 @@ namespace api.Resources
             if (rangeHeader.Unit != "bytes" || rangeHeader.Ranges.Count > 1 ||
                 !MediaLibrary.TryReadRangeItem(rangeHeader.Ranges.First(), totalLength, out start, out end))
             {
+
                 response.StatusCode = HttpStatusCode.RequestedRangeNotSatisfiable;
                 response.Content = new StreamContent(Stream.Null);  // No content for this status.
                 response.Content.Headers.ContentRange = new ContentRangeHeaderValue(totalLength);
                 response.Content.Headers.ContentType = MediaLibrary.GetMimeNameFromExt(fileInfo.Extension);
-
+                Debug.WriteLine("Movie served successfully.");
                 return response;
             }
 
@@ -102,7 +104,7 @@ namespace api.Resources
 
             response.Content.Headers.ContentLength = end - start + 1;
             response.Content.Headers.ContentRange = contentRange;
-
+            Debug.WriteLine("Movie served successfully.");
             return response;
         }
     

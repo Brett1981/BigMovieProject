@@ -13,7 +13,7 @@ elseif(isset($_GET['login']) && $_GET['login'] == "user" ){
 }
 else
 {
-    header('Location: movies/');
+    header('Location: login/');
 }
 exit();
 
