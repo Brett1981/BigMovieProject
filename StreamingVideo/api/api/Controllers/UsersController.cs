@@ -32,14 +32,14 @@ namespace api.Controllers
 
         //POST: api/Users/Login
         [HttpPost,ActionName("Login")]
-        public async Task<IHttpActionResult> Login([FromBody] UserLibrary data)
+        public async Task<IHttpActionResult> Login([FromBody] CustomUserModel data)
         {
             var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)
             {
                 if(user.username == data.username && user.password == data.password) {
                     user.last_logon = DateTime.Now; db.SaveChanges();
-                    return Ok(new AuthorizationUserModels() { user_id = user.unique_id });
+                    return Ok(new DatabaseUserModels() { user_id = user.unique_id });
                 }
                 else { return Unauthorized(); }
             }
@@ -47,7 +47,7 @@ namespace api.Controllers
         }
         //POST: api/Users/Create
         [HttpPost, ActionName("Create")]
-        public async Task<IHttpActionResult> Create([FromBody] UserLibrary data)
+        public async Task<IHttpActionResult> Create([FromBody] CustomUserModel data)
         {
             var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user == null)
@@ -95,7 +95,7 @@ namespace api.Controllers
             return Ok(); //popravi da vrne false
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
-        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]UserLibrary data)
+        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]CustomUserModel data)
         { 
             try
             {

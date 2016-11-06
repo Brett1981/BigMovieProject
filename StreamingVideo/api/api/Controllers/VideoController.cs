@@ -14,6 +14,7 @@ using System.Net.Http.Formatting;
 using System.Data.Entity.Core.Objects;
 using Newtonsoft.Json;
 using System.Web.Http.Cors;
+using System.Web.Http.Description;
 
 namespace api.Controllers
 {
@@ -41,19 +42,19 @@ namespace api.Controllers
             throw new HttpResponseException(HttpStatusCode.NotFound);
         }
         [HttpGet, ActionName("AllMovies")]
-        public MovieData[] AllMovies()
+        public IHttpActionResult AllMovies()
         {
-            return Database.allMovies;
+            return Ok(Database.allMovies);
         }
         //GET: api/video/getmovie?id=
         [HttpGet,ActionName("GetMovie")]
-        public async  Task<MovieData> GetMovie([FromUri]string id)
+        public async  Task<IHttpActionResult> GetMovie([FromUri]string id)
         {
-            return await Database.GetMovie(id);
+            return Ok(await Database.GetMovie(id));
         }
         //POST: api/video/getmovie (object)
         [HttpPost,ActionName("GetMovie")]
-        public async Task<IHttpActionResult> GetMovie([FromBody] AuthorizationUserModels data)
+        public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
         {
             var movie = await Database.GetMovie(data);
             if(movie == null)

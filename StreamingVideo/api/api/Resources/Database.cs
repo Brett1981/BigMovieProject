@@ -40,7 +40,7 @@ namespace api.Resources
         private static MovieData[] _movies;
         
         /// <summary>
-        /// Movie Database methods
+        /// Movie Database  public / private items
         /// </summary>
         public static MovieData[] allMovies
         {
@@ -50,6 +50,12 @@ namespace api.Resources
         private static DateTime time;
         private static DateTime CreateListTime;
 
+        /// <summary>
+        /// Edit movie from MVC view
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         internal static async Task<MovieData> Edit(string guid, System.Web.Mvc.FormCollection collection)
         {
             try
@@ -93,10 +99,16 @@ namespace api.Resources
             }
             catch(Exception e)
             {
+                Debug.WriteLine("Exception Database.Edit --> " + e.Message);
                 return new MovieData();
             }
         }
-
+        
+        /// <summary>
+        /// Get movie data from local db
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns></returns>
         public static async Task<MovieData> Get(string guid)
         {
             try
@@ -115,6 +127,11 @@ namespace api.Resources
             }
         }
 
+        /// <summary>
+        /// Retrieve movie data from db using a guid as reference and increase the view counter if movie found
+        /// </summary>
+        /// <param name="guid"></param>
+        /// <returns name="MovieData"></returns>
         public static async Task<MovieData> GetMovie(string guid)
         {
             var movie = await db.MovieDatas.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
@@ -142,8 +159,13 @@ namespace api.Resources
             return new MovieData();
             
         }
-
-        public static async Task<MovieData> GetMovie(AuthorizationUserModels data)
+        
+        /// <summary>
+        /// Retrieve movie from db and increase the view counter
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static async Task<MovieData> GetMovie(DatabaseUserModels data)
         {
             var user = await db.Users.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
             if (user != null)
@@ -172,6 +194,12 @@ namespace api.Resources
             }
             return new MovieData();
         }
+        
+        /// <summary>
+        /// Remove movie from db
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static async Task<int> Remove(MovieData item)
         {
             try
@@ -187,10 +215,18 @@ namespace api.Resources
             
         }
 
-        public static void ForceCreateList()
+        /// <summary>
+        /// Force creating the movie list when an element is deleted from db or added
+        /// </summary>
+        public static void ForceMovieList()
         {
             allMovies = db.MovieDatas.Select(x => x).ToArray();
         }
+
+        /// <summary>
+        /// Create movie list every x minutes or hours, depends how it is set up
+        /// </summary>
+        /// <returns></returns>
         public static async Task CreateList()
         {
             try
@@ -201,6 +237,9 @@ namespace api.Resources
                     if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; CreateListTime = DateTime.Now; }
                     Debug.WriteLine("Movie list --> waiting ...");
                     await Task.Delay(new TimeSpan(0, 1, 0));
+                    if(DateTime.Now < CreateListTime.AddMilliseconds(5)) { 
+                        // reorganize db
+                    }
                 }
             }
             catch(Exception e)
@@ -209,6 +248,10 @@ namespace api.Resources
             }
         }
 
+        /// <summary>
+        /// Check directories if new movie was found that is not in the local db
+        /// </summary>
+        /// <returns></returns>
         public static async Task CheckDB()
         {
             try
@@ -244,6 +287,10 @@ namespace api.Resources
             }
         }
 
+        /// <summary>
+        /// Method that checks directories
+        /// </summary>
+        /// <returns></returns>
         private static async Task<int> databaseMovieCheck(){
             try
             {
@@ -351,6 +398,13 @@ namespace api.Resources
 
             }
         }
+
+        /// <summary>
+        /// GUID method that is called when a new movie is about to be added to local db. 
+        /// This GUID is ussed for references when a movie is searched for
+        /// </summary>
+        /// <param name="movieName"></param>
+        /// <returns></returns>
         public static Guid CreateGuid(string movieName)
         {
             using (MD5 md5 = MD5.Create())
@@ -359,6 +413,13 @@ namespace api.Resources
             }
         }
 
+        /// <summary>
+        /// This method can be deprecated as the local db autoincrements 
+        /// the unique id's of both moviedata and movieinfo tabels when movie is added
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private static MovieInfo editMovieInfo(MovieInfo data, int id)
         {
             data.id_movie = id;
@@ -368,34 +429,13 @@ namespace api.Resources
         #endregion
 
         #region User database methods
-        public static async Task<User> GetUser(string username, string password)
-        {
-            return await db.Users.Where(x => (x.username == username && x.password == password)).FirstOrDefaultAsync();
-        }
 
-        public static async Task<User> CreateUser(UserLibrary data)
-        {
-            User u = new User();
-            if(data.username != "" && data.password != ""){
-                u.username = data.username;
-                u.password = data.password;
-                if (data.image_url != null)
-                {
-                    try
-                    {
-                        HttpClient client = new HttpClient();
-                        u.profile_image = await client.GetByteArrayAsync(data.image_url);
-                    }
-                    catch (HttpException ex)
-                    {
-                        Debug.WriteLine("HttpException --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
-                    }
-                }
-            }
-            return u;
-        }
-
-        public static async Task<string>ChangeUserPicture(UserLibrary user)
+        /// <summary>
+        /// Changes user profile picture when user prompts to change it
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static async Task<string>ChangeUserPicture(CustomUserModel user)
         {
 
             var uData = await db.Users.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync();

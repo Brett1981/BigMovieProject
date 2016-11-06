@@ -50,7 +50,7 @@ namespace api.Controllers
             try
             {
                 await Database.Remove(await Database.Get(guid));
-                Database.ForceCreateList();
+                Database.ForceMovieList();
                 return RedirectToAction("Index");
             }
             catch
