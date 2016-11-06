@@ -40,11 +40,12 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
                     }
-                      $profile .= "<form action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data'>
+                    $profile .= "<form action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data'>
                                     Select image to upload:
                                     <input type='file' name='avatar' id='avatar'>
                                     <input type='submit' value='Upload Image' name='submit'>
                                 </form>";
+                    $profile .= "<div class='user-data'>";
                     echo $profile;
                                 
                     if(isset($_SESSION['post_message'])){

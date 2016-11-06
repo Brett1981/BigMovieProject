@@ -30,7 +30,7 @@ else{
   crossorigin="anonymous"></script>
         
     </head>
-    <body>
+    <body class="sidenav-active">
         <!-- Sidebar -->
         <?php include $dir_nav.'website/navigation_left.php'; ?>
         <!-- /#sidebar-wrapper -->

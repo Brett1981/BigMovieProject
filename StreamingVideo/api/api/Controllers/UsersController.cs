@@ -71,7 +71,7 @@ namespace api.Controllers
             }
             return Unauthorized();
         }
-        
+
         // GET: api/Users/5
         [HttpGet,ActionName("GetUser"),ResponseType(typeof(User))]
         public async Task<IHttpActionResult> GetUser(string guid)
@@ -82,6 +82,17 @@ namespace api.Controllers
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        [HttpGet,ActionName("Check")]
+        public async Task<IHttpActionResult> Check(string username)
+        {
+            var user = await db.Users.Where(x => x.username == username).FirstOrDefaultAsync();
+            if(user == null)
+            {
+                return Ok();
+            }
+            return Ok(); //popravi da vrne false
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]UserLibrary data)
