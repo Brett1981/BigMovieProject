@@ -128,7 +128,7 @@ namespace api.Resources
         }
 
         /// <summary>
-        /// Retrieve movie data from db using a guid as reference and increase the view counter if movie found
+        /// Retrieve movie data from db using a guid string as reference and increase the view counter if movie found
         /// </summary>
         /// <param name="guid"></param>
         /// <returns name="MovieData"></returns>
@@ -238,7 +238,10 @@ namespace api.Resources
                     Debug.WriteLine("Movie list --> waiting ...");
                     await Task.Delay(new TimeSpan(0, 1, 0));
                     if(DateTime.Now < CreateListTime.AddMilliseconds(5)) { 
-                        // reorganize db
+                        foreach(var item in allMovies)
+                        {
+
+                        }
                     }
                 }
             }
@@ -262,11 +265,12 @@ namespace api.Resources
                     if (!projectDebug && checkDbCount == 0)
                     {
                         if (checkDbCount == 0) {
-                        await databaseMovieCheck();
-                        time = DateTime.Now;
-                        Thread t2 = new Thread(async () => await Database.CreateList());
-                        t2.Priority = ThreadPriority.Normal;
-                        t2.Start();
+                            
+                            await databaseMovieCheck();
+                            time = DateTime.Now;
+                            Thread t2 = new Thread(async () => await Database.CreateList());
+                            t2.Priority = ThreadPriority.Normal;
+                            t2.Start();
                         }
                         if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
                     }
@@ -335,12 +339,15 @@ namespace api.Resources
                                     };
                                     try
                                     {
+                                        Console.WriteLine(db.Database.Log);
                                         db.MovieDatas.Add(mData);
+                                        Console.WriteLine(db.Database.Log);
                                         databaseMovieCount++;
                                         temp.Add(mData);
                                     }
                                     catch(Exception ex)
                                     {
+                                        Console.WriteLine(db.Database.Log);
                                         Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
                                     }
                                     finally
