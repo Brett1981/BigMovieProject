@@ -33,18 +33,22 @@ namespace api.Resources
         private static int createListCount = 0;
         private static int checkDbCount = 0;
 
-        private static bool projectDebug = true;
+        /// <summary>
+        /// ProjectDebug is used for only creating a list of movies from database if false reads directories specified
+        /// and checks db to add movie to it.
+        /// </summary>
+        private static bool projectDebug = false;
 
         private static int databaseMovieCount = 0;
 
-        private static MovieData[] _movies;
+        private static List<MovieData> _movies;
         
         /// <summary>
         /// Movie Database  public / private items
         /// </summary>
-        public static MovieData[] allMovies
+        public static List<MovieData> allMovies
         {
-            get { if (_movies != null) { return _movies; } else return new MovieData[] { }; }
+            get { if (_movies != null) { return _movies; } else return new List<MovieData>(); }
             set { _movies = value; }
         }
         private static DateTime time;
@@ -220,7 +224,7 @@ namespace api.Resources
         /// </summary>
         public static void ForceMovieList()
         {
-            allMovies = db.MovieDatas.Select(x => x).ToArray();
+            allMovies = db.MovieDatas.Select(x => x).ToList();
         }
 
         /// <summary>
@@ -233,15 +237,12 @@ namespace api.Resources
             {
                 while (true)
                 {
-                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToArray(); createListCount++;  }
-                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToArrayAsync(); createListCount++; CreateListTime = DateTime.Now; }
+                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++;  }
+                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; }
                     Debug.WriteLine("Movie list --> waiting ...");
                     await Task.Delay(new TimeSpan(0, 1, 0));
-                    if(DateTime.Now < CreateListTime.AddMilliseconds(5)) { 
-                        foreach(var item in allMovies)
-                        {
-
-                        }
+                    if(DateTime.Now < CreateListTime.AddMilliseconds(5) || createListCount == 1) { 
+                        
                     }
                 }
             }
@@ -327,34 +328,39 @@ namespace api.Resources
                                     {
                                         await Task.Delay(5000); MoviesAPI.countAPICalls = 0;
                                     }
-                                    MovieInfo mInfo = await MoviesAPI.getMovieInfo(name, databaseMovieCount);//editMovieInfo(
+                                    MovieInfo mInfo = await MoviesAPI.getMovieInfo(name, databaseMovieCount);//editMovieInfo
+                                    if(mInfo.id != null)
+                                    {
+                                        if (mInfo.tagline.Length > 128) { mInfo.tagline = mInfo.tagline.Substring(0, 127); }
+                                        MovieData mData = new MovieData()
+                                        {
+                                            movie_name = name,
+                                            movie_ext = ext,
+                                            movie_guid = CreateGuid(name).ToString(),
+                                            movie_folder = item.Directory.Name.ToString(),
+                                            MovieInfo = mInfo
+                                        };
+                                        try
+                                        {
+                                            db.MovieDatas.Add(mData);
+                                            await db.SaveChangesAsync();
+                                            databaseMovieCount++;
+                                            //temp.Add(mData);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine(db.Database.Log);
+                                            Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
+                                        }
+                                        finally
+                                        {
 
-                                    MovieData mData = new MovieData()
-                                    {
-                                        movie_name = name,
-                                        movie_ext = ext,
-                                        movie_guid = CreateGuid(name).ToString(),
-                                        movie_folder = item.Directory.Name.ToString(),
-                                        MovieInfo = mInfo
-                                    };
-                                    try
-                                    {
-                                        Console.WriteLine(db.Database.Log);
-                                        db.MovieDatas.Add(mData);
-                                        Console.WriteLine(db.Database.Log);
-                                        databaseMovieCount++;
-                                        temp.Add(mData);
+                                        }
                                     }
-                                    catch(Exception ex)
+                                    else
                                     {
-                                        Console.WriteLine(db.Database.Log);
-                                        Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
+                                        Debug.WriteLine("Movie " + name + " was not added as there was a problem!");
                                     }
-                                    finally
-                                    {
-
-                                    }
-                                    //var dbSaveInt = await db.SaveChangesAsync();
                                 }
                             }
 

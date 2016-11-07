@@ -11,14 +11,27 @@ namespace api.Resources
 {
     public class MoviesAPI
     {
-        private static string movieSearchURL = "http://api.themoviedb.org/3/search/movie?api_key=";
+        private static Uri movieSearchURL = new Uri("http://api.themoviedb.org/3/search/movie");
         //private static string GenreURL = "http://api.themoviedb.org/3/genre/movie/list?api_key=";
         public static int countAPICalls = 0;
         public static async Task<MovieInfo> getMovieInfo(string data, int id)
         {
             try
             {
-                var date = new DateTime(int.Parse("0001"), 1, 1);
+                DateTime date;
+                try
+                {
+                    date = new DateTime(int.Parse("0001"), 1, 1);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("Exception getMoviInfo --> " + ex.Message);
+                }
+                finally
+                {
+                    date = new DateTime();
+                }
+                 
                 string Searcheditem = "";
                 HttpClient client = new HttpClient();
 
@@ -48,7 +61,15 @@ namespace api.Resources
                         {
                             datum = datum.Replace('(', ' '); datum = datum.Replace(')', ' ');
                             datum.Trim();
-                            date = new DateTime(int.Parse(datum), 1, 1);
+                            try
+                            {
+                                date = new DateTime(int.Parse(datum), 1, 1);
+                            }
+                            finally
+                            {
+                                date = new DateTime(int.Parse(Convert.ToInt32(datum).ToString()), 1, 1);
+                            }
+                            
                         }
                         else { date = new DateTime(int.Parse(datum), 1, 1); }
                         break;
@@ -64,51 +85,69 @@ namespace api.Resources
                     }
                 }
                 //Building api url with parameters - apikey + item to search for
-                string url_API = "";
+                Uri searchMovieAPI;
                 var apikey = ConfigurationManager.AppSettings["APIkey"];
 
                 if(apikey == null) { throw new Exception("API key was null or not defined! Check your Web.config to include value with key!"); }
 
                 if (apikey != null && apikey.Length != 0)
                 {
-                    url_API = movieSearchURL + apikey + "&query=" + Searcheditem;
+                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + Searcheditem);
                     try
                     {
                         //GlobalVar.GlobalApiCall.Counter++;
                         if(countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
-
-                        var response = await client.GetStringAsync(url_API);
-                        countAPICalls++;
-                        var jsonData = JsonConvert.DeserializeObject<DataAPI>(response);
-
-                        results apiResult = new results();
-
-                        for (int i = 0; i < jsonData.results.Count; i++)
+                        HttpResponseMessage response;
+                        try
                         {
-                            DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
-                            if (date.Year != 1 && date != null)
+                            response  = await client.GetAsync(searchMovieAPI,HttpCompletionOption.ResponseContentRead);
+                            if (response.IsSuccessStatusCode)
                             {
-                                if (jsonDate >= date || jsonData.results[i].title == Searcheditem)
+                                countAPICalls++;
+
+                                var jsonData = JsonConvert.DeserializeObject<DataAPI>(await response.Content.ReadAsStringAsync());
+                                if (jsonData == null) { return new MovieInfo(); }
+
+                                results apiResult = new results();
+
+                                for (int i = 0; i < jsonData.results.Count; i++)
                                 {
-                                    apiResult = new results()
+                                    DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
+                                    if (date.Year != 1 && date != null)
                                     {
-                                        id = jsonData.results[i].id,
-                                        title = jsonData.results[i].title,
-                                        genre_ids = jsonData.results[i].genre_ids,
-                                        poster_path = jsonData.results[i].poster_path
-                                    };
-                                    break;
+                                        if (jsonDate >= date || jsonData.results[i].title == Searcheditem)
+                                        {
+                                            apiResult = new results()
+                                            {
+                                                id = jsonData.results[i].id,
+                                                title = jsonData.results[i].title,
+                                                genre_ids = jsonData.results[i].genre_ids,
+                                                poster_path = jsonData.results[i].poster_path
+                                            };
+                                            break;
+                                        }
+                                    }
                                 }
+                                if (apiResult == null) { return new MovieInfo(); }
+
+                                //GlobalVar.GlobalApiCall.Counter++;
+                                if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
+                                string info = "";
+                                if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
+                                else { return new MovieInfo(); }
+                                countAPICalls++;
+                                return createMovieInfo(JsonConvert.DeserializeObject<MovieInfoJSON>(info), id);
+                            }
+                            else
+                            {
+                                return new MovieInfo();
                             }
                         }
-                        if (apiResult == null) { return new MovieInfo(); }
-
-                        //GlobalVar.GlobalApiCall.Counter++;
-                        if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
-                        var info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey);
-                        countAPICalls++;
-                        return createMovieInfo(JsonConvert.DeserializeObject<MovieInfoJSON>(info),id);
-
+                        catch(Exception ex)
+                        {
+                            Debug.WriteLine("Exception at getMovieInfo --> " + ex.Message);
+                            return new MovieInfo();
+                        }
                     }
                     catch (Exception e)
                     {
@@ -158,13 +197,13 @@ namespace api.Resources
         }
         private static string ListToString (List<values> data)
         {
-            string x = "{ ";
+            string x = "";
             for(int i = 0; i < data.Count; i++)
             {
-                x += data[i].id + ":\"" +  data[i].name + "\"";
-                if(data.Count - 1 != i ) { x += ","; }
+                x += data[i].id + ":" +  data[i].name ;
+                if(data.Count - 1 != i ) { x += "|"; }
             }
-            return x += "}";
+            return x += "";
         }
     }
 
