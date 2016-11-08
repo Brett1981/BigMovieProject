@@ -23,7 +23,7 @@ namespace api
             config.EnableCors();
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}",
+                routeTemplate: "api/{controller}/{action}/{value}",
                 defaults: new { id = RouteParameter.Optional }
             );
 

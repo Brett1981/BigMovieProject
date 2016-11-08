@@ -22,6 +22,7 @@ namespace streamingApp
         public Movies()
         {
             InitializeComponent();
+            
         }
     }
 }

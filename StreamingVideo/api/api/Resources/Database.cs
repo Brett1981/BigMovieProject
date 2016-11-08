@@ -427,16 +427,46 @@ namespace api.Resources
         }
 
         /// <summary>
-        /// This method can be deprecated as the local db autoincrements 
-        /// the unique id's of both moviedata and movieinfo tabels when movie is added
+        /// Retrieve movies from db where genre is the same as searched
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="id"></param>
+        /// <param name="genre"></param>
         /// <returns></returns>
-        private static MovieInfo editMovieInfo(MovieInfo data, int id)
+        public static List<MovieData> GetByGenre(string genre)
         {
-            data.id_movie = id;
-            return data;
+            List<MovieData> searchedMovies = new List<MovieData>();
+            foreach(var item in allMovies)
+            {
+                if(item.MovieInfo.genres != "")
+                {
+                    var g = item.MovieInfo.genres;
+                    if (g.Contains("|"))
+                    {
+                        var h = g.Split('|');
+                        foreach(var gnr in h)
+                        {
+                            var y = gnr.Split(':');
+                            if(y[1].ToLower() == genre.ToLower())
+                            {
+                                searchedMovies.Add(item);
+                                break;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (g.Contains(":"))
+                        {
+                            var h = g.Split(':');
+                            if(h[1].ToLower() == genre.ToLower())
+                            {
+                                searchedMovies.Add(item);
+                            }
+                        }
+                    }
+                }
+            }
+            return searchedMovies;
         }
 
         #endregion

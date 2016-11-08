@@ -28,14 +28,14 @@ namespace api.Controllers
         public static HttpClient client = new HttpClient();
         
         [HttpGet, ActionName("Play")]
-        public async Task<HttpResponseMessage> Play([FromUri]string id)
+        public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
-            Debug.WriteLine("User requesting to watch movie: " + id);
+            Debug.WriteLine("User requesting to watch movie: " + value);
             //Getting movie from DB
-            var movie = await Database.Get(id);
+            var movie = await Database.Get(value);
             if(movie != null)
             {
-                Debug.WriteLine("Movie "+id+" is being served.");
+                Debug.WriteLine("Movie "+value+" is being served.");
                 //streaming content to client
                 return Streaming.streamingContent(movie, base.Request.Headers.Range);
             }
@@ -48,9 +48,9 @@ namespace api.Controllers
         }
         //GET: api/video/getmovie?id=
         [HttpGet,ActionName("GetMovie")]
-        public async  Task<IHttpActionResult> GetMovie([FromUri]string id)
+        public async  Task<IHttpActionResult> GetMovie([FromUri]string value)
         {
-            return Ok(await Database.GetMovie(id));
+            return Ok(await Database.GetMovie(value));
         }
         //POST: api/video/getmovie (object)
         [HttpPost,ActionName("GetMovie")]
@@ -67,9 +67,20 @@ namespace api.Controllers
         }
 
         [HttpGet,ActionName("Subs")]
-        public async Task<IHttpActionResult> Subs([FromUri]string id)
+        public async Task<IHttpActionResult> Subs([FromUri]string value)
         {
             return Ok();
+        }
+
+        [HttpGet, ActionName("Genre")]
+        public IHttpActionResult Genre([FromUri]string value)
+        {
+            var g = Database.GetByGenre(value);
+            if(g.Count == 0)
+            {
+                return NotFound();
+            }
+            return Ok(g);
         }
     }
 }

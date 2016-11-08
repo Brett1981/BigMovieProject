@@ -74,9 +74,9 @@ namespace api.Controllers
 
         // GET: api/Users/5
         [HttpGet,ActionName("GetUser"),ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(string guid)
+        public async Task<IHttpActionResult> GetUser(string value)
         {
-            User user = await db.Users.Where(x => x.unique_id == guid).FirstOrDefaultAsync();
+            User user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if (user == null)
             {
                 return NotFound();
@@ -85,9 +85,9 @@ namespace api.Controllers
         }
 
         [HttpGet,ActionName("Check")]
-        public async Task<IHttpActionResult> Check(string username)
+        public async Task<IHttpActionResult> Check(string value)
         {
-            var user = await db.Users.Where(x => x.username == username).FirstOrDefaultAsync();
+            var user = await db.Users.Where(x => x.username == value).FirstOrDefaultAsync();
             if(user == null)
             {
                 return Ok();

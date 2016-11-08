@@ -4,32 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:streamingApp"
-        mc:Ignorable="d"
-        Title="Movies" Height="300" Width="300" UseLayoutRounding="True">
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Grid>
-        <DockPanel Margin="0,0,0,250">
-            <ToolBar DockPanel.Dock="Top">
-                <Button  VerticalAlignment="Top">
-                    <Button.Content>
-                        <Image Source="/Icons/refresh.png" Width="8" Height="8"></Image>
-                    </Button.Content>
-                    <Button.ToolTip>
-                        <StackPanel>
-                            <TextBlock FontWeight="Bold" FontSize="14" Margin="0,0,0,5">Refresh movies</TextBlock>
-                            <TextBlock>
-                        Search your computer or local network
-                        <LineBreak />
-                        for a file and open it for editing.
-                            </TextBlock>
-                            <Border BorderBrush="Silver" BorderThickness="0,1,0,0" Margin="0,8" />
-                            <WrapPanel>
-                                <Image Source="" Margin="0,0,5,0" />
-                                <TextBlock FontStyle="Italic">Press F1 for more help</TextBlock>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Button.ToolTip>
-                </Button>
-            </ToolBar>
-        </DockPanel>
+        <ItemsControl x:Name="myList" ItemsSource="{Binding myList}">
+            <materialDesign:Card x:Name="{Binding myList.Name}" Padding="32" Margin="16">
+                <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
+            </materialDesign:Card>
+        </ItemsControl>
+        
     </Grid>
 </Window>
