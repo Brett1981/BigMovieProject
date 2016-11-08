@@ -60,7 +60,7 @@ namespace api.Controllers
                     if (data.image_url != null)
                     {
                         HttpClient client = new HttpClient();
-                        user.profile_image = await client.GetByteArrayAsync(data.image_url);
+                        //user.profile_image = await client.GetByteArrayAsync(data.image_url);
                     }
                     if (data.user_birthday != null) { try { user.user_birthday = Convert.ToDateTime(data.user_birthday); } catch { user.user_birthday = DateTime.Now; } }
                     if (data.user_display_name != null) { user.user_display_name = data.user_display_name; }
@@ -114,10 +114,21 @@ namespace api.Controllers
             }
             catch(Exception ex)
             {
-                Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0} -- {1}",ex.Message, ex.InnerException.InnerException);
+                Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0}",ex.Message);
                 return BadRequest();
             }
             
+        }
+
+        [HttpGet,ActionName("GetProfilePicture")]
+        public async Task<IHttpActionResult> GetProfilePicture([FromUri] string value)
+        {
+            var user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
+            if(user != null)
+            {
+                return Ok(Resources.Database.GetUserImage(user.profile_image));
+            }
+            return NotFound();
         }
         // PUT: api/Users/5
         [ResponseType(typeof(void))]

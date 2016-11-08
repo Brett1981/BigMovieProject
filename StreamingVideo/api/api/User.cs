@@ -17,7 +17,7 @@ namespace api
         public int Id { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-        public byte[] profile_image { get; set; }
+        public string profile_image { get; set; }
         public string unique_id { get; set; }
         public string user_display_name { get; set; }
         public Nullable<System.DateTime> profile_created { get; set; }

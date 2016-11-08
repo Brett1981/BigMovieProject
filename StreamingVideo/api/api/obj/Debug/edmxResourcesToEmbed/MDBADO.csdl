@@ -67,7 +67,7 @@
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="profile_image" Type="Binary" Nullable="true" MaxLength="Max" FixedLength="false" />
+    <Property Name="profile_image" Type="String" Nullable="true" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="unique_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="user_display_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="profile_created" Type="DateTime" Precision="0" />

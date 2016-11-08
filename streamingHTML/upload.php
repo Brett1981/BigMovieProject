@@ -1,6 +1,6 @@
 <?php
 session_start();
-$api = 'http://31.15.224.24:53851/api/users/changeprofilepicture';
+$api = 'http://31.15.224.24:53851/api/user/changeprofilepicture';
 $server_port = "8080";
 $isUploaded = 0;
 $target_dir = $_SERVER['DOCUMENT_ROOT']."/streamingHTML/uploads/";
@@ -57,6 +57,7 @@ if($isUploaded == 1){
     //delete file on successfull upload
     unlink($target_file); 
     //redirect to profile page of user
+    $_SESSION['user_img'] = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getprofilepicture/'.$_SESSION['guid']),true);
     header('location: ../streamingHTML/profile/index.php?user='.$_SESSION['guid']);
     exit();
 }

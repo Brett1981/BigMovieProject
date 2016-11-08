@@ -46,7 +46,7 @@
     <Property Name="unique_id" Type="nvarchar" MaxLength="50" />
     <Property Name="username" Type="nvarchar" MaxLength="50" />
     <Property Name="password" Type="nvarchar(max)" />
-    <Property Name="profile_image" Type="varbinary(max)" />
+    <Property Name="profile_image" Type="nvarchar(max)" />
     <Property Name="user_display_name" Type="nvarchar" MaxLength="50" />
     <Property Name="profile_created" Type="date" />
     <Property Name="last_logon" Type="datetime" />
