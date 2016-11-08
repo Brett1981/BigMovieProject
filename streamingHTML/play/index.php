@@ -35,7 +35,7 @@ else{
 
 function get_movie($user_id, $movie_id, $username = null, $password = null)
 {
-    $api = "http://192.168.1.10:53851/api/video/getmovie";
+    $api = "http://31.15.224.24:53851/api/video/getmovie";
     if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
         $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
         
@@ -109,9 +109,9 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
                         <?php if(isset($data)){
                             $guid = $data["movie_guid"];
                             if($data["movie_ext"] == "mp4"){ 
-                                echo "<source src='http://31.15.224.24:53851/api/video/play?id=".$guid."' type='video/mp4'/>"; 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$guid."' type='video/mp4'/>"; 
                             }elseif($data["movie_ext"] == "webm"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play?id=".$guid."'  type='video/mp4'>"; 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$guid."'  type='video/mp4'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
                         } ?>

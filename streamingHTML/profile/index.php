@@ -4,7 +4,7 @@ $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/'); //default server path
 $data = null;
 if(isset($_GET['user']) && $_GET['user'] != null){
     $guid = $_GET['user'];
-    $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/users/getuser?guid='.$_SESSION['guid']),true);
+    $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
     /*if($data != null){
         print_r(var_dump($data));
     }*/

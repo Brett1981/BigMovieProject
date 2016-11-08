@@ -135,13 +135,13 @@ nav a:hover { background-color: #f5f5f5; }
 nav a:visited { color: black; }
 
 nav a.active {
-  background-color: black;
+  background-color: #41295a;
   color: white;
 }
 
 nav, .hamburger, .cover {
-  -webkit-transition: -webkit-transform .3s;
-  transition: transform .3s;
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
 }
 
 .sidenav-active nav, .sidenav-active .hamburger, .sidenav-active .cover {
@@ -239,8 +239,10 @@ nav .movie_information .watched div{
 }
 /*-- main --*/
 .main {
-  -webkit-transition: margin-left .3s;
-  transition: margin-left .3s;
+    -webkit-transition: margin-left 0.5s;
+    transition: margin-left 0.5s;
+    height: auto;
+    padding-bottom: 100px;
 }
 
 .sidenav-active .main { margin-left: 225px; }
@@ -256,15 +258,49 @@ section {
 
 /*----------------------MOVIE---------------------*/
 
-.main .movies{
-    width: 90.3%;
-    height: 100%;
-    left:200px !important;
-    overflow:hidden;
-    margin-left: 50px;
-    margin-right: 50px;
+nav .search{
+    
+    height: auto;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.21);
+    border-radius: 3px;
 }
 
+nav .search ul{
+    position: relative;
+    display: inline;
+    width:auto;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+nav .search ul li{
+    padding: 0px 10px 0px 10px;
+    max-width: auto;
+}
+
+
+nav .search ul li:hover{
+    background-color: #41295a; 
+}
+nav .search ul li:hover a{
+    color:white;
+    background-color: #41295a;
+}
+nav .search ul li a{
+    font-weight: 500;
+    text-decoration: none;
+    color:black;
+}
+
+.movies{
+    width: auto;
+    height: 100%;
+    left:175px !important;
+    overflow:hidden;
+    margin-left: 50px;
+    
+}
 .movie{
     position: relative;
     top:20px;
@@ -283,15 +319,22 @@ section {
 }
 .movie .movie_data{
     position: absolute;
+    display: flex;
     max-width: 54% !important;
     left:190px;
     top:0px;
     color:white;
+    max-height: 260px !important;
+    min-height: 260px !important;
+    overflow: hidden;
+    line-height: 18px; 
     
 }
 
 .movie .title p:first-child{
     position: relative;
+    display: inline-block;
+    text-overflow: ellipsis;
 	font-size: 24px;
 	font-style: normal;
 	font-variant: normal;
@@ -303,14 +346,26 @@ section {
 }
 .movie .title p:nth-child(2){
     position: relative;
-    top:-30px;
+    top:-50px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 36px;
+    overflow: hidden;
+    line-height: 18px; 
+    
 }
-
+.movie .title p:nth-child(3){
+    position: relative;
+    display: block;
+     width: 100%;
+    top:-58px;
+}
 .movie .title p:last-child{
     position: relative;
     display: block;
     width: 100%;
-    top:-35px;
+    top:-58px;
 
 }
 .movie .movieinfo{
@@ -332,6 +387,7 @@ section {
     width:80%;
 }
 
+
 .movie:hover{
     background-color: rgba(0, 167, 255, 0.55);
     cursor: pointer;
@@ -342,12 +398,12 @@ section {
 }
 
 .movie .poster{
-    position: relative;
-    height: 260px;
-    width:43.5%;
+    position: absolute;
+    /*height: 260px;*/
+    width:41.3% !important;
     max-height: 260px;
-    top:-10px;
-    left:-10px;
+    top:0px;
+    left:0px;
 
 }
 .movie:hover{
@@ -452,6 +508,7 @@ section {
   padding: 80px 0;
   height: 400px;
   text-align: center;
+    transition: opacity 1s;
 }
 .container a{
     text-decoration: none;
@@ -541,7 +598,7 @@ form button:hover {
   display: block;
   width: 40px;
   height: 40px;
-  border-radius:120px;
+  
   background-color: rgba(255, 255, 255, 0.15);
   bottom: -160px;
   -webkit-animation: square 30s infinite;
@@ -551,6 +608,7 @@ form button:hover {
 }
 .bg-bubbles li:nth-child(1) {
   left: 10%;
+  border-radius:120px;
 }
 .bg-bubbles li:nth-child(2) {
   left: 20%;
@@ -560,12 +618,15 @@ form button:hover {
           animation-delay: 2s;
   -webkit-animation-duration: 17s;
           animation-duration: 17s;
+    border-radius:10px;
 }
 .bg-bubbles li:nth-child(3) {
   left: 25%;
   -webkit-animation-delay: 4s;
           animation-delay: 4s;
+    border-radius:120px;
 }
+
 .bg-bubbles li:nth-child(4) {
   left: 40%;
   width: 60px;
@@ -576,6 +637,7 @@ form button:hover {
 }
 .bg-bubbles li:nth-child(5) {
   left: 70%;
+    border-radius:120px;
 }
 .bg-bubbles li:nth-child(6) {
   left: 80%;
@@ -590,7 +652,8 @@ form button:hover {
   width: 160px;
   height: 160px;
   -webkit-animation-delay: 7s;
-          animation-delay: 7s;
+      animation-delay: 7s;
+    border-radius:120px;
 }
 .bg-bubbles li:nth-child(8) {
   left: 55%;
@@ -600,6 +663,7 @@ form button:hover {
           animation-delay: 15s;
   -webkit-animation-duration: 40s;
           animation-duration: 40s;
+    border-radius:120px;
 }
 .bg-bubbles li:nth-child(9) {
   left: 25%;
@@ -610,6 +674,7 @@ form button:hover {
   -webkit-animation-duration: 40s;
           animation-duration: 40s;
   background-color: rgba(255, 255, 255, 0.3);
+    border-radius:120px;
 }
 .bg-bubbles li:nth-child(10) {
   left: 90%;
@@ -617,6 +682,7 @@ form button:hover {
   height: 160px;
   -webkit-animation-delay: 11s;
           animation-delay: 11s;
+    border-radius:50px;
 }
 @-webkit-keyframes square {
   0% {

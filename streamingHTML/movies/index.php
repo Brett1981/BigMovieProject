@@ -3,8 +3,14 @@ session_start();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
 /*$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";*/
 //var_dump($_POST);
+$enableGenres = true;
 if(isset($_GET['id']) && $_GET['id'] != null){
     $_SESSION['guid'] = $_GET['id'];
+}
+$genreMovies;
+if(isset($_GET['genre']) && $_GET['genre'] != ""){
+    $g = $_GET['genre'];
+    $genreMovies = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/genre/'.$g),true);
 }
 /*if($_SESSION['guid'] == null && (isset($_POST['user_id']) && $_POST['user_id'] != null)){
     $_SESSION['guid'] = $_POST['user_id'];
@@ -14,7 +20,6 @@ else{
 }*/
 
 //echo $_SESSION['guid'];
-
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -36,13 +41,18 @@ else{
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
-            <div class="search">
-            </div>
             <div class="movies">
             <?php 
-            $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/allmovies'),true);
+                $data;
+                if(isset($genreMovies) && $genreMovies != null){
+                    $data = $genreMovies;
+                }
+                else{
+                    $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/allmovies'),true);
+                }
+            
                 for($i = 0; $i < count($data); $i++){
-                echo "<div id='m' class='movie' onClick='movie(this);'>
+                $movie = "<div id='m' class='movie' onClick='movie(this);'>
 
                         <div class='poster'>
                             <img alt='poster' src='https://image.tmdb.org/t/p/w300/".$data[$i]["MovieInfo"]["poster_path"]."' width='120'/>
@@ -53,10 +63,33 @@ else{
                             <div class='title'>
                                 <p>".$data[$i]["MovieInfo"]["title"]."</p>
                                 <p>".$data[$i]["MovieInfo"]["tagline"]."</p>
-                                <p>Release date: ".$data[$i]["MovieInfo"]["release_date"]."</p>
-                            </div>
+                                <p>Release date: ".date_format(new DateTime($data[$i]["MovieInfo"]["release_date"]), 'd-m-Y')."</p>
+                            
+                            <p>";
+                            $genres = array();
+                            if(strpos($data[$i]["MovieInfo"]["genres"], '|') !== false){
+                                $genres = explode("|",$data[$i]["MovieInfo"]["genres"]);
+                                for($y = 0; $y < count($genres);$y++){
+                                    $x = explode(":",$genres[$y]);
+                                    if($y < 2){
+                                        if($y == 0){
+                                            $movie .= (string)$x[1] ."/";
+                                        }
+                                        else{
+                                            $movie .= (string)$x[1];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }else{
+                                $genres = explode(":",$data[$i]["MovieInfo"]["genres"]);
+                                $movie .= (string)$genres[1];
+                                
+                            }
+                    $movie .=  "</p></div>
                         </div>
                     </div>";
+                    echo $movie;
                 }
             ?>
             

@@ -1,6 +1,6 @@
 <?php
 session_start();
-$api = 'http://192.168.1.10:53851/api/users/changeprofilepicture';
+$api = 'http://31.15.224.24:53851/api/users/changeprofilepicture';
 $server_port = "8080";
 $isUploaded = 0;
 $target_dir = $_SERVER['DOCUMENT_ROOT']."/streamingHTML/uploads/";

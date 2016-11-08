@@ -1,4 +1,6 @@
 $("#switch").click(function(event){
+    h1 = $('.wrapper .container #register').children("h1");
+    h1.text("Register");
     var parent = $('.container').find('div');
     var first = parent.first();
     //.addClass("hidden")
@@ -17,6 +19,8 @@ $("#login-button").click(function(event){
 });
 
 $("#switch2").click(function(event){
+   
+    h1.text("Welcome");
     var parent = $('.container').find('div');
     var first = parent.first();
     //.addClass("hidden")
@@ -36,18 +40,12 @@ $("#register-button").click(function(event){
                     user_birthday : f.birthday.value, 
                     };
         postData(register,"register");
-        
-    
-    /*else{
-        var h1 = $('.wrapper .container #register').children("h1");
-        h1.text("Passwords do not match!");
-    }*/
 });
 
 function postData(post,form){
     var http = new XMLHttpRequest();
     var url = "";
-    if (form == "login"){ url = "http://31.15.224.24:53851/api/users/login"; }else if(form == "register"){ url = "http://31.15.224.24:53851/api/users/create"; }
+    if (form == "login"){ url = "http://31.15.224.24:53851/api/user/login"; }else if(form == "register"){ url = "http://31.15.224.24:53851/api/user/create"; }
     var params = JSON.stringify(post);
     http.open("POST", url, true);
 
@@ -109,6 +107,51 @@ redirectTo.myMethod = function (sProperty) {
     window.location.href = redirectTo[0];
 };
 
+function check(value,type){
+    if(type.name == "username"){
+        checkUsername(value);
+    }
+    else if(type.name == "password"){
+        console.log(value);
+    }
+    else if(type.name == "v_password"){
+        console.log(value);
+    }
+    else if(type.name == "email"){
+        console.log(value);
+    }
+    else if(type.name == "display_name"){
+        console.log(value);
+    }
+}
+
+function checkUsername(value){
+    var http = new XMLHttpRequest();
+    h1 = $('.wrapper .container #register').children("h1");
+    var url = "http://31.15.224.24:53851/api/user/check/"+value;
+    console.log(url);
+    http.open("GET", url, true);
+    http.setRequestHeader('Access-Control-Allow-Headers', '*');
+    http.setRequestHeader('Access-Control-Allow-Origin', '*');
+    http.setRequestHeader("Content-type", "plain/text");
+    http.onreadystatechange = function(){
+        if (http.readyState == 4 && http.status == 200){
+            console.log(http.responseText);
+            if(http.responseText == "OK"){
+                
+                h1.text("Username is valid");
+            }
+            else if(http.responseText == "NOK"){
+                h1.text("Username is already in use");
+            }
+        }
+        else if(http.readyState == 4 && http.status != 200){
+            
+        }
+        
+    }
+    http.send();
+}
 function checkPass(){
     
 }
