@@ -26,7 +26,7 @@
     <Property Name="overview" Type="nvarchar(max)" />
     <Property Name="popularity" Type="nvarchar" MaxLength="50" />
     <Property Name="poster_path" Type="nvarchar" MaxLength="50" />
-    <Property Name="release_date" Type="nvarchar" MaxLength="50" />
+    <Property Name="release_date" Type="datetime" />
     <Property Name="revenue" Type="nvarchar" MaxLength="50" />
     <Property Name="status" Type="nvarchar" MaxLength="50" />
     <Property Name="tagline" Type="varchar" MaxLength="128" />

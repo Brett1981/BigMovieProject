@@ -181,7 +181,7 @@ namespace api.Resources
                 overview = data.overview,
                 popularity = data.popularity,
                 poster_path = data.poster_path,
-                release_date = data.release_date,
+                release_date = Convert.ToDateTime(data.release_date),
                 revenue = data.revenue,
                 status = data.status,
                 tagline = data.tagline,

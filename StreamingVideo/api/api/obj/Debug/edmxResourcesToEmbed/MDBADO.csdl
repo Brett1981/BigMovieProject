@@ -27,7 +27,7 @@
     <Property Name="overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="popularity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="poster_path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="release_date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="release_date" Type="DateTime" Precision="3" />
     <Property Name="revenue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="tagline" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />

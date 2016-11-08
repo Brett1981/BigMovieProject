@@ -25,7 +25,7 @@ namespace api
         public string overview { get; set; }
         public string popularity { get; set; }
         public string poster_path { get; set; }
-        public string release_date { get; set; }
+        public Nullable<System.DateTime> release_date { get; set; }
         public string revenue { get; set; }
         public string status { get; set; }
         public string tagline { get; set; }

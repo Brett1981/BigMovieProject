@@ -88,7 +88,7 @@ namespace api.Resources
                         case "MovieInfo.poster_path": {movie.MovieInfo.poster_path = i.AttemptedValue; } break;
                         case "MovieInfo.production_companies": {movie.MovieInfo.production_companies = i.AttemptedValue; } break;
                         case "MovieInfo.production_countries": {movie.MovieInfo.production_countries = i.AttemptedValue; } break;
-                        case "MovieInfo.release_data": {movie.MovieInfo.release_date = i.AttemptedValue; } break;
+                        case "MovieInfo.release_data": {movie.MovieInfo.release_date = Convert.ToDateTime(i.AttemptedValue); } break;
                         case "MovieInfo.revenue": {movie.MovieInfo.revenue = i.AttemptedValue; } break;
                         case "MovieInfo.spoken_language": {movie.MovieInfo.spoken_languages = i.AttemptedValue; } break;
                         case "MovieInfo.status": {movie.MovieInfo.status = i.AttemptedValue; } break;
@@ -225,6 +225,7 @@ namespace api.Resources
         public static void ForceMovieList()
         {
             allMovies = db.MovieDatas.Select(x => x).ToList();
+            OrganizeListByDate();
         }
 
         /// <summary>
@@ -235,21 +236,26 @@ namespace api.Resources
         {
             try
             {
+                bool edited = false;
                 while (true)
                 {
-                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++;  }
-                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; }
+                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++; edited = true; }
+                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
                     Debug.WriteLine("Movie list --> waiting ...");
+                    if (edited || createListCount == 1){ OrganizeListByDate(); }
                     await Task.Delay(new TimeSpan(0, 1, 0));
-                    if(DateTime.Now < CreateListTime.AddMilliseconds(5) || createListCount == 1) { 
-                        
-                    }
+                    edited = false;
                 }
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
+        }
+
+        private static void OrganizeListByDate()
+        {
+            allMovies.Sort((x, y) => y.MovieInfo.release_date.Value.CompareTo(x.MovieInfo.release_date.Value));
         }
 
         /// <summary>

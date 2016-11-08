@@ -31,7 +31,7 @@
           <Property Name="overview" Type="nvarchar(max)" />
           <Property Name="popularity" Type="nvarchar" MaxLength="50" />
           <Property Name="poster_path" Type="nvarchar" MaxLength="50" />
-          <Property Name="release_date" Type="nvarchar" MaxLength="50" />
+          <Property Name="release_date" Type="datetime" />
           <Property Name="revenue" Type="nvarchar" MaxLength="50" />
           <Property Name="status" Type="nvarchar" MaxLength="50" />
           <Property Name="tagline" Type="varchar" MaxLength="128" />
@@ -110,7 +110,7 @@
           <Property Name="overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="popularity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="poster_path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="release_date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="release_date" Type="DateTime" Precision="3" />
           <Property Name="revenue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="tagline" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />

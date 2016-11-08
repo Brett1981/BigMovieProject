@@ -18,7 +18,7 @@ using System.Web.Http.Description;
 
 namespace api.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
     public class VideoController : ApiController
     {
         //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
@@ -75,6 +75,7 @@ namespace api.Controllers
         [HttpGet, ActionName("Genre")]
         public IHttpActionResult Genre([FromUri]string value)
         {
+            if(value == "scifi") { value = "Science Fiction"; } //website has scifi short for science fiction
             var g = Database.GetByGenre(value);
             if(g.Count == 0)
             {

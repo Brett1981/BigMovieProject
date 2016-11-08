@@ -18,13 +18,14 @@ using api.Models;
 
 namespace api.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class UsersController : ApiController
+    [EnableCors(origins: "*", headers: "*", methods: "GET, POST")]
+    public class UserController : ApiController
     {
         
         private MDBSQLEntities db = new MDBSQLEntities();
-
+        
         // GET: api/Users
+        [HttpGet,ActionName("GetUsers")]
         public IQueryable<User> GetUsers()
         {
             return db.Users;
@@ -45,6 +46,7 @@ namespace api.Controllers
             }
             else { return NotFound(); }
         }
+
         //POST: api/Users/Create
         [HttpPost, ActionName("Create")]
         public async Task<IHttpActionResult> Create([FromBody] CustomUserModel data)
@@ -90,9 +92,9 @@ namespace api.Controllers
             var user = await db.Users.Where(x => x.username == value).FirstOrDefaultAsync();
             if(user == null)
             {
-                return Ok();
+                return Ok("OK");
             }
-            return Ok(); //popravi da vrne false
+            return Ok("NOK");
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]CustomUserModel data)
