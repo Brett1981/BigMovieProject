@@ -26,7 +26,8 @@ namespace api.Controllers
 
         public static string[] movieDir = { @"E:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
-        
+
+        //GET: api/videoplay/value
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
@@ -41,17 +42,21 @@ namespace api.Controllers
             }
             throw new HttpResponseException(HttpStatusCode.NotFound);
         }
+
+        //GET: api/video/allmovies
         [HttpGet, ActionName("AllMovies")]
         public IHttpActionResult AllMovies()
         {
             return Ok(Database.allMovies);
         }
-        //GET: api/video/getmovie?id=
+
+        //GET: api/video/getmovie/value
         [HttpGet,ActionName("GetMovie")]
         public async  Task<IHttpActionResult> GetMovie([FromUri]string value)
         {
             return Ok(await Database.GetMovie(value));
         }
+
         //POST: api/video/getmovie (object)
         [HttpPost,ActionName("GetMovie")]
         public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
@@ -66,12 +71,14 @@ namespace api.Controllers
             return Ok(movie);
         }
 
+        //GET: api/video/subs/value
         [HttpGet,ActionName("Subs")]
         public async Task<IHttpActionResult> Subs([FromUri]string value)
         {
             return Ok();
         }
 
+        //GET: api/video/genre/value
         [HttpGet, ActionName("Genre")]
         public IHttpActionResult Genre([FromUri]string value)
         {
