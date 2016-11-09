@@ -21,6 +21,7 @@ using Microsoft.Owin;
 using System.Net.Http;
 using System.Net;
 using System.Web.Http;
+using System.Drawing;
 
 namespace api.Resources
 {
@@ -242,7 +243,7 @@ namespace api.Resources
                     if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++; edited = true; }
                     if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
                     Debug.WriteLine("Movie list --> waiting ...");
-                    if (edited || createListCount == 1){ OrganizeListByDate(); }
+                    if (edited){ OrganizeListByDate(); }
                     await Task.Delay(new TimeSpan(0, 1, 0));
                     edited = false;
                 }
@@ -375,38 +376,7 @@ namespace api.Resources
                     }
                 }
                 int retValue = 0;
-                if (temp.Count != 0)
-                {
-                    try
-                    {
-                        var dbSaveInt = await db.SaveChangesAsync();
-                        /*var writer = new XmlSerializer(typeof(List<MovieData>));
-                        if (File.Exists(path))
-                        {
-                            FileStream file = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
-                            writer.Serialize(file, temp);
-                            file.Close();
-                        }
-                        else
-                        {
-                            var file = File.Create(path);
-                            writer.Serialize(file, temp);
-                            file.Close();
-                        }*/
-                        //retValue = dbSaveInt;
-                    }
-                    catch (DbEntityValidationException dbEx)
-                    {
-                        foreach (var validationErrors in dbEx.EntityValidationErrors)
-                        {
-                            foreach (var validationError in validationErrors.ValidationErrors)
-                            {
-                                Debug.WriteLine("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-                            }
-                        }
-                        retValue = -99999;
-                    }
-                }
+                
                 return retValue;
                 
             }
@@ -493,19 +463,61 @@ namespace api.Resources
                 try
                 {
                     HttpClient client = new HttpClient();
-                    uData.profile_image = await client.GetByteArrayAsync(user.image_url);
+                    var img = Image.FromStream(await client.GetStreamAsync(user.image_url));
+
+                    var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"images\users\", uData.unique_id);
+
+                    if(!Directory.Exists(path)) { Directory.CreateDirectory(path); }
+
+                    var i = Path.Combine(path, "profile.jpg");
+                    if (!File.Exists(i)){
+                        img.Save(i);
+                    }
+                    else{
+                        
+                        File.Delete(i);
+                        img.Save(i);
+                    }
+                    img.Dispose();
+                    uData.profile_image = uData.unique_id+"/profile.jpg";
                     db.Entry(uData).State = EntityState.Modified;
                     await db.SaveChangesAsync();
                     return "OK";
                 }
                 catch (HttpException ex)
                 {
-                    Debug.WriteLine("HttpException --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
+                    Debug.WriteLine("HttpException at ChangeUserPicture --> {0}", ex.Message);
                     return "Exception";
                 }
             }
             return "NotAuthorized";
         }
+
+        public static byte[] GetUserImage(string path)
+        {
+            var imgdir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"images\users\", path);
+            if (File.Exists(imgdir))
+            {
+                try
+                {
+                    ImageConverter converter = new ImageConverter();
+                    var i = Image.FromFile(imgdir);
+                    var b =  (byte[])converter.ConvertTo(i, typeof(byte[]));
+                    i.Dispose();
+                    return b;
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("Exception at GetUserImage --> " + ex.Message);
+                    return null;
+                }
+                
+            }
+            else
+            {
+                return null;
+            }
+        } 
         #endregion
         
     }

@@ -3,6 +3,8 @@ session_start();
 if(isset($_GET['logout']) && $_GET['logout'] !== null)
 {
     echo $_GET['logout'];
+    $_SESSION['user_data'] = null;
+    $_SESSION['user_img'] = null;
     session_destroy();
     header('Location: login/');
 }

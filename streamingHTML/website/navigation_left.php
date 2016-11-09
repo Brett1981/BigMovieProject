@@ -3,10 +3,32 @@ $server_path = 'http://'.$_SERVER['HTTP_HOST'];
 $icons = $server_path.'/streamingHTML/assets/icons/';
 
 $home = $server_path.'/streamingHTML/movies/';
+$img;
+$user;
+$guid_nav;
+if($_SESSION['guid'] == null){
+    session_destroy();
+    header('location: ../login/');
+    
+}
+if(isset($_SESSION['user_img']) && $_SESSION['user_img'] != null && $_SESSION['user_img'] != $_SESSION['user_img_backup']){
+    $img = $_SESSION['user_img'];
+    $_SESSION['user_img_backup'] = $_SESSION['user_img'];
+}
 
-$user = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
-$guid_nav = $user["unique_id"];
-$img = $user["profile_image"];
+if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
+    $img = $_SESSION['user_img'];
+    $user = $_SESSION['user_data'];
+    $guid_nav = $user["unique_id"];
+}else{
+    $user = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
+    $guid_nav = $user["unique_id"];
+    $img = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getprofilepicture/'.$_SESSION['guid']),true);
+    $_SESSION['user_img'] = $img;
+    $_SESSION['user_data'] = $user;
+    $_SESSION['user_img_backup'] = $img;
+}
+
 $profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav;
 
 
@@ -20,7 +42,7 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
         <nav>
           <div class='user'>
             <a href='$profile'>";
-                if($img != null){
+                if(strlen($img) > 100){
                     $navigation .= "<img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>";
                 }
                 else{

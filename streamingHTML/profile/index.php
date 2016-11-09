@@ -31,7 +31,6 @@ if(isset($_GET['user']) && $_GET['user'] != null){
             <?php 
                 if(isset($data) && $data != null){
                     $display_name = $data["user_display_name"];
-                    $img = $data["profile_image"];
                     $profile = "<div class='user_profile'>
                             <div class='profile_picture'>";
                     if($img != null){
