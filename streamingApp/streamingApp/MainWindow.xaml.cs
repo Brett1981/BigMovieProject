@@ -16,17 +16,21 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using streamingApp.Models;
 using Unosquare.FFmpegMediaElement;
+using MahApps.Metro.Controls;
 
 namespace streamingApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
+        public MetroNavigationWindow mainNav;
+        public static MovieData Movie;
         public MainWindow()
         {
             InitializeComponent();
+            if(Movie.movie_guid != null) { SourceText.Text = Movie.movie_guid; }
             this.MediaEl.MouseDown += MediaEl_MouseDown;
             this.MediaEl.MouseWheel += MediaEl_MouseWheel;
             this.MediaEl.MediaEnded += (s, e) => { System.Diagnostics.Debug.WriteLine("MediaEnded Event Fired"); };
@@ -47,6 +51,17 @@ namespace streamingApp
 
             this.Closing += MainWindow_Closing;
         }
+
+        private void MainNav_Navigated(object sender, NavigationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MainNav_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.MediaEl.Close();
