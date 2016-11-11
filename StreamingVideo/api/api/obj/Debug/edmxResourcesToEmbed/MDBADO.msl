@@ -57,5 +57,34 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="History_API">
+      <EntityTypeMapping TypeName="MDBSQLModel.History_API">
+        <MappingFragment StoreEntitySet="History_API">
+          <ScalarProperty Name="api_type" ColumnName="api_type" />
+          <ScalarProperty Name="api_action" ColumnName="api_action" />
+          <ScalarProperty Name="api_datetime" ColumnName="api_datetime" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="History_User">
+      <EntityTypeMapping TypeName="MDBSQLModel.History_User">
+        <MappingFragment StoreEntitySet="History_User">
+          <ScalarProperty Name="user_datetime" ColumnName="user_datetime" />
+          <ScalarProperty Name="user_movie" ColumnName="user_movie" />
+          <ScalarProperty Name="user_type" ColumnName="user_type" />
+          <ScalarProperty Name="user_action" ColumnName="user_action" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tables">
+      <EntityTypeMapping TypeName="MDBSQLModel.Table">
+        <MappingFragment StoreEntitySet="Table">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

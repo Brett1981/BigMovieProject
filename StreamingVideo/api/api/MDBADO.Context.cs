@@ -28,5 +28,8 @@ namespace api
         public virtual DbSet<MovieData> MovieDatas { get; set; }
         public virtual DbSet<MovieInfo> MovieInfoes { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<History_API> History_API { get; set; }
+        public virtual DbSet<History_User> History_User { get; set; }
+        public virtual DbSet<Table> Tables { get; set; }
     }
 }

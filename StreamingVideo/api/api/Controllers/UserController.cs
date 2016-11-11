@@ -40,9 +40,27 @@ namespace api.Controllers
             {
                 if(user.username == data.username && user.password == data.password) {
                     user.last_logon = DateTime.Now; db.SaveChanges();
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "Login authorization : " + user.unique_id,
+                        user_datetime = DateTime.Now,
+                        user_id = user.unique_id,
+                        user_movie = "",
+                        user_type = "Login"
+                    });
                     return Ok(new DatabaseUserModels() { user_id = user.unique_id });
                 }
-                else { return Unauthorized(); }
+                else {
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "Login authorization : " + user.unique_id,
+                        user_datetime = DateTime.Now,
+                        user_id = user.unique_id,
+                        user_movie = "",
+                        user_type = "NotAuthorized"
+                    });
+                    return Unauthorized();
+                }
             }
             else { return NotFound(); }
         }
@@ -68,9 +86,25 @@ namespace api.Controllers
                     user.profile_created = DateTime.Now;
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "User create : " + user.unique_id,
+                        user_datetime = DateTime.Now,
+                        user_id = user.unique_id,
+                        user_movie = "",
+                        user_type = "UserCreation"
+                    });
                     return Ok(db.Users.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
                 }
             }
+            await History.Set("user", new History_User()
+            {
+                user_action = "User not create : " + user.unique_id,
+                user_datetime = DateTime.Now,
+                user_id = user.unique_id,
+                user_movie = "",
+                user_type = "NoUserCreation"
+            });
             return Unauthorized();
         }
 
@@ -81,8 +115,24 @@ namespace api.Controllers
             User user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if (user == null)
             {
+                await History.Set("user", new History_User()
+                {
+                    user_action = "User not found search : " + value,
+                    user_datetime = DateTime.Now,
+                    user_id = user.unique_id,
+                    user_movie = "",
+                    user_type = "UserNotFound"
+                });
                 return NotFound();
             }
+            await History.Set("user", new History_User()
+            {
+                user_action = "User found search : " + value,
+                user_datetime = DateTime.Now,
+                user_id = user.unique_id,
+                user_movie = "",
+                user_type = "UserFound"
+            });
             return Ok(user);
         }
 
@@ -105,16 +155,65 @@ namespace api.Controllers
                 if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.ChangeUserPicture(data); }
                 switch (status){
 
-                    case "OK": { return Ok(); } 
-                    case "NotAuthorized": { return Unauthorized(); } 
-                    case "Exception": { return BadRequest(); }
-                    case "BadRequest": { return BadRequest(); }
+                    case "OK": {
+                            await History.Set("user", new History_User()
+                            {
+                                user_action = "User change profile picture : " + data.unique_id,
+                                user_datetime = DateTime.Now,
+                                user_id = data.unique_id,
+                                user_movie = "",
+                                user_type = "Ok-UserChangProfilePicture"
+                            });
+                            return Ok();
+                        } 
+                    case "NotAuthorized": {
+                            await History.Set("user", new History_User()
+                            {
+                                user_action = "User change profile picture : " + data.unique_id,
+                                user_datetime = DateTime.Now,
+                                user_id = data.unique_id,
+                                user_movie = "",
+                                user_type = "NotAuth-UserChangProfilePicture"
+                            });
+                            return Unauthorized();
+                        } 
+                    case "Exception": {
+                            await History.Set("user", new History_User()
+                            {
+                                user_action = "User change profile picture : " + data.unique_id,
+                                user_datetime = DateTime.Now,
+                                user_id = data.unique_id,
+                                user_movie = "",
+                                user_type = "Exception-UserChangProfilePicture"
+                            });
+                            return BadRequest();
+                        }
+                    case "BadRequest": {
+                            await History.Set("user", new History_User()
+                            {
+                                user_action = "User change profile picture : " + data.unique_id,
+                                user_datetime = DateTime.Now,
+                                user_id = data.unique_id,
+                                user_movie = "",
+                                user_type = "BadReq-UserChangProfilePicture"
+                            });
+                            return BadRequest();
+                        }
                 }
+                await History.Set("user", new History_User()
+                {
+                    user_action = "User change profile picture : " + data.unique_id,
+                    user_datetime = DateTime.Now,
+                    user_id = data.unique_id,
+                    user_movie = "",
+                    user_type = "BadReq-UserChangProfilePicture"
+                });
                 return BadRequest();
             }
             catch(Exception ex)
             {
-                Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0}",ex.Message);
+                await History.Set("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception"});
+                Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0}", ex.Message);
                 return BadRequest();
             }
             
@@ -126,58 +225,17 @@ namespace api.Controllers
             var user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if(user != null)
             {
+                await History.Set("user", new History_User()
+                {
+                    user_action = "User get profile picture : " + value,
+                    user_datetime = DateTime.Now,
+                    user_id = user.unique_id,
+                    user_movie = "",
+                    user_type = "RetrieveUserProfilePicture"
+                });
                 return Ok(Resources.Database.GetUserImage(user.profile_image));
             }
             return NotFound();
-        }
-        // PUT: api/Users/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutUser(int id, User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Users
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> PostUser(User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
         }
 
         // DELETE: api/Users/5

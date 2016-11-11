@@ -5,6 +5,26 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="History_API">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="api_datetime" Type="datetime" />
+          <Property Name="api_action" Type="nvarchar(max)" />
+          <Property Name="api_type" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="History_User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="user_action" Type="nvarchar(max)" />
+          <Property Name="user_type" Type="nvarchar" MaxLength="50" />
+          <Property Name="user_movie" Type="nvarchar" MaxLength="50" />
+          <Property Name="user_datetime" Type="datetime" />
+        </EntityType>
         <EntityType Name="MovieData">
           <Key>
             <PropertyRef Name="Id" />
@@ -43,6 +63,12 @@
           <Property Name="production_companies" Type="nvarchar(max)" />
           <Property Name="spoken_languages" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -71,8 +97,11 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MDBSQLModelStoreContainer">
+          <EntitySet Name="History_API" EntityType="Self.History_API" Schema="dbo" Table="History.API" store:Type="Tables" />
+          <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
           <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Table" EntityType="Self.Table" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
             <End Role="MovieData" EntitySet="MovieData" />
@@ -142,6 +171,9 @@
             <End Role="MovieInfo" EntitySet="MovieInfoes" />
           </AssociationSet>
           <EntitySet Name="Users" EntityType="MDBSQLModel.User" />
+          <EntitySet Name="History_API" EntityType="MDBSQLModel.History_API" />
+          <EntitySet Name="History_User" EntityType="MDBSQLModel.History_User" />
+          <EntitySet Name="Tables" EntityType="MDBSQLModel.Table" />
         </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -157,6 +189,32 @@
           <Property Name="last_logon" Type="DateTime" Precision="3" />
           <Property Name="user_birthday" Type="DateTime" Precision="0" />
           <Property Name="user_email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="History_API">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="api_datetime" Type="DateTime" Precision="3" />
+          <Property Name="api_action" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="api_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="History_User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="user_action" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="user_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="user_movie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="user_datetime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Table">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -216,6 +274,35 @@
                 <ScalarProperty Name="profile_image" ColumnName="profile_image" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="History_API">
+            <EntityTypeMapping TypeName="MDBSQLModel.History_API">
+              <MappingFragment StoreEntitySet="History_API">
+                <ScalarProperty Name="api_type" ColumnName="api_type" />
+                <ScalarProperty Name="api_action" ColumnName="api_action" />
+                <ScalarProperty Name="api_datetime" ColumnName="api_datetime" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="History_User">
+            <EntityTypeMapping TypeName="MDBSQLModel.History_User">
+              <MappingFragment StoreEntitySet="History_User">
+                <ScalarProperty Name="user_datetime" ColumnName="user_datetime" />
+                <ScalarProperty Name="user_movie" ColumnName="user_movie" />
+                <ScalarProperty Name="user_type" ColumnName="user_type" />
+                <ScalarProperty Name="user_action" ColumnName="user_action" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tables">
+            <EntityTypeMapping TypeName="MDBSQLModel.Table">
+              <MappingFragment StoreEntitySet="Table">
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

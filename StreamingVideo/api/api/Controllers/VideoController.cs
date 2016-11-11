@@ -31,12 +31,19 @@ namespace api.Controllers
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
+            
             Debug.WriteLine("User requesting to watch movie: " + value);
             //Getting movie from DB
             var movie = await Database.Get(value);
             if(movie != null)
             {
                 Debug.WriteLine("Movie "+value+" is being served.");
+                
+                await History.Set("user", new History_User() { user_action = "User requesting to watch movie: " + value,
+                    user_datetime = DateTime.Now,
+                    user_id = "",
+                    user_movie = movie.movie_guid, user_type = "Request"
+                });
                 //streaming content to client
                 return Streaming.streamingContent(movie, base.Request.Headers.Range);
             }
@@ -68,6 +75,14 @@ namespace api.Controllers
                 return NotFound();
             }
             Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.movie_name);
+            await History.Set("user", new History_User()
+            {
+                user_action = "Authorization to watch movie: " + movie.movie_name,
+                user_datetime = DateTime.Now,
+                user_id = data.user_id,
+                user_movie = movie.movie_guid,
+                user_type = "Authorization"
+            });
             return Ok(movie);
         }
 
