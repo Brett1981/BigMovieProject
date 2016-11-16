@@ -242,7 +242,6 @@ nav .movie_information .watched div{
     -webkit-transition: margin-left 0.5s;
     transition: margin-left 0.5s;
     height: auto;
-    padding-bottom: 100px;
 }
 
 .sidenav-active .main { margin-left: 225px; }
@@ -335,7 +334,7 @@ nav .search ul li a{
     position: relative;
     display: inline-block;
     text-overflow: ellipsis;
-	font-size: 24px;
+	font-size: 20px;
 	font-style: normal;
 	font-variant: normal;
 	font-weight: 500;
@@ -345,27 +344,28 @@ nav .search ul li a{
     top:-20px;
 }
 .movie .title p:nth-child(2){
+    font-style: italic;
+    color:rgb(214, 214, 214);
     position: relative;
-    top:-50px;
+    display: block;
+    width: 100%;
+    top:-58px; 
+}
+.movie .title p:nth-child(3){
+   position: relative;
+    top:-69px;
     line-height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     height: 36px;
     overflow: hidden;
     line-height: 18px; 
-    
-}
-.movie .title p:nth-child(3){
-    position: relative;
-    display: block;
-     width: 100%;
-    top:-58px;
 }
 .movie .title p:last-child{
-    position: relative;
+    position: absolute;
     display: block;
     width: 100%;
-    top:-58px;
+    top:190px;
 
 }
 .movie .movieinfo{

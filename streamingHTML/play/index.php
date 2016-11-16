@@ -9,8 +9,6 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
     if(isset($_GET['id']) && $_GET['id'] != null){
         $mGuid = $_GET['id'];
         try {
-            
-        /*$api = file_get_contents('http://31.15.224.24:53851/api/video/getmovie?id='.$mGuid);*/
             $api = get_movie($_SESSION['guid'], $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";

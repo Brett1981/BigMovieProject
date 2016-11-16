@@ -61,10 +61,8 @@ else{
                         <div class='movie_data'>
                             <div class='id' style='display:none'>".$data[$i]["movie_guid"]."</div>
                             <div class='title'>
-                                <p>".$data[$i]["MovieInfo"]["title"]."</p>
+                                <p>".$data[$i]["MovieInfo"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data[$i]["MovieInfo"]["release_date"]), 'Y').")</p>
                                 <p>".$data[$i]["MovieInfo"]["tagline"]."</p>
-                                <p>Release date: ".date_format(new DateTime($data[$i]["MovieInfo"]["release_date"]), 'd-m-Y')."</p>
-                            
                             <p>";
                             $genres = array();
                             if(strpos($data[$i]["MovieInfo"]["genres"], '|') !== false){
