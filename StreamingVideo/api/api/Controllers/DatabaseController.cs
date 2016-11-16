@@ -17,9 +17,25 @@ namespace api.Controllers
         public IHttpActionResult Get([FromUri] string value)
         {
             if(value.ToLower() == "api"){
-                return Ok(History.GetAPI(value)); } 
+                return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ObjectContent<List<History_API>>(History.GetAPI(value),
+                    new System.Net.Http.Formatting.XmlMediaTypeFormatter
+                    {
+                        UseXmlSerializer = true
+                    })
+                });
+            } 
             else if(value.ToLower() == "user") {
-                return Ok(History.GetUsers(value)); }
+                return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ObjectContent<List<History_User>>(History.GetUsers(value),
+                    new System.Net.Http.Formatting.XmlMediaTypeFormatter
+                    {
+                        UseXmlSerializer = true
+                    })
+                });
+            }
             else { return NotFound(); }
         }
 

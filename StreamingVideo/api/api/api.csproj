@@ -293,9 +293,6 @@
     <Compile Include="Resources\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Table.cs">
-      <DependentUpon>MDBADO.tt</DependentUpon>
-    </Compile>
     <Compile Include="User.cs">
       <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>

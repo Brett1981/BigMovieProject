@@ -38,7 +38,6 @@ namespace api.Controllers
             if(movie != null)
             {
                 Debug.WriteLine("Movie "+value+" is being served.");
-                
                 await History.Set("user", new History_User() { user_action = "User requesting to watch movie: " + value,
                     user_datetime = DateTime.Now,
                     user_id = "",
@@ -50,6 +49,36 @@ namespace api.Controllers
             throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
+        //POST: api/videoplay/value
+        [HttpPost, ActionName("PlayMovie")]
+        public async Task<HttpResponseMessage> PlayMovie([FromBody]DatabaseUserModels data)
+        {
+
+            Debug.WriteLine("User {0} requesting to watch movie: {1}",data.user_id,data.movie_id);
+            //check if user exists
+            var user = await Database.FindUser(data.user_id);
+            if(user != null)
+            {
+                //Getting movie from DB
+                var movie = await Database.Get(data.movie_id);
+                if (movie != null)
+                {
+                    Debug.WriteLine("Movie " + movie.movie_name + " is being served.");
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "User "+data.user_id+" requesting to watch movie: " + data.movie_id,
+                        user_datetime = DateTime.Now,
+                        user_id = data.user_id,
+                        user_movie = movie.movie_guid,
+                        user_type = "Request"
+                    });
+                    //streaming content to client
+                    return Streaming.streamingContent(movie, base.Request.Headers.Range);
+                }
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            throw new HttpResponseException(HttpStatusCode.Unauthorized);
+        }
         //GET: api/video/allmovies
         [HttpGet, ActionName("AllMovies")]
         public IHttpActionResult AllMovies()

@@ -19,23 +19,25 @@ namespace api.Resources
             try
             {
                 DateTime date;
-                try
+                var movie = data.Split('|');
+                date = new DateTime(int.Parse(movie[1]), 1, 1);
+                /*try
                 {
                     date = new DateTime(int.Parse("0001"), 1, 1);
                 }
                 catch(Exception ex)
                 {
-                    Debug.WriteLine("Exception getMoviInfo --> " + ex.Message);
+                    Debug.WriteLine("Exception getMovieInfo --> " + ex.Message);
                 }
                 finally
                 {
                     date = new DateTime();
-                }
+                }*/
                  
-                string Searcheditem = "";
+                //string Searcheditem = "";
                 HttpClient client = new HttpClient();
 
-                if (data.Contains(".")) { Searcheditem = data.Replace('.', ' '); }
+                /*if (data.Contains(".")) { Searcheditem = data.Replace('.', ' '); }
                 else { Searcheditem = data; }
 
                 string[] dates = new string[] {
@@ -47,9 +49,9 @@ namespace api.Resources
                     "(1990)","(1991)","(1992)","(1993)","(1994)","(1995)","(1996)","(1997)","(1998)","(1999)",
                     "1980","1981","1982","1983","1984","1985","1986","1987","1988","1989",
                     "(1980)","(1981)","(1982)","(1983)","(1984)","(1985)","(1986)","(1987)","(1988)","(1989)",
-                };
+                };*/
 
-                string[] specialStrings = new string[] { "SLOSubs", "COMPLETE" };
+                /*string[] specialStrings = new string[] { "SLOSubs", "COMPLETE" };
                 foreach (var item in dates)
                 {
                     if (Searcheditem.Contains(item))
@@ -74,8 +76,8 @@ namespace api.Resources
                         else { date = new DateTime(int.Parse(datum), 1, 1); }
                         break;
                     }
-                }
-                foreach (var item in specialStrings)
+                }*/
+                /*foreach (var item in specialStrings)
                 {
                     if (Searcheditem.Contains(item))
                     {
@@ -83,7 +85,7 @@ namespace api.Resources
                         var editedInfo = Searcheditem.Remove(position);
                         Searcheditem = editedInfo.TrimEnd();
                     }
-                }
+                }*/
                 //Building api url with parameters - apikey + item to search for
                 Uri searchMovieAPI;
                 var apikey = ConfigurationManager.AppSettings["APIkey"];
@@ -92,7 +94,7 @@ namespace api.Resources
 
                 if (apikey != null && apikey.Length != 0)
                 {
-                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + Searcheditem);
+                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + movie[0]);
                     try
                     {
                         //GlobalVar.GlobalApiCall.Counter++;
@@ -115,7 +117,7 @@ namespace api.Resources
                                     DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
                                     if (date.Year != 1 && date != null)
                                     {
-                                        if (jsonDate >= date || jsonData.results[i].title == Searcheditem)
+                                        if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(movie[0]))
                                         {
                                             apiResult = new results()
                                             {

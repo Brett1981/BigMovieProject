@@ -61,7 +61,6 @@
     <EntitySet Name="Users" EntityType="MDBSQLModel.User" />
     <EntitySet Name="History_API" EntityType="MDBSQLModel.History_API" />
     <EntitySet Name="History_User" EntityType="MDBSQLModel.History_User" />
-    <EntitySet Name="Tables" EntityType="MDBSQLModel.Table" />
   </EntityContainer>
   <EntityType Name="User">
     <Key>
@@ -97,11 +96,5 @@
     <Property Name="user_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="user_movie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="user_datetime" Type="DateTime" Precision="3" />
-  </EntityType>
-  <EntityType Name="Table">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>
