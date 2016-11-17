@@ -3,6 +3,7 @@ session_start();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
 $api;
 $guid;
+$session;
 $watching = array();
 
 if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
@@ -10,10 +11,12 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
         $mGuid = $_GET['id'];
         try {
             $api = get_movie($_SESSION['guid'], $mGuid);
+            $api_session = get_session($_SESSION['guid'], $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
         $data = json_decode($api,true);
+        $session = json_decode($api_session,true);
         
         if(isset($data) && $data != null){
             $watching['movie_name'] = $data['MovieInfo']['title'];
@@ -30,7 +33,35 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
 else{
     header('location: ../login');
 }
-
+function get_session($user_id, $movie_id){
+    $api = "http://31.15.224.24:53851/api/video/getsession";
+    if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
+        $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
+        
+        $data = json_encode($data);
+        //cURL call to api
+        $ch = curl_init( $api);
+        # Setup request to send json via POST
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        # Return response instead of printing.
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        # Send request.
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if($result == null){
+            header('location: ../movies/');
+            $_SESSION['play_error'] = "Error retrieving data";
+            exit();
+        }
+        
+        return $result;
+    }
+    else{
+        header('location: ../movies/');
+        exit();
+    }
+}
 function get_movie($user_id, $movie_id, $username = null, $password = null)
 {
     $api = "http://31.15.224.24:53851/api/video/getmovie";
@@ -107,9 +138,9 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
                         <?php if(isset($data)){
                             $guid = $data["movie_guid"];
                             if($data["movie_ext"] == "mp4"){ 
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$guid."' type='video/mp4'/>"; 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
                             }elseif($data["movie_ext"] == "webm"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$guid."'  type='video/mp4'>"; 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/mp4'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
                         } ?>
