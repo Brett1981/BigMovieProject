@@ -447,11 +447,11 @@ namespace api.Resources
         /// </summary>
         /// <param name="movieName"></param>
         /// <returns></returns>
-        public static Guid CreateGuid(string movieName)
+        public static Guid CreateGuid(string value)
         {
             using (MD5 md5 = MD5.Create())
             {
-                return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(movieName)));
+                return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(value)));
             }
         }
 
@@ -583,6 +583,47 @@ namespace api.Resources
             return u;
         }
         #endregion
-        
+
+        #region SessionPlay Methods
+
+        public static async Task<string> CreateSession(DatabaseUserModels data)
+        {
+            var s0 = await db.SessionPlays.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
+            if(s0 != null)
+            {
+                if (s0.movie_id != "" && s0.session_id != "" && s0.session_date < DateTime.Now && s0.user_id != "")
+                {
+                    db.SessionPlays.Remove(s0);
+                    await db.SaveChangesAsync();
+                }
+            }
+            
+            Guid g1 = new Guid(data.user_id);
+            Guid g2 = new Guid(data.movie_id);
+            var result = g1.GetHashCode() ^ g2.GetHashCode() + DateTime.Now.GetHashCode();
+            
+            SessionPlay s = new SessionPlay()
+            {
+                session_date = DateTime.Now,
+                session_id = CreateGuid(result.ToString()).ToString(),
+                movie_id = data.movie_id,
+                user_id = data.user_id
+            };
+            db.SessionPlays.Add(s);
+            await db.SaveChangesAsync();
+            return s.session_id;
+        }
+
+        public static async Task<SessionPlay> GetSession(DatabaseUserModels data)
+        {
+           return await db.SessionPlays.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
+        }
+
+        public static async Task<SessionPlay> GetBySession(string session)
+        {
+            return await db.SessionPlays.Where(x => x.session_id == session).FirstOrDefaultAsync();
+        }
+        #endregion
+
     }
 }

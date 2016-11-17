@@ -63,6 +63,16 @@
           <Property Name="production_companies" Type="nvarchar(max)" />
           <Property Name="spoken_languages" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="SessionPlay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="movie_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="session_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="session_date" Type="datetime" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="Id" />
@@ -95,6 +105,7 @@
           <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
           <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SessionPlay" EntityType="Self.SessionPlay" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
             <End Role="MovieData" EntitySet="MovieData" />
@@ -166,6 +177,7 @@
           <EntitySet Name="Users" EntityType="MDBSQLModel.User" />
           <EntitySet Name="History_API" EntityType="MDBSQLModel.History_API" />
           <EntitySet Name="History_User" EntityType="MDBSQLModel.History_User" />
+          <EntitySet Name="SessionPlays" EntityType="MDBSQLModel.SessionPlay" />
         </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -201,6 +213,16 @@
           <Property Name="user_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="user_movie" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="user_datetime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="SessionPlay">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="movie_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="session_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="session_date" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -281,6 +303,17 @@
                 <ScalarProperty Name="user_movie" ColumnName="user_movie" />
                 <ScalarProperty Name="user_type" ColumnName="user_type" />
                 <ScalarProperty Name="user_action" ColumnName="user_action" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SessionPlays">
+            <EntityTypeMapping TypeName="MDBSQLModel.SessionPlay">
+              <MappingFragment StoreEntitySet="SessionPlay">
+                <ScalarProperty Name="session_date" ColumnName="session_date" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="movie_id" ColumnName="movie_id" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

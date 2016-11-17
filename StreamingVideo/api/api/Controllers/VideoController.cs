@@ -31,44 +31,21 @@ namespace api.Controllers
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
-            
-            Debug.WriteLine("User requesting to watch movie: " + value);
-            //Getting movie from DB
-            var movie = await Database.Get(value);
-            if(movie != null)
+            //get user id and movie id from session in database
+            var s = await Database.GetBySession(value);
+            if(s != null && s.movie_id != null)
             {
-                Debug.WriteLine("Movie "+value+" is being served.");
-                await History.Set("user", new History_User() { user_action = "User requesting to watch movie: " + value,
-                    user_datetime = DateTime.Now,
-                    user_id = "",
-                    user_movie = movie.movie_guid, user_type = "Request"
-                });
-                //streaming content to client
-                return Streaming.streamingContent(movie, base.Request.Headers.Range);
-            }
-            throw new HttpResponseException(HttpStatusCode.NotFound);
-        }
-
-        //POST: api/videoplay/value
-        [HttpPost, ActionName("PlayMovie")]
-        public async Task<HttpResponseMessage> PlayMovie([FromBody]DatabaseUserModels data)
-        {
-
-            Debug.WriteLine("User {0} requesting to watch movie: {1}",data.user_id,data.movie_id);
-            //check if user exists
-            var user = await Database.FindUser(data.user_id);
-            if(user != null)
-            {
+                Debug.WriteLine("User requesting to watch movie: " + value);
                 //Getting movie from DB
-                var movie = await Database.Get(data.movie_id);
+                var movie = await Database.Get(s.movie_id);
                 if (movie != null)
                 {
-                    Debug.WriteLine("Movie " + movie.movie_name + " is being served.");
+                    Debug.WriteLine("Movie " + value + " is being served.");
                     await History.Set("user", new History_User()
                     {
-                        user_action = "User "+data.user_id+" requesting to watch movie: " + data.movie_id,
+                        user_action = "User requesting to watch movie: " + value,
                         user_datetime = DateTime.Now,
-                        user_id = data.user_id,
+                        user_id = "",
                         user_movie = movie.movie_guid,
                         user_type = "Request"
                     });
@@ -77,8 +54,10 @@ namespace api.Controllers
                 }
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            throw new HttpResponseException(HttpStatusCode.Forbidden);
+            
         }
+
         //GET: api/video/allmovies
         [HttpGet, ActionName("AllMovies")]
         public IHttpActionResult AllMovies()
@@ -112,6 +91,7 @@ namespace api.Controllers
                 user_movie = movie.movie_guid,
                 user_type = "Authorization"
             });
+            await Database.CreateSession(data);
             return Ok(movie);
         }
 
@@ -133,6 +113,18 @@ namespace api.Controllers
                 return NotFound();
             }
             return Ok(g);
+        }
+
+        //POST: api/video/session
+        [HttpPost,ActionName("GetSession")]
+        public async Task<IHttpActionResult> GetSession([FromBody] DatabaseUserModels data)
+        {
+            var s = await Database.GetSession(data);
+            if(s.session_id == "" || s == null)
+            {
+                return NotFound();
+            }
+            return Ok(s.session_id);
         }
     }
 }

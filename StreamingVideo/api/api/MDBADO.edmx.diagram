@@ -11,6 +11,7 @@
         <EntityTypeShape EntityType="MDBSQLModel.User" Width="1.5" PointX="5.375" PointY="0.5" />
         <EntityTypeShape EntityType="MDBSQLModel.History_API" Width="1.5" PointX="7.75" PointY="2.75" />
         <EntityTypeShape EntityType="MDBSQLModel.History_User" Width="1.5" PointX="7.75" PointY="0.5" />
+        <EntityTypeShape EntityType="MDBSQLModel.SessionPlay" Width="1.5" PointX="9.875" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

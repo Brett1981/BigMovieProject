@@ -14,14 +14,16 @@ namespace api.Controllers
     {
         private static HttpClient client = new HttpClient();
         // GET: Movies
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/allmovies")));
+            return View(Database.allMovies);
         }
+
+        
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         public async Task<ActionResult> Edit(string guid)
         {
-            return View(JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("http://192.168.1.10:53851/api/video/getmovie?id="+guid)));
+            return View(await Database.Get(guid));
         }
         // POST: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         [HttpPost]

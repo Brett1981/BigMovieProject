@@ -58,6 +58,16 @@
     <Property Name="production_companies" Type="nvarchar(max)" />
     <Property Name="spoken_languages" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="SessionPlay">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="nvarchar" MaxLength="50" />
+    <Property Name="movie_id" Type="nvarchar" MaxLength="50" />
+    <Property Name="session_id" Type="nvarchar" MaxLength="50" />
+    <Property Name="session_date" Type="datetime" />
+  </EntityType>
   <EntityType Name="User">
     <Key>
       <PropertyRef Name="Id" />
@@ -90,6 +100,7 @@
     <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
     <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SessionPlay" EntityType="Self.SessionPlay" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
       <End Role="MovieData" EntitySet="MovieData" />

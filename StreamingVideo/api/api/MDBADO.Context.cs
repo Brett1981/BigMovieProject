@@ -30,5 +30,6 @@ namespace api
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<History_API> History_API { get; set; }
         public virtual DbSet<History_User> History_User { get; set; }
+        public virtual DbSet<SessionPlay> SessionPlays { get; set; }
     }
 }

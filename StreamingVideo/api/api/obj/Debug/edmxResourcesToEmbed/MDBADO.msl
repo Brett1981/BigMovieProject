@@ -79,5 +79,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SessionPlays">
+      <EntityTypeMapping TypeName="MDBSQLModel.SessionPlay">
+        <MappingFragment StoreEntitySet="SessionPlay">
+          <ScalarProperty Name="session_date" ColumnName="session_date" />
+          <ScalarProperty Name="session_id" ColumnName="session_id" />
+          <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
