@@ -12,6 +12,15 @@ if(isset($_GET['genre']) && $_GET['genre'] != ""){
     $g = $_GET['genre'];
     $genreMovies = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/genre/'.$g),true);
 }
+$top10;
+if(isset($_GET['top10'])){
+    $top10 = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/top10'),true);
+}
+$last10;
+if(isset($_GET['last10'])){
+    $last10 = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/last10'),true);
+}
+    
 /*if($_SESSION['guid'] == null && (isset($_POST['user_id']) && $_POST['user_id'] != null)){
     $_SESSION['guid'] = $_POST['user_id'];
 }
@@ -46,6 +55,12 @@ else{
                 $data;
                 if(isset($genreMovies) && $genreMovies != null){
                     $data = $genreMovies;
+                }
+                else if(isset($top10) && $top10 != null){
+                    $data = $top10;
+                }
+                 else if(isset($last10) && $last10 != null){
+                    $data = $last10;
                 }
                 else{
                     $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/allmovies'),true);
