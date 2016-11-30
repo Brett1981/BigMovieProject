@@ -21,9 +21,6 @@ namespace api.Controllers
     [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
     public class VideoController : ApiController
     {
-        //public const string movieDir = @"E:\Git\BigMovieProject\StreamingVideo\movies\";
-        //public const string movieDir = @"E:\Torrent2\Movies";
-
         public static string[] movieDir = { @"E:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
 
@@ -115,6 +112,19 @@ namespace api.Controllers
             return Ok(g);
         }
 
+        //GET: api/video/top10
+        [HttpGet,ActionName("Top10")]
+        public async Task<IHttpActionResult> Top10()
+        {
+            return Ok(await Database.GetTop10());
+        }
+
+        //GET: api/video/Last10
+        [HttpGet, ActionName("Last10")]
+        public async Task<IHttpActionResult> Last10()
+        {
+            return Ok(await Database.GetLast10());
+        }
         //POST: api/video/session
         [HttpPost,ActionName("GetSession")]
         public async Task<IHttpActionResult> GetSession([FromBody] DatabaseUserModels data)

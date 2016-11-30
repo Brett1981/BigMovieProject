@@ -20,6 +20,8 @@ namespace api
         public string movie_guid { get; set; }
         public string movie_folder { get; set; }
         public Nullable<int> movie_views { get; set; }
+        public string movie_dir { get; set; }
+        public Nullable<System.DateTime> movie_added { get; set; }
     
         public virtual MovieInfo MovieInfo { get; set; }
     }

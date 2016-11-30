@@ -4,6 +4,8 @@
     <EntitySetMapping Name="MovieDatas">
       <EntityTypeMapping TypeName="MDBSQLModel.MovieData">
         <MappingFragment StoreEntitySet="MovieData">
+          <ScalarProperty Name="movie_added" ColumnName="movie_added" />
+          <ScalarProperty Name="movie_dir" ColumnName="movie_dir" />
           <ScalarProperty Name="movie_views" ColumnName="movie_views" />
           <ScalarProperty Name="movie_folder" ColumnName="movie_folder" />
           <ScalarProperty Name="Id" ColumnName="Id" />

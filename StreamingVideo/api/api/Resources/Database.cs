@@ -58,9 +58,9 @@ namespace api.Resources
         /// <summary>
         /// Edit movie from MVC view
         /// </summary>
-        /// <param name="guid"></param>
-        /// <param name="collection"></param>
-        /// <returns></returns>
+        /// <param name="guid">string</param>
+        /// <param name="collection">System.Web.Mvc.FormCollection</param>
+        /// <returns>MovieData</returns>
         internal static async Task<MovieData> Edit(string guid, System.Web.Mvc.FormCollection collection)
         {
             try
@@ -75,6 +75,7 @@ namespace api.Resources
                         case "movie_ext": {movie.movie_ext = i.AttemptedValue; } break;
                         case "movie_folder": {movie.movie_folder = i.AttemptedValue; } break;
                         case "movie_guid": {movie.movie_guid = i.AttemptedValue; } break;
+                        case "movie_dir": { movie.movie_dir = i.AttemptedValue; }break;
                         case "MovieInfo.adult": { if (i.AttemptedValue != "") { movie.MovieInfo.adult = Convert.ToBoolean(i.AttemptedValue); } } break;
                         case "MovieInfo.backdrop_path": {movie.MovieInfo.backdrop_path = i.AttemptedValue; } break;
                         case "MovieInfo.budget": {movie.MovieInfo.budget = i.AttemptedValue; } break;
@@ -112,8 +113,8 @@ namespace api.Resources
         /// <summary>
         /// Get movie data from local db
         /// </summary>
-        /// <param name="guid"></param>
-        /// <returns></returns>
+        /// <param name="guid">string</param>
+        /// <returns>MovieData</returns>
         public static async Task<MovieData> Get(string guid)
         {
             try
@@ -135,8 +136,8 @@ namespace api.Resources
         /// <summary>
         /// Retrieve movie data from db using a guid string as reference and increase the view counter if movie found
         /// </summary>
-        /// <param name="guid"></param>
-        /// <returns name="MovieData"></returns>
+        /// <param name="guid">string</param>
+        /// <returns name="MovieData">MovieData</returns>
         public static async Task<MovieData> GetMovie(string guid)
         {
             var movie = await db.MovieDatas.Where(x => x.movie_guid == guid).FirstOrDefaultAsync();
@@ -164,12 +165,12 @@ namespace api.Resources
             return new MovieData();
             
         }
-        
+
         /// <summary>
         /// Retrieve movie from db and increase the view counter
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">DatabaseUserModels</param>
+        /// <returns>MovieData</returns>
         public static async Task<MovieData> GetMovie(DatabaseUserModels data)
         {
             var user = await db.Users.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
@@ -203,8 +204,8 @@ namespace api.Resources
         /// <summary>
         /// Remove movie from db
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item">MovieData</param>
+        /// <returns>int</returns>
         public static async Task<int> Remove(MovieData item)
         {
             try
@@ -232,7 +233,7 @@ namespace api.Resources
         /// <summary>
         /// Create movie list every x minutes or hours, depends how it is set up
         /// </summary>
-        /// <returns></returns>
+        /// <returns>null</returns>
         public static async Task CreateList()
         {
             try
@@ -254,6 +255,9 @@ namespace api.Resources
             }
         }
 
+        /// <summary>
+        /// Organize list of movies by their release date
+        /// </summary>
         private static void OrganizeListByDate()
         {
             if(allMovies.Count > 0)
@@ -266,7 +270,7 @@ namespace api.Resources
         /// <summary>
         /// Check directories if new movie was found that is not in the local db
         /// </summary>
-        /// <returns></returns>
+        /// <returns>null</returns>
         public static async Task CheckDB()
         {
             try
@@ -276,15 +280,17 @@ namespace api.Resources
                 {
                     if (!projectDebug && checkDbCount == 0)
                     {
-                        if (checkDbCount == 0) {
-                            
-                            await databaseMovieCheck();
-                            time = DateTime.Now;
-                            Thread t2 = new Thread(async () => await Database.CreateList());
-                            t2.Priority = ThreadPriority.Normal;
-                            t2.Start();
-                        }
-                        if (checkDbCount != 0 && DateTime.Now > time.AddMinutes(10)) { await databaseMovieCheck(); time = DateTime.Now; }
+                        await databaseMovieCheck();
+                        time = DateTime.Now;
+                        Thread t2 = new Thread(async () => await Database.CreateList());
+                        t2.Priority = ThreadPriority.Normal;
+                        t2.Start();
+                    }
+                    else if (!projectDebug && checkDbCount > 0) //&& DateTime.Now > time.AddMinutes(10)
+                    {
+                        await databaseMovieCheck();
+                        await databaseRemoveDeletedFolderFromDb();
+                        time = DateTime.Now;
                     }
                     else if(projectDebug)
                     {
@@ -292,6 +298,7 @@ namespace api.Resources
                         t2.Priority = ThreadPriority.Normal;
                         t2.Start();
                     }
+                    
                     Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
                     await Task.Delay(new TimeSpan(0, 1, 0));
                     checkDbCount++;
@@ -302,12 +309,11 @@ namespace api.Resources
                 Debug.WriteLine(e.Message);
             }
         }
-
         /// <summary>
         /// Method that checks directories
         /// </summary>
-        /// <returns></returns>
-        private static async Task<int> databaseMovieCheck(){
+        /// <returns>int</returns>
+        private static async Task databaseMovieCheck(){
             try
             {
                 Debug.WriteLine("Checking database for new entries!");
@@ -323,21 +329,22 @@ namespace api.Resources
                     foreach (var d in dirs)
                     {
                         DirectoryInfo v = new DirectoryInfo(d);
-                        var movie = GetMovieName(v.Name);
                         var files = Directory.GetFiles(d);
-                        if (movie[0] != "")
+                        if (files.Any(s => s.Contains(".mp4") || s.Contains(".webm")))
                         {
-                            foreach (var f in files)
+                            var mName = files.Where(s => s.Contains(".mp4") || s.Contains(".webm")).ToArray();
+                            
+                            if(mName.Count() > 0 )
                             {
-                                var item = new FileInfo(f);
+                                //create a string from folder name so that it can retrieve movie information from external API
+                                var movie = GetMovieName(v.Name);
+                                var item = new FileInfo(mName[0]);
                                 int idx = item.Name.LastIndexOf('.');
                                 var name = item.Name.Substring(0, idx);
                                 var ext = item.Name.Substring(idx + 1);
                                 if (ext == "mp4" || ext == "webm")
                                 {
                                     var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
-
-
                                     if (m == null)
                                     {
                                         //get movieinfo from api 
@@ -355,6 +362,8 @@ namespace api.Resources
                                                 movie_ext = ext,
                                                 movie_guid = CreateGuid(name).ToString(),
                                                 movie_folder = item.Directory.Name.ToString(),
+                                                movie_dir = item.Directory.FullName,
+                                                movie_added = DateTime.Now,
                                                 MovieInfo = mInfo
                                             };
                                             try
@@ -383,21 +392,52 @@ namespace api.Resources
 
                             }
                         }
+                        
                     }
                 }
-                int retValue = 0;
-                
-                return retValue;
                 
             }
             catch(Exception ex)
             {
+                Debug.WriteLine("Exception --> {0} -- {1}", ex.Message);
+            }
+        }
+        /// <summary>
+        /// Remove movie database entries if directory does not exist
+        /// </summary>
+        /// <returns>string</returns>
+        private static async Task<string> databaseRemoveDeletedFolderFromDb()
+        {
+            try
+            {
+                List<MovieData> toDelete = new List<MovieData>();
+                if(allMovies.Count > 0)
+                {
+                    foreach(var item in allMovies)
+                    {
+                        if(!Directory.Exists(item.movie_dir)){ toDelete.Add(item); }
+                    }
+                    if(toDelete.Count > 0)
+                    {
+                        db.MovieDatas.RemoveRange(toDelete); //removing entries in database
+                        await db.SaveChangesAsync();
+                        return "Ok";
+                    }
+                }
+                return "No entries in database ...";
+            }
+            catch(Exception ex)
+            {
                 Debug.WriteLine("Exception --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
-                return ex.HResult;
-
+                return ex.Message;
             }
         }
 
+        /// <summary>
+        /// Retrieve a movie name from its folder and return an array of strings
+        /// </summary>
+        /// <param name="value">string</param>
+        /// <returns>string[]</returns>
         private static string[] GetMovieName(string value)
         {
             string[] dates = new string[] {
@@ -445,8 +485,8 @@ namespace api.Resources
         /// GUID method that is called when a new movie is about to be added to local db. 
         /// This GUID is ussed for references when a movie is searched for
         /// </summary>
-        /// <param name="movieName"></param>
-        /// <returns></returns>
+        /// <param name="movieName">string</param>
+        /// <returns>Guid</returns>
         public static Guid CreateGuid(string value)
         {
             using (MD5 md5 = MD5.Create())
@@ -458,8 +498,8 @@ namespace api.Resources
         /// <summary>
         /// Retrieve movies from db where genre is the same as searched
         /// </summary>
-        /// <param name="genre"></param>
-        /// <returns></returns>
+        /// <param name="genre">string</param>
+        /// <returns>MovieData</returns>
         public static List<MovieData> GetByGenre(string genre)
         {
             List<MovieData> searchedMovies = new List<MovieData>();
@@ -496,6 +536,23 @@ namespace api.Resources
                 }
             }
             return searchedMovies;
+        }
+
+        /// <summary>
+        /// Returns last 10 movies added to database
+        /// </summary>
+        /// <returns>MovieData</returns>
+        public static async Task<List<MovieData>> GetLast10()
+        {
+            return await db.MovieDatas.OrderByDescending(x => x.movie_added).Take(10).ToListAsync();
+        }
+        /// <summary>
+        /// Returns the top 10 most played movies 
+        /// </summary>
+        /// <returns>MovieData</returns>
+        public static async Task<List<MovieData>> GetTop10()
+        {
+            return await db.MovieDatas.Where(x => x.movie_views > 0).Take(5).ToListAsync();
         }
 
         #endregion
@@ -585,7 +642,11 @@ namespace api.Resources
         #endregion
 
         #region SessionPlay Methods
-
+        /// <summary>
+        /// Creating a session guid that allows users to play content
+        /// </summary>
+        /// <param name="data">DatabaseUserModels</param>
+        /// <returns>string</returns>
         public static async Task<string> CreateSession(DatabaseUserModels data)
         {
             var s0 = await db.SessionPlays.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
@@ -613,12 +674,20 @@ namespace api.Resources
             await db.SaveChangesAsync();
             return s.session_id;
         }
-
+        /// <summary>
+        /// Retrieve a session from database 
+        /// </summary>
+        /// <param name="data">DatabaseUserModels</param>
+        /// <returns>SessionPlay</returns>
         public static async Task<SessionPlay> GetSession(DatabaseUserModels data)
         {
            return await db.SessionPlays.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
         }
-
+        /// <summary>
+        /// Retrieve data from db by providing session guid that was generated by requesting a movie
+        /// </summary>
+        /// <param name="session">string</param>
+        /// <returns>SessionPlay</returns>
         public static async Task<SessionPlay> GetBySession(string session)
         {
             return await db.SessionPlays.Where(x => x.session_id == session).FirstOrDefaultAsync();

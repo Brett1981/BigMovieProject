@@ -11,6 +11,8 @@
     <NavigationProperty Name="MovieInfo" Relationship="Self.FK_MovieInfo_ToMovieData" FromRole="MovieData" ToRole="MovieInfo" />
     <Property Name="movie_folder" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" Nullable="true" />
     <Property Name="movie_views" Type="Int32" />
+    <Property Name="movie_dir" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="movie_added" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="MovieInfo">
     <Key>
