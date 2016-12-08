@@ -105,10 +105,11 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
                 echo $data["movie_name"]; 
             }else{ echo "Unknown movie";}  
         }?></title>
-        
-        <link href="http://vjs.zencdn.net/5.11.9/video-js.css" rel="stylesheet">
+        <!-- VideoJs plugin and stylesheet -->
+        <script src="../assets/videojs/video.min.js"></script>
+        <link href="../assets/videojs/video-js.min.css" rel="stylesheet"> 
         <!-- If you'd like to support IE8 -->
-        <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+        <script src="../assets/videojs/ie8/videojs-ie8.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
@@ -135,22 +136,19 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
                 <div>
                     <?php if(isset($data)){ ?>
                     <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
-                        <?php if(isset($data)){
-                            $guid = $data["movie_guid"];
+                    <?php  $guid = $data["movie_guid"];
                             if($data["movie_ext"] == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
                             }elseif($data["movie_ext"] == "webm"){
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/mp4'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
-                        } ?>
+                         ?>
                         <p class="vjs-no-js">
                           To view this video please enable JavaScript, and consider upgrading to a web browser that
                           <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                         </p>
                     </video>
-
-                    <script src="http://vjs.zencdn.net/5.11.9/video.js"></script>
                     <?php } ?>
                 </div>
             </div>

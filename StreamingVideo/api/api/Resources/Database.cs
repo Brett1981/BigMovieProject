@@ -300,7 +300,7 @@ namespace api.Resources
                     }
                     
                     Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
-                    await Task.Delay(new TimeSpan(0, 1, 0));
+                    await Task.Delay(new TimeSpan(0, 30, 0));
                     checkDbCount++;
                 }
             }

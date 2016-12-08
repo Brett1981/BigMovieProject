@@ -481,6 +481,30 @@ nav .search ul li a{
     left:100px;
     top:100px;
     overflow: hidden;
+    border-radius: 5px;
+}
+.main label{}
+
+.main .profile_picture{
+    position: relative;
+    background-color: white;
+    border-radius: 5px;
+    top:10px;
+    height: 120px;
+}
+.main .profile_picture img{
+    position: relative;
+    max-width: 100px !important;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.main .profile_picture input{
+    position: relative;
+}
+.main .user_data{
+    position: relative;
 }
 /*---------------------!PROFILE----------------------*/
 

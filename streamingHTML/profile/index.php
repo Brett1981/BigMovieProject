@@ -39,12 +39,21 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
                     }
-                    $profile .= "<form action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data'>
+                    $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>
                                     Select image to upload:
-                                    <input type='file' name='avatar' id='avatar'>
+                                    <input type='file' name='avatar' id='avatar'/>
                                     <input type='submit' value='Upload Image' name='submit'>
-                                </form>";
-                    $profile .= "<div class='user-data'>";
+                                </form></div>";
+                    $profile .= "<div class='user_data'>
+                                    <form  action='../upload.php?user=upload' method='post' class='user_data_form'>
+                                        <div><label>Email: </label> <input type='email' name='user_email' value='".$data['user_email']."' readonly/></div>
+                                        <div><label>Profile created: </label><input type='text' name='profile_created' value='".$data['profile_created']."' readonly/></div>
+                                        <div><label>Last logon: </label><input type='text' name='last_logon' value='".$data['last_logon']."' readonly/></div>
+                                        <div><label>Birthday: </label><input type='date' name='user_birthday' value='".$data['user_birthday']."' /></div>
+                                    </form>
+                                </div>";
+                                
+                    
                     echo $profile;
                                 
                     if(isset($_SESSION['post_message'])){
@@ -52,7 +61,7 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                         $_SESSION['post_message'] = "";
                     }
                                     
-                    echo "</div></div>";
+                    echo "</div>";
                 }
             ?>
         </div>

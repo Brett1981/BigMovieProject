@@ -38,12 +38,12 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
                         <h1>Register</h1>
 
                         <form id="register-form" class="form" method="post">
-                            <input type="text" placeholder="Username" name="username" onblur="check(value,this)">
-                            <input type="password" placeholder="Password" name="password" onblur="check(value,this)">
-                            <input type="password" placeholder="Verify password" name="v_password" onblur="check(value,this)">
-                            <input type="email" placeholder="Email" name="email" onblur="check(value,this)">
+                            <input type="text" placeholder="Username" name="username" onblur="check(value,this)" required>
+                            <input type="password" placeholder="Password" name="password" onblur="check(value,this)" required>
+                            <input type="password" placeholder="Verify password" name="v_password" onblur="check(value,this)" required>
+                            <input type="email" placeholder="Email" name="email" onblur="check(value,this)" required>
                             <input type="date" placeholder="Birthday" name="birthday">
-                            <input type="text" placeholder="Display name" name="display_name" onblur="check(value,this)">
+                            <input type="text" placeholder="Display name" name="display_name" onblur="check(value,this)" required>
                             <button type="submit" id="register-button" class="preventSubmit">Register</button>
                             <a id="switch2">Login</a>
                         </form>
