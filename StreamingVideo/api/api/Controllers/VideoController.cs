@@ -21,37 +21,44 @@ namespace api.Controllers
     [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
     public class VideoController : ApiController
     {
-        public static string[] movieDir = { @"E:\Torrent2\Movies", @"K:\uTorrent\Movies" };
+        public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
-
         //GET: api/videoplay/value
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
-            //get user id and movie id from session in database
-            var s = await Database.GetBySession(value);
-            if(s != null && s.movie_id != null)
+            try
             {
-                Debug.WriteLine("User requesting to watch movie: " + value);
-                //Getting movie from DB
-                var movie = await Database.Get(s.movie_id);
-                if (movie != null)
+                //get user id and movie id from session in database
+                var s = await Database.GetBySession(value);
+                if (s != null && s.movie_id != null)
                 {
-                    Debug.WriteLine("Movie " + value + " is being served.");
-                    await History.Set("user", new History_User()
+                    Debug.WriteLine("User requesting to watch movie: " + value);
+                    //Getting movie from DB
+                    var movie = await Database.Get(s.movie_id);
+                    if (movie != null)
                     {
-                        user_action = "User requesting to watch movie: " + value,
-                        user_datetime = DateTime.Now,
-                        user_id = "",
-                        user_movie = movie.movie_guid,
-                        user_type = "Request"
-                    });
-                    //streaming content to client
-                    return Streaming.streamingContent(movie, base.Request.Headers.Range);
+                        Debug.WriteLine("Movie " + value + " is being served.");
+                        await History.Set("user", new History_User()
+                        {
+                            user_action = "User requesting to watch movie: " + value,
+                            user_datetime = DateTime.Now,
+                            user_id = "",
+                            user_movie = movie.movie_guid,
+                            user_type = "Request"
+                        });
+                        //streaming content to client
+                        return Streaming.streamingContent(movie, base.Request.Headers.Range);
+                    }
+                    throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
             }
-            throw new HttpResponseException(HttpStatusCode.Forbidden);
+            catch(System.Web.HttpException ex)
+            {
+                Debug.WriteLine(ex);
+                throw new HttpResponseException(HttpStatusCode.Conflict);
+            }
             
         }
 
