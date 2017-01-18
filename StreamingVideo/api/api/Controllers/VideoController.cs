@@ -39,14 +39,14 @@ namespace api.Controllers
                     if (movie != null)
                     {
                         Debug.WriteLine("Movie " + value + " is being served.");
-                        await History.Set("user", new History_User()
+                        /*await History.Set("user", new History_User()
                         {
                             user_action = "User requesting to watch movie: " + value,
                             user_datetime = DateTime.Now,
                             user_id = "",
                             user_movie = movie.movie_guid,
                             user_type = "Request"
-                        });
+                        });*/
                         //streaming content to client
                         return Streaming.streamingContent(movie, base.Request.Headers.Range);
                     }

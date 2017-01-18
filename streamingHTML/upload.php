@@ -58,13 +58,10 @@ if($isUploaded == 1){
     unlink($target_file); 
     //redirect to profile page of user
     $_SESSION['user_img'] = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getprofilepicture/'.$_SESSION['guid']),true);
-    header('location: ../streamingHTML/profile/index.php?user='.$_SESSION['guid']);
-    exit();
 }
-else{
-    header('location: ../streamingHTML/profile/index.php?user='.$_SESSION['guid']);
-    exit();
-}
+if(isset($_SESSION['guid'])){ header('location: ../streamingHTML/profile/index.php'); }
+else{ header('location: /profile/index.php?user='.$_SESSION['guid']); }
+exit();
 
 
 function file_post_contents($url, $data, $file, $username = null, $password = null)

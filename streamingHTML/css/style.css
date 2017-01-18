@@ -472,40 +472,123 @@ nav .search ul li a{
 /*---------------------!PLAY----------------------*/
 
 /*---------------------PROFILE----------------------*/
-
-.main .user_profile{
+.main{
     position: relative;
-    width: 90%;
-    max-width: 80% !important;
+    height: auto;
+    display: block;
+}
+.main .user_profile{
+    position: absolute;
+    display: inline-flex;
+    flex-direction: row;
+    width: 80%;
+    height: auto;
     min-width: 0%;
     left:100px;
     top:100px;
     overflow: hidden;
-    border-radius: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
-.main label{}
-
 .main .profile_picture{
     position: relative;
+    width: 170px;
+    min-width:170px;
+    margin-left: 10px;
+    overflow: hidden;
     background-color: white;
-    border-radius: 5px;
-    top:10px;
-    height: 120px;
-}
-.main .profile_picture img{
-    position: relative;
-    max-width: 100px !important;
-    float: left;
-    margin: 0;
-    padding: 0;
-}
-
-.main .profile_picture input{
-    position: relative;
+    top:0px;
+    padding: 10px;
+    
 }
 .main .user_data{
-    position: relative;
+     position: relative;
+    min-width: 0%;
+    margin-left: 10px;
+    overflow: hidden;
+    background-color: white;
+    top:0px;
+    padding: 10px;
+    min-width:150px;
+    width:60%;
+    margin-left: 10%;
+    
 }
+.main label{
+    color: black;
+}
+.main .profile_picture .change_avatar{
+    height: 50px;
+    position: relative;
+    float:left;
+    text-align:center;
+    width: 150px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    cursor:pointer;
+    border-radius: 3px;
+    font-size: 18px;
+    color: black;
+    box-sizing:border-box;
+    outline: 0;
+    border: 1px solid rgb(209, 209, 209);
+    background-color: rgba(255, 255, 255, 0.47);
+}
+.main .profile_picture .change_avatar a{
+    cursor:pointer;
+    padding: 0;
+    margin: 0 auto;
+    display: block;
+    z-index:-1;
+}
+.main .profile_picture input[type="file"]{ 
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    width:100% !important;
+    z-index: 1;
+}
+.main .profile_picture input{
+    cursor: pointer;
+    z-index: 1000;
+    position: relative;
+    display: block;
+    box-sizing:border-box;
+    outline: 0;
+    border: 1px solid rgb(209, 209, 209);
+    background-color: rgba(255, 255, 255, 0.47);
+    width: 150px;
+    border-radius: 3px;
+    padding: 10px 15px;
+    margin: 0 auto 10px auto;
+    text-align: center;
+    font-size: 18px;
+    color: black;
+    -webkit-transition-duration: 0.25s;
+          transition-duration: 0.25s;
+    font-weight: 300;
+    
+}
+
+.main .profile_picture img{
+    position: relative;
+    max-width: 150px;
+    float: left;
+    margin: 0;
+    padding: 10px;
+}
+
+.main .error{
+    position: absolute;
+    display: block;
+    height: 50px;
+    width:auto;
+    padding: 10px;
+    top:400px;
+}
+
 /*---------------------!PROFILE----------------------*/
 
 /*---------------------LOGIN--------------------------*/

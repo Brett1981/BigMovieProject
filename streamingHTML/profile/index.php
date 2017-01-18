@@ -2,12 +2,16 @@
 session_start();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/'); //default server path
 $data = null;
-if(isset($_GET['user']) && $_GET['user'] != null){
-    $guid = $_GET['user'];
-    $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
-    /*if($data != null){
-        print_r(var_dump($data));
-    }*/
+if(isset($_GET['user'])  || isset($_SESSION['guid'])){
+    if(!empty($_GET['user'])){
+        $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_GET['user']),true);
+    }
+    elseif(!empty($_SESSION['guid'])){
+        $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
+    }
+    else{
+        header('location ../index.php');
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -33,15 +37,15 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                     $display_name = $data["user_display_name"];
                     $profile = "<div class='user_profile'>
                             <div class='profile_picture'>";
+                    
+                    $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
                     if($img != null){
                         $profile .= "<img alt='".$display_name."_picture' src='data:image/jpeg;base64, $img' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
                     }
-                    $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>
-                                    Select image to upload:
-                                    <input type='file' name='avatar' id='avatar'/>
+                    $profile .= "   <div class='change_avatar'><a>Change profile picture</a><input type='file' name='avatar' class='avatar'/></div>
                                     <input type='submit' value='Upload Image' name='submit'>
                                 </form></div>";
                     $profile .= "<div class='user_data'>
@@ -57,7 +61,7 @@ if(isset($_GET['user']) && $_GET['user'] != null){
                     echo $profile;
                                 
                     if(isset($_SESSION['post_message'])){
-                        echo $_SESSION['post_message'];
+                        echo "<div class='error'>{$_SESSION['post_message']}</div>";
                         $_SESSION['post_message'] = "";
                     }
                                     

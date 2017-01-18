@@ -28,8 +28,10 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
     $_SESSION['user_data'] = $user;
     $_SESSION['user_img_backup'] = $img;
 }
-
-$profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav;
+//star profile link!
+//$profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav; 
+//nov profile link!
+$profile = $server_path.'/streamingHTML/profile/index.php';
 
 
 /*if(isset($username) && $username != null){ $user[0] = $username; }else{ $user[0] = "Username";}*/
