@@ -21,71 +21,10 @@ namespace api.Resources
                 DateTime date;
                 var movie = data.Split('|');
                 date = new DateTime(int.Parse(movie[1]), 1, 1);
-                /*try
-                {
-                    date = new DateTime(int.Parse("0001"), 1, 1);
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine("Exception getMovieInfo --> " + ex.Message);
-                }
-                finally
-                {
-                    date = new DateTime();
-                }*/
                  
                 //string Searcheditem = "";
                 HttpClient client = new HttpClient();
-
-                /*if (data.Contains(".")) { Searcheditem = data.Replace('.', ' '); }
-                else { Searcheditem = data; }
-
-                string[] dates = new string[] {
-                    "2010","2011", "2012", "2013", "2014", "2015", "2016", "2017",
-                    "(2010)","(2011)","(2012)","(2013)","(2014)","(2015)","(2016)","(2017)",
-                    "2000","2001","2002","2003","2004","2005","2006","2007","2008","2009",
-                    "(2000)","(2001)","(2002)","(2003)","(2004)","(2005)","(2006)","(2007)","(2008)","(2009)",
-                    "1990","1991","1992","1993","1994","1995","1996","1997","1998","1999",
-                    "(1990)","(1991)","(1992)","(1993)","(1994)","(1995)","(1996)","(1997)","(1998)","(1999)",
-                    "1980","1981","1982","1983","1984","1985","1986","1987","1988","1989",
-                    "(1980)","(1981)","(1982)","(1983)","(1984)","(1985)","(1986)","(1987)","(1988)","(1989)",
-                };*/
-
-                /*string[] specialStrings = new string[] { "SLOSubs", "COMPLETE" };
-                foreach (var item in dates)
-                {
-                    if (Searcheditem.Contains(item))
-                    {
-                        Searcheditem = Searcheditem.Remove(Searcheditem.IndexOf(item));
-                        Searcheditem = Searcheditem.TrimEnd();
-                        var datum = item;
-                        if (item.Contains("(") || item.Contains(")"))
-                        {
-                            datum = datum.Replace('(', ' '); datum = datum.Replace(')', ' ');
-                            datum.Trim();
-                            try
-                            {
-                                date = new DateTime(int.Parse(datum), 1, 1);
-                            }
-                            finally
-                            {
-                                date = new DateTime(int.Parse(Convert.ToInt32(datum).ToString()), 1, 1);
-                            }
-                            
-                        }
-                        else { date = new DateTime(int.Parse(datum), 1, 1); }
-                        break;
-                    }
-                }*/
-                /*foreach (var item in specialStrings)
-                {
-                    if (Searcheditem.Contains(item))
-                    {
-                        var position = Searcheditem.IndexOf(item);
-                        var editedInfo = Searcheditem.Remove(position);
-                        Searcheditem = editedInfo.TrimEnd();
-                    }
-                }*/
+                
                 //Building api url with parameters - apikey + item to search for
                 Uri searchMovieAPI;
                 var apikey = ConfigurationManager.AppSettings["APIkey"];
@@ -138,7 +77,7 @@ namespace api.Resources
                                 if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
                                 else { return new MovieInfo(); }
                                 countAPICalls++;
-                                return createMovieInfo(JsonConvert.DeserializeObject<MovieInfoJSON>(info), id);
+                                return CreateMovieInfo(JsonConvert.DeserializeObject<MovieInfoJSON>(info), id);
                             }
                             else
                             {
@@ -169,7 +108,7 @@ namespace api.Resources
                 return new MovieInfo();
             }
         }
-        private static MovieInfo createMovieInfo(MovieInfoJSON data, int id)
+        private static MovieInfo CreateMovieInfo(MovieInfoJSON data, int id)
         {
             return  new MovieInfo()
             {

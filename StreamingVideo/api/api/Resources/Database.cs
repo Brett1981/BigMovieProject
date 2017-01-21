@@ -47,7 +47,7 @@ namespace api.Resources
         /// <summary>
         /// Movie Database  public / private items
         /// </summary>
-        public static List<MovieData> allMovies
+        public static List<MovieData> AllMovies
         {
             get { if (_movies != null) { return _movies; } else return new List<MovieData>(); }
             set { _movies = value; }
@@ -226,7 +226,7 @@ namespace api.Resources
         /// </summary>
         public static void ForceMovieList()
         {
-            allMovies = db.MovieDatas.Select(x => x).ToList();
+            AllMovies = db.MovieDatas.Select(x => x).ToList();
             OrganizeListByDate();
         }
 
@@ -241,8 +241,8 @@ namespace api.Resources
                 bool edited = false;
                 while (true)
                 {
-                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); allMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++; edited = true; }
-                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { allMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
+                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); AllMovies = db.MovieDatas.Select(x => x).ToList(); createListCount++; edited = true; }
+                    if(DateTime.Now > CreateListTime.AddMinutes(5)) { AllMovies = await db.MovieDatas.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
                     Debug.WriteLine("Movie list --> waiting ...");
                     if (edited){ OrganizeListByDate(); }
                     await Task.Delay(new TimeSpan(0, 1, 0));
@@ -260,9 +260,9 @@ namespace api.Resources
         /// </summary>
         private static void OrganizeListByDate()
         {
-            if(allMovies.Count > 0)
+            if(AllMovies.Count > 0)
             {
-                allMovies.Sort((x, y) => y.MovieInfo.release_date.Value.CompareTo(x.MovieInfo.release_date.Value));
+                AllMovies.Sort((x, y) => y.MovieInfo.release_date.Value.CompareTo(x.MovieInfo.release_date.Value));
             }
             
         }
@@ -411,9 +411,9 @@ namespace api.Resources
             try
             {
                 List<MovieData> toDelete = new List<MovieData>();
-                if(allMovies.Count > 0)
+                if(AllMovies.Count > 0)
                 {
-                    foreach(var item in allMovies)
+                    foreach(var item in AllMovies)
                     {
                         if(!Directory.Exists(item.movie_dir)){ toDelete.Add(item); }
                     }
@@ -503,7 +503,7 @@ namespace api.Resources
         public static List<MovieData> GetByGenre(string genre)
         {
             List<MovieData> searchedMovies = new List<MovieData>();
-            foreach(var item in allMovies)
+            foreach(var item in AllMovies)
             {
                 if(item.MovieInfo.genres != "")
                 {

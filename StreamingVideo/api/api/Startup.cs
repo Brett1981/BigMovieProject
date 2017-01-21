@@ -25,8 +25,10 @@ namespace api
             Thread t1;
             try
             {
-                t1= new Thread(async () => await Database.CheckDB());
-                t1.Priority = ThreadPriority.Normal;
+                t1 = new Thread(async () => await Database.CheckDB())
+                {
+                    Priority = ThreadPriority.Normal
+                };
                 t1.Start();
             }
             catch(Exception ex)

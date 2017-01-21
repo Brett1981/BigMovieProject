@@ -1,4 +1,6 @@
 <?php 
+include_once '../server/serverComm.php';
+$client = Server::Client();
 $server_path = 'http://'.$_SERVER['HTTP_HOST'];
 $icons = $server_path.'/streamingHTML/assets/icons/';
 
@@ -21,9 +23,9 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
     $user = $_SESSION['user_data'];
     $guid_nav = $user["unique_id"];
 }else{
-    $user = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
+    $user = Server::getUser($_SESSION['guid']);
     $guid_nav = $user["unique_id"];
-    $img = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getprofilepicture/'.$_SESSION['guid']),true);
+    $img = Server::getUserProfilePicture($_SESSION['guid']);
     $_SESSION['user_img'] = $img;
     $_SESSION['user_data'] = $user;
     $_SESSION['user_img_backup'] = $img;
@@ -55,14 +57,14 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
             </a>
             <span>
                 <p>Welcome:</p>
-                <p class='user_username'>".$user["username"]."</p>
+                <p class='user_username'>{$user["username"]}</p>
             </span>
           </div>
           <div class='links'>
-            <a class='active' href='".$server_path."/streamingHTML/movies/'>Home</a>
+            <a class='active' href='{$server_path}/streamingHTML/movies/'>Home</a>
             <a href='#'>Search</a>
             <a href='#'>About</a>
-            <a href='".$server_path."/streamingHTML/index.php?logout=".$guid_nav."'>Logout</a>
+            <a href='{$server_path}/streamingHTML/index.php?logout={$guid_nav}'>Logout</a>
           </div>";
           if(isset($enableGenres) && $enableGenres == true){
               $navigation .= "<div class='search'>

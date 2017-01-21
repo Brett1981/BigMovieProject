@@ -1,5 +1,7 @@
 <?php 
 session_start();
+include '../server/serverComm.php';
+$client = Server::Client();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
 $api;
 $guid;
@@ -24,80 +26,44 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
             $watching['vote_average'] = $data['MovieInfo']['vote_average'];
             $watching['watched'] = $data['movie_views'];
         }
+        else{ header('location: ../index.php'); }
     }
-    else{
-        header('location: ../movies');
-    }
-    
+    else{ header('location: ../movies'); }
 }
-else{
-    header('location: ../login');
-}
+else{ header('location: ../login'); }
 function get_session($user_id, $movie_id){
-    $api = "http://31.15.224.24:53851/api/video/getsession";
     if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
         $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
-        
-        $data = json_encode($data);
-        //cURL call to api
-        $ch = curl_init( $api);
-        # Setup request to send json via POST
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        # Return response instead of printing.
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        # Send request.
-        $result = curl_exec($ch);
-        curl_close($ch);
+        $result = Server::getSession($data);
         if($result == null){
             header('location: ../movies/');
             $_SESSION['play_error'] = "Error retrieving data";
             exit();
         }
-        
         return $result;
     }
-    else{
-        header('location: ../movies/');
-        exit();
-    }
+    else{ header('location: ../movies/'); exit(); }
 }
 function get_movie($user_id, $movie_id, $username = null, $password = null)
 {
-    $api = "http://31.15.224.24:53851/api/video/getmovie";
     if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
         $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
-        
-        $data = json_encode($data);
-        //cURL call to api
-        $ch = curl_init( $api);
-        # Setup request to send json via POST
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        # Return response instead of printing.
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        # Send request.
-        $result = curl_exec($ch);
-        curl_close($ch);
-        if($result == null){
+        $result = Server::getMovie($data);
+        if($result === null){
             header('location: ../movies/');
             $_SESSION['play_error'] = "No movie was found ";
             exit();
         }
-        
         return $result;
     }
-    else{
-        header('location: ../movies/');
-        exit();
-    }
-    
+    else{ header('location: ../movies/'); exit(); }
 }
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php  if(isset($data) && $data != null){ 
             if($data["MovieInfo"]["title"] != ""){ 
                 echo $data["MovieInfo"]["title"]; 
@@ -140,7 +106,7 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
                             if($data["movie_ext"] == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
                             }elseif($data["movie_ext"] == "webm"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/mp4'>"; 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
                          ?>

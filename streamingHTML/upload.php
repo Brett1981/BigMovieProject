@@ -1,6 +1,8 @@
 <?php
 session_start();
+include_once 'server/serverComm.php';
 $api = 'http://31.15.224.24:53851/api/user/changeprofilepicture';
+$client = Server::Client();
 $server_port = "8080";
 $isUploaded = 0;
 $target_dir = $_SERVER['DOCUMENT_ROOT']."/streamingHTML/uploads/";
@@ -50,14 +52,13 @@ if ($uploadOk == 0) {
 
 if($isUploaded == 1){
     $data = array('unique_id' => $_SESSION['guid'], 'image_url' => $server_dir);
-    $data = json_encode($data);
-    //cURL call to api
-    var_dump(file_post_contents($api,$data,$target_file));
+    Server::setUserProfilePicture($data);
+    //var_dump(file_post_contents($api,$data,$target_file));
     $_SESSION['post_message'] = "Profile updated.";
     //delete file on successfull upload
     unlink($target_file); 
     //redirect to profile page of user
-    $_SESSION['user_img'] = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getprofilepicture/'.$_SESSION['guid']),true);
+    $_SESSION['user_img'] = Server::getUserProfilePicture($_SESSION['guid']);
 }
 if(isset($_SESSION['guid'])){ header('location: ../streamingHTML/profile/index.php'); }
 else{ header('location: /profile/index.php?user='.$_SESSION['guid']); }

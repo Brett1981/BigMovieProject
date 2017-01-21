@@ -1,24 +1,31 @@
 <?php
 session_start();
+include_once '../server/serverComm.php';
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
 /*$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";*/
 //var_dump($_POST);
 $enableGenres = true;
+$genreMovies;
+$top10;
+$last10;
+$all;
+$client = Server::Client();
 if(isset($_GET['id']) && $_GET['id'] != null){
     $_SESSION['guid'] = $_GET['id'];
 }
-$genreMovies;
+
 if(isset($_GET['genre']) && $_GET['genre'] != ""){
     $g = $_GET['genre'];
-    $genreMovies = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/genre/'.$g),true);
+    $genreMovies = Server::getByGenre($g);
 }
-$top10;
-if(isset($_GET['top10'])){
-    $top10 = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/top10'),true);
+elseif(isset($_GET['top10'])){
+    $top10 = Server::getTop10();
 }
-$last10;
-if(isset($_GET['last10'])){
-    $last10 = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/last10'),true);
+elseif(isset($_GET['last10'])){
+    $last10 = Server::getLast10();
+}
+else{
+    $all = Server::getAllMovies();
 }
     
 /*if($_SESSION['guid'] == null && (isset($_POST['user_id']) && $_POST['user_id'] != null)){
@@ -34,6 +41,7 @@ else{
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Movies</title>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -63,7 +71,7 @@ else{
                     $data = $last10;
                 }
                 else{
-                    $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/video/allmovies'),true);
+                    $data = $all;
                 }
             
                 for($i = 0; $i < count($data); $i++){

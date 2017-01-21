@@ -242,6 +242,11 @@ nav .movie_information .watched div{
     -webkit-transition: margin-left 0.5s;
     transition: margin-left 0.5s;
     height: auto;
+    position: relative;
+    height: auto;
+    display: block;
+    width: auto;
+    padding: 0;
 }
 
 .sidenav-active .main { margin-left: 225px; }
@@ -291,7 +296,9 @@ nav .search ul li a{
     text-decoration: none;
     color:black;
 }
-
+.main{
+    position: relative;
+}
 .movies{
     width: auto;
     height: 100%;
@@ -473,19 +480,18 @@ nav .search ul li a{
 
 /*---------------------PROFILE----------------------*/
 .main{
-    position: relative;
-    height: auto;
-    display: block;
+
 }
 .main .user_profile{
-    position: absolute;
+    position: relative;
     display: inline-flex;
     flex-direction: row;
     width: 80%;
     height: auto;
     min-width: 0%;
-    left:100px;
-    top:100px;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 100px;
     overflow: hidden;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -503,18 +509,34 @@ nav .search ul li a{
 }
 .main .user_data{
      position: relative;
-    min-width: 0%;
+    min-width: 10px !important;
     margin-left: 10px;
     overflow: hidden;
     background-color: white;
     top:0px;
     padding: 10px;
-    min-width:150px;
-    width:60%;
+    min-width:auto;
+    width:75%;
     margin-left: 10%;
     
 }
+.main .user_log{
+    position: relative;
+    display: block;
+    width: 80%;
+    height: auto;
+    min-width: 0%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 25px;
+    overflow: hidden;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 .main label{
+    color: black;
+}
+.main .user_data input{
     color: black;
 }
 .main .profile_picture .change_avatar{
@@ -588,6 +610,27 @@ nav .search ul li a{
     padding: 10px;
     top:400px;
 }
+.main .user_log{
+    width: auto;
+}
+.main .user_log table{
+    position: relative;
+    display: table;
+    padding: 25px;
+    margin-left: 0.7%;
+    margin-right: 0.7%;
+    background-color: white;
+}
+.main .user_log table th{
+    width:33vw;
+}
+.main .user_log table tr:nth-child(2n+2){
+    background-color: rgb(222, 222, 222);
+}
+.main .user_log table td:nth-child(2), td:nth-child(3){
+    text-align: center;
+}
+
 
 /*---------------------!PROFILE----------------------*/
 

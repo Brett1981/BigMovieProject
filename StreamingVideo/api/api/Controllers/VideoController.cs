@@ -48,7 +48,7 @@ namespace api.Controllers
                             user_type = "Request"
                         });*/
                         //streaming content to client
-                        return Streaming.streamingContent(movie, base.Request.Headers.Range);
+                        return Streaming.StreamingContent(movie, base.Request.Headers.Range);
                     }
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
@@ -66,7 +66,7 @@ namespace api.Controllers
         [HttpGet, ActionName("AllMovies")]
         public IHttpActionResult AllMovies()
         {
-            return Ok(Database.allMovies);
+            return Ok(Database.AllMovies);
         }
 
         //GET: api/video/getmovie/value
@@ -89,11 +89,11 @@ namespace api.Controllers
             Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.movie_name);
             await History.Set("user", new History_User()
             {
-                user_action = "Authorization to watch movie: " + movie.movie_name,
+                user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.MovieInfo.title,
                 user_datetime = DateTime.Now,
                 user_id = data.user_id,
                 user_movie = movie.movie_guid,
-                user_type = "Authorization"
+                user_type = "AuthContent"
             });
             await Database.CreateSession(data);
             return Ok(movie);

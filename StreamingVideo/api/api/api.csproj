@@ -307,7 +307,7 @@
     <Compile Include="Resources\Database.cs" />
     <Compile Include="Resources\DataProcessing.cs" />
     <Compile Include="Resources\History.cs" />
-    <Compile Include="Resources\Library.cs" />
+    <Compile Include="Resources\Library1.cs" />
     <Compile Include="Resources\MoviesAPI.cs" />
     <Compile Include="Resources\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

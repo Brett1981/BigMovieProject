@@ -1,24 +1,25 @@
 <?php
 session_start();
+include_once '../server/serverComm.php';
+$client = Server::Client();
 $dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/'); //default server path
 $data = null;
 if(isset($_GET['user'])  || isset($_SESSION['guid'])){
-    if(!empty($_GET['user'])){
-        $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_GET['user']),true);
-    }
-    elseif(!empty($_SESSION['guid'])){
-        $data = json_decode(file_get_contents('http://31.15.224.24:53851/api/user/getuser/'.$_SESSION['guid']),true);
-    }
-    else{
-        header('location ../index.php');
-    }
+    $user_id = null;
+    $data = array('user' => null, 'history' => null);
+    if(!empty($_SESSION['guid'])){ $user_id = $_SESSION['guid']; }
+    elseif(!empty($_GET['user'])){ $user_id = $_GET['user']; }
+    else{ header('location ../index.php'); }
+    $data['user'] = Server::getUser($user_id);
+    $data['history'] = Server::getUserHistory($user_id);
 }
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-        <title><?php ?></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title><?php echo $data['user']['user_display_name']. " profile"?></title>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script
@@ -33,14 +34,13 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
         <!-- Page Content -->
         <div class="main">
             <?php 
-                if(isset($data) && $data != null){
-                    $display_name = $data["user_display_name"];
+                if(isset($data['user']) && $data['user'] != null){
                     $profile = "<div class='user_profile'>
                             <div class='profile_picture'>";
                     
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
                     if($img != null){
-                        $profile .= "<img alt='".$display_name."_picture' src='data:image/jpeg;base64, $img' />";
+                        $profile .= "<img alt='{$data['user']['user_display_name']}_picture' src='data:image/jpeg;base64, $img' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
@@ -50,14 +50,12 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
                                 </form></div>";
                     $profile .= "<div class='user_data'>
                                     <form  action='../upload.php?user=upload' method='post' class='user_data_form'>
-                                        <div><label>Email: </label> <input type='email' name='user_email' value='".$data['user_email']."' readonly/></div>
-                                        <div><label>Profile created: </label><input type='text' name='profile_created' value='".$data['profile_created']."' readonly/></div>
-                                        <div><label>Last logon: </label><input type='text' name='last_logon' value='".$data['last_logon']."' readonly/></div>
-                                        <div><label>Birthday: </label><input type='date' name='user_birthday' value='".$data['user_birthday']."' /></div>
+                                        <div><label>Email: </label> <input type='email' name='user_email' value='{$data['user']['user_email']}' readonly/></div>
+                                        <div><label>Profile created: </label><input type='text' name='profile_created' value='{$data['user']['profile_created']}' readonly/></div>
+                                        <div><label>Last logon: </label><input type='text' name='last_logon' value='{$data['user']['last_logon']}' readonly/></div>
+                                        <div><label>Birthday: </label><input type='date' name='user_birthday' value='{$data['user']['user_birthday']}' /></div>
                                     </form>
                                 </div>";
-                                
-                    
                     echo $profile;
                                 
                     if(isset($_SESSION['post_message'])){
@@ -66,6 +64,19 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
                     }
                                     
                     echo "</div>";
+                    $history = "<div class='user_log'><table><tbody><tr><th>Action</th><th>Type</th><th>Date</th></tr></tbody><tbody>";
+                    foreach($data['history'] as $array){
+                        $history .= "<tr>";
+                        foreach($array as $key => $value){
+                            switch($key){
+                                case 'user_action':$history .= "<td>{$value}</td>"; ;break;
+                                case 'user_type': $history .= "<td>{$value}</td>";;break;
+                                case 'user_datetime': $history .= "<td>{$value}</td>";;break;
+                            }
+                        }
+                        $history .= "</tr>";
+                    }
+                    echo $history."</tbody></table></div>";
                 }
             ?>
         </div>

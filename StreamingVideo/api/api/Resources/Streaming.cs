@@ -14,27 +14,20 @@ namespace api.Resources
 {
     public class Streaming
     {
-        public static HttpResponseMessage streamingContent(MovieData movie, RangeHeaderValue header)
+        public static HttpResponseMessage StreamingContent(MovieData movie, RangeHeaderValue header)
         {
             // This can prevent some unnecessary accesses. 
             // These kind of file names won't be existing at all. 
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
             string path = "";
-            /*if (VideoController.streamDir.EndsWith(@"\")) {path = VideoController.streamDir + movie.movie_ext + @"\"; }
-            else { path = VideoController.streamDir + @"\" + movie.movie_ext + @"\"; }*/
 
             foreach(var mDir in VideoController.movieDir)
             {
                 if(Directory.Exists(mDir + @"\"+ movie.movie_folder)) { path = mDir + @"\" + movie.movie_folder; break; }
                 if(path != "") { break;}
             }
-            /*if (VideoController.movieDir.EndsWith(@"\")) { path = VideoController.streamDir + movie.movie_name + @"\"; }
-            else { path = VideoController.streamDir + @"\" + movie.movie_folder + @"\"; }*/
-
             FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
-            //FileInfo fileInfo = new FileInfo(file);
 
             if (!fileInfo.Exists)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
