@@ -47,7 +47,7 @@ class Server {
         curl_close($ch);
         return $result;
     }
-            
+    
     //GET: all movies
     public static function getAllMovies(){
         return Server::getData("/api/video/allmovies");
@@ -76,7 +76,14 @@ class Server {
     public static function getUserHistory($data){
         return Server::getData("/api/user/getuserhistory/",$data);
     }
-    
+    //POST: Login
+    public static function login($data){
+        return Server::postData($data, "/api/user/login");
+    }
+    //POST: Register
+    public static function register($data){
+        return Server::postData($data, "/api/user/create");
+    }
     //POST: retrieve temp session
     public static function getSession($data){
         return Server::postData($data,"/api/video/getsession");
