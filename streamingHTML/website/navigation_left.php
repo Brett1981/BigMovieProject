@@ -3,7 +3,7 @@ include_once '../server/serverComm.php';
 $client = Server::Client();
 $server_path = 'http://'.$_SERVER['HTTP_HOST'];
 $icons = $server_path.'/streamingHTML/assets/icons/';
-
+$user_def_icon = $icons.'user_default_icon.png';
 $home = $server_path.'/streamingHTML/movies/';
 $img;
 $user;
@@ -19,16 +19,35 @@ if(isset($_SESSION['user_img']) && $_SESSION['user_img'] != null && $_SESSION['u
 }
 
 if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
-    $img = $_SESSION['user_img'];
+    if(empty($_SESSION['user_img'])){
+        $img = $user_def_icon;
+        $_SESSION['user_img'] = $user_def_icon;
+    }
+    else{
+        $img = $_SESSION['user_img'];
+    }
+    
     $user = $_SESSION['user_data'];
     $guid_nav = $user["unique_id"];
 }else{
     $user = Server::getUser($_SESSION['guid']);
     $guid_nav = $user["unique_id"];
-    $img = Server::getUserProfilePicture($_SESSION['guid']);
-    $_SESSION['user_img'] = $img;
+    $img = null;
+    if($user['profile_image'] !== null){
+        $img = Server::getUserProfilePicture($_SESSION['guid']);
+    }
+    else{
+        $img = $user_def_icon;
+    }
+    if(!empty($img)){
+        $_SESSION['user_img'] = $img;
+        $_SESSION['user_img_backup'] = $img;
+    }
+    else{
+        $_SESSION['user_img'] = $user_def_icon;
+        $_SESSION['user_img_backup'] = $user_def_icon;
+    }
     $_SESSION['user_data'] = $user;
-    $_SESSION['user_img_backup'] = $img;
 }
 //star profile link!
 //$profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav; 

@@ -107,7 +107,7 @@ function changeHtmlDom(data){
         //change welcome sign so that user see's changes}
         $('#register-form').fadeOut(500); 
         $('.wrapper').addClass('form-success');
-        h1.text("You can now login as " + data.data.username);
+        h1.text("You can now login as " + data.cred.username);
         setTimeout(function(){ 
             redirectTo[0] = "../login/index.php"; 
             redirectTo.myMethod(); 
@@ -122,16 +122,22 @@ redirectTo = [""];
 redirectTo.myMethod = function (sProperty) {
     window.location.href = redirectTo[0];
 };
-
+var f_password = null;
 function check(value,type){
     if(type.name == "username"){
-        checkUsername(value);
+        checkUsername({username:value});
     }
     else if(type.name == "password"){
-        console.log(value);
+        f_password = value;
     }
     else if(type.name == "v_password"){
-        console.log(value);
+        if(value == f_password){
+            
+            console.log("Password 1 and 2 match!");
+        }
+        else{
+            console.log("Password's do not match!");
+        }
     }
     else if(type.name == "email"){
         console.log(value);
@@ -142,31 +148,25 @@ function check(value,type){
 }
 
 function checkUsername(value){
-    var http = new XMLHttpRequest();
+    //var http = new XMLHttpRequest();
     h1 = $('.wrapper .container #register').children("h1");
-    var url = "http://31.15.224.24:53851/api/user/check/"+value;
-    console.log(url);
-    http.open("GET", url, true);
-    http.setRequestHeader('Access-Control-Allow-Headers', '*');
-    http.setRequestHeader('Access-Control-Allow-Origin', '*');
-    http.setRequestHeader("Content-type", "plain/text");
-    http.onreadystatechange = function(){
-        if (http.readyState == 4 && http.status == 200){
-            console.log(http.responseText);
-            if(http.responseText == "OK"){
-                
-                h1.text("Username is valid");
-            }
-            else if(http.responseText == "NOK"){
-                h1.text("Username is already in use");
-            }
+    var req = $.ajax({
+            type: "POST",
+            url: 'client/client.php?check',
+            data:value
+        });
+    h1.text("Checking username validity...");
+    req.done(function(info){
+        var json = JSON.parse(info);
+        console.log(json);
+        if(json['username_status'] == true){ 
+            //username is available
+            h1.text("Username is available!");
         }
-        else if(http.readyState == 4 && http.status != 200){
-            
+        else{
+            h1.text("Username is not available!");
         }
-        
-    }
-    http.send();
+    });
 }
 function checkPass(){
     

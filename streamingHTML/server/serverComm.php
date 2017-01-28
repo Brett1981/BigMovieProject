@@ -29,7 +29,14 @@ class Server {
     }
     //GET
     private static function getData($api = null,$data = null){
-        if($api != null){ return json_decode(file_get_contents(Server::$client.$api.$data),true); }
+        if($api != null){ 
+            try{
+               return json_decode(file_get_contents(Server::$client.$api.$data),true);
+            }
+            catch(Exception $e){
+                echo 'there was an error ', $e->getMessage(),"\n";
+            }
+        }
         else{ header('locaton ../index.php'); }
     }
     //POST
@@ -76,6 +83,10 @@ class Server {
     public static function getUserHistory($data){
         return Server::getData("/api/user/getuserhistory/",$data);
     }
+    //GET: check register form data
+    public static function checkFormUser($data){
+        return Server::getData("/api/user/check/",$data);
+    }
     //POST: Login
     public static function login($data){
         return Server::postData($data, "/api/user/login");
@@ -95,8 +106,6 @@ class Server {
     //POST: change user profile picture
     public static function setUserProfilePicture($data){
         return Server::postData($data, "/api/user/changeprofilepicture");
-    }
-    
-            
+    }   
 }
 

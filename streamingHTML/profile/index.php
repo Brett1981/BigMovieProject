@@ -39,8 +39,9 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
                             <div class='profile_picture'>";
                     
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
-                    if($img != null){
-                        $profile .= "<img alt='{$data['user']['user_display_name']}_picture' src='data:image/jpeg;base64, $img' />";
+                    echo strlen($_SESSION['user_img']);
+                    if(strlen($_SESSION['user_img']) > 100){
+                        $profile .= "<img alt='{$data['user']['user_display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user_img']}' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";

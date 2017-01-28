@@ -142,9 +142,9 @@ namespace api.Controllers
             var user = await db.Users.Where(x => x.username == value).FirstOrDefaultAsync();
             if(user == null)
             {
-                return Ok("OK");
+                return Ok(user);
             }
-            return Ok("NOK");
+            return Ok(new User());
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]CustomUserModel data)

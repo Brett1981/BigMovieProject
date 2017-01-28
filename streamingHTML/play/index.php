@@ -17,14 +17,13 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
-        $data = json_decode($api,true);
-        $session = json_decode($api_session,true);
-        
+        $data = json_decode(json_decode(json_encode($api)));
+        $session = json_decode($api_session, true);
         if(isset($data) && $data != null){
-            $watching['movie_name'] = $data['MovieInfo']['title'];
-            $watching['homepage'] = $data['MovieInfo']['homepage'];
-            $watching['vote_average'] = $data['MovieInfo']['vote_average'];
-            $watching['watched'] = $data['movie_views'];
+            $watching['movie_name'] = $data->MovieInfo->title;
+            $watching['homepage'] = $data->MovieInfo->homepage;
+            $watching['vote_average'] = $data->MovieInfo->vote_average;
+            $watching['watched'] = $data->movie_views;
         }
         else{ header('location: ../index.php'); }
     }
@@ -33,8 +32,8 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
 else{ header('location: ../login'); }
 function get_session($user_id, $movie_id){
     if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
-        $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
-        $result = Server::getSession($data);
+        $u = array('user_id' => $user_id, 'movie_id' => $movie_id);
+        $result = Server::getSession($u);
         if($result == null){
             header('location: ../movies/');
             $_SESSION['play_error'] = "Error retrieving data";
@@ -65,10 +64,10 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php  if(isset($data) && $data != null){ 
-            if($data["MovieInfo"]["title"] != ""){ 
-                echo $data["MovieInfo"]["title"]; 
-            }elseif($data["movie_name"] != ""){ 
-                echo $data["movie_name"]; 
+            if($data->MovieInfo->title != ""){ 
+                echo $data->MovieInfo->title; 
+            }elseif($data->movie_name != ""){ 
+                echo $data->movie_name; 
             }else{ echo "Unknown movie";}  
         }?></title>
         <!-- VideoJs plugin and stylesheet -->
@@ -101,11 +100,11 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <div class="main">
                 <div>
                     <?php if(isset($data)){ ?>
-                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data["MovieInfo"]["backdrop_path"]; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
-                    <?php  $guid = $data["movie_guid"];
-                            if($data["movie_ext"] == "mp4"){ 
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data->MovieInfo->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
+                    <?php  $guid = $data->movie_guid;
+                            if($data->movie_ext == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
-                            }elseif($data["movie_ext"] == "webm"){
+                            }elseif($data->movie_ext == "webm"){
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
