@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace api.Resources
@@ -14,13 +15,12 @@ namespace api.Resources
         private static Uri movieSearchURL = new Uri("http://api.themoviedb.org/3/search/movie");
         //private static string GenreURL = "http://api.themoviedb.org/3/genre/movie/list?api_key=";
         public static int countAPICalls = 0;
-        public static async Task<MovieInfo> getMovieInfo(string data, int id)
+        public static async Task<MovieInfo> getMovieInfo(Match data, int id)
         {
             try
             {
-                DateTime date;
-                var movie = data.Split('|');
-                date = new DateTime(int.Parse(movie[1]), 1, 1);
+                DateTime date  = new DateTime(int.Parse(data.Groups["year"].Value), 1, 1);
+                //var movie = data.Split('|');
                  
                 //string Searcheditem = "";
                 HttpClient client = new HttpClient();
@@ -33,7 +33,7 @@ namespace api.Resources
 
                 if (apikey != null && apikey.Length != 0)
                 {
-                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + movie[0]);
+                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + data.Groups["title"].Value.Replace('.', ' '));
                     try
                     {
                         //GlobalVar.GlobalApiCall.Counter++;
@@ -56,7 +56,7 @@ namespace api.Resources
                                     DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
                                     if (date.Year != 1 && date != null)
                                     {
-                                        if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(movie[0]))
+                                        if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
                                         {
                                             apiResult = new results()
                                             {

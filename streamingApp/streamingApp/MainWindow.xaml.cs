@@ -109,12 +109,12 @@ namespace streamingApp
             try
             {
                 HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://192.168.1.10:53851");
-                var data = JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("api/video/getmovie?id="+ SourceText.Text));
+                client.BaseAddress = new Uri("http://31.15.224.24:53851");
+                var data = JsonConvert.DeserializeObject<MovieData>(await client.GetStringAsync("api/video/getmovie/"+ SourceText.Text));
                 if(data != null)
                 {
                     this.Title = data.movie_name;
-                    MediaEl.Source = new Uri("http://192.168.1.10:53851/api/video/play?id=" + data.movie_guid);
+                    MediaEl.Source = new Uri("http://31.15.224.24:53851/api/video/play/" + data.movie_guid);
                 }
             }
             catch

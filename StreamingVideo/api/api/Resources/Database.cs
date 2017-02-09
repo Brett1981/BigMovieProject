@@ -22,6 +22,7 @@ using System.Net.Http;
 using System.Net;
 using System.Web.Http;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace api.Resources
 {
@@ -337,11 +338,13 @@ namespace api.Resources
                             if(mName.Count() > 0 )
                             {
                                 //create a string from folder name so that it can retrieve movie information from external API
-                                var movie = GetMovieName(v.Name);
+                                
                                 var item = new FileInfo(mName[0]);
                                 int idx = item.Name.LastIndexOf('.');
                                 var name = item.Name.Substring(0, idx);
-                                var ext = item.Name.Substring(idx + 1);
+                                var movie = GetMovieName(item.Name);
+                                var movieName = movie.Groups["title"].Value.Replace('.', ' ');
+                                var ext = movie.Groups["extension"].Value;
                                 if (ext == "mp4" || ext == "webm")
                                 {
                                     var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
@@ -351,7 +354,7 @@ namespace api.Resources
                                         if (MoviesAPI.countAPICalls > 30) { await Task.Delay(5000); MoviesAPI.countAPICalls = 0; }
 
                                         //editMovieInfo, movie[0] is array from method GetMovieName
-                                        MovieInfo mInfo = await MoviesAPI.getMovieInfo(movie[0], databaseMovieCount);
+                                        MovieInfo mInfo = await MoviesAPI.getMovieInfo(movie, databaseMovieCount);
 
                                         if (mInfo.id != null)
                                         {
@@ -438,47 +441,15 @@ namespace api.Resources
         /// </summary>
         /// <param name="value">string</param>
         /// <returns>string[]</returns>
-        private static string[] GetMovieName(string value)
+        private static Match GetMovieName(string value)
         {
-            string[] dates = new string[] {
-                    "2010","2011", "2012", "2013", "2014", "2015", "2016", "2017","2018","2019",
-                    "2000","2001","2002","2003","2004","2005","2006","2007","2008","2009",                   
-                    "1990","1991","1992","1993","1994","1995","1996","1997","1998","1999",                    
-                    "1980","1981","1982","1983","1984","1985","1986","1987","1988","1989",
-                    
-                };
-            if (dates.Any(value.Contains)){
-                try
-                {
-                    var d = dates.Where(x => value.Contains(x)).ToArray();
-                    string[] movieName = new string[0];
-                    if (d.Count() > 0)
-                    {
-                        for (int i = 0; i < d.Count(); i++)
-                        {
-                            var temp = value.Substring(0, value.IndexOf(d[i])).TrimEnd();
-                            Array.Resize(ref movieName, movieName.Length + 1);
-                            if (temp.ElementAt(temp.Length - 1) == '(')
-                            {
-                                temp = temp.Remove(temp.Length - 1, 1).TrimEnd();
-                                movieName[i] = temp + "|";
-                            }
-                            else { 
-                                movieName[i] += temp;
-                            }
-                            if (movieName[i] != "" && movieName.Count() > 0) { movieName[i] += d[i]; Debug.WriteLine("Movie {0} , year {1}", temp, d[i]); }
-                        }
-                    }
-                    return movieName;
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine("Exception --> GetMovieName :" + ex.Message);
-                    return new string[] { "" };
-                }
-                
-            }
-            return new string[] { "" };
+            Match r = null;
+            string pattern = @"(?'title'.*)(?=\.[\d]{4})\.(?'year'[\d]{4})\.(?'pixelsize'[\d]{4}p)\.(?'format'[\w]+)\.(?'formatsize'[\w]+)-\[(?'group'.*)\]\.(?'extension'[\w]+)$";
+            string pattern2 = @"(?'title'.*)\.(?'year'[^\.]+)\.(?'pixelsize'[^\.]+)\.(?'format'[^\.]+)\.(?'formatsize'[^\.]+)\.(?'filename'[^\.]+)\.(?'extension'[^\.]+)";
+
+            if (value.Contains("[")) r = Regex.Match(value, pattern);
+            else r = Regex.Match(value, pattern2); 
+            return r;
         }
 
         /// <summary>
