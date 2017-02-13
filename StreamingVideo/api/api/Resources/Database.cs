@@ -50,7 +50,7 @@ namespace api.Resources
         /// </summary>
         public static List<MovieData> AllMovies
         {
-            get { if (_movies != null) { return _movies; } else return new List<MovieData>(); }
+            get { if (_movies != null) { return _movies; } else {  ForceMovieList(); return _movies; } }
             set { _movies = value; }
         }
         private static DateTime time;
@@ -282,6 +282,7 @@ namespace api.Resources
                     if (!projectDebug && checkDbCount == 0)
                     {
                         await databaseMovieCheck();
+                        await insertMoviesToDb();
                         time = DateTime.Now;
                         Thread t2 = new Thread(async () => await Database.CreateList());
                         t2.Priority = ThreadPriority.Normal;
@@ -290,6 +291,7 @@ namespace api.Resources
                     else if (!projectDebug && checkDbCount > 0) //&& DateTime.Now > time.AddMinutes(10)
                     {
                         await databaseMovieCheck();
+                        await insertMoviesToDb();
                         await databaseRemoveDeletedFolderFromDb();
                         time = DateTime.Now;
                     }
@@ -318,18 +320,19 @@ namespace api.Resources
             try
             {
                 Debug.WriteLine("Checking database for new entries!");
-                List<MovieData> temp = new List<MovieData>();
+                //List<MovieData> temp = new List<MovieData>();
+                movieListToAdd = new List<Tuple<MovieData,Match>>();
                 foreach (var childDirs in VideoController.movieDir)
                 {
                     var dirs = Directory.GetDirectories(childDirs);
                     // var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//SerializationOverview.xml";
 
-                    var dbCount = db.MovieDatas.Count();
-                    if (dbCount == 0) { databaseMovieCount = 0; } else { databaseMovieCount = db.MovieDatas.Count(); }
+                    //var dbCount = db.MovieDatas.Count();
+                    //if (dbCount == 0) { databaseMovieCount = 0; } else { databaseMovieCount = db.MovieDatas.Count(); }
 
                     foreach (var d in dirs)
                     {
-                        DirectoryInfo v = new DirectoryInfo(d);
+                        //DirectoryInfo v = new DirectoryInfo(d);
                         var files = Directory.GetFiles(d);
                         if (files.Any(s => s.Contains(".mp4") || s.Contains(".webm")))
                         {
@@ -342,24 +345,19 @@ namespace api.Resources
                                 var item = new FileInfo(mName[0]);
                                 int idx = item.Name.LastIndexOf('.');
                                 var name = item.Name.Substring(0, idx);
+                                //regex to get movie info
                                 var movie = GetMovieName(item.Name);
                                 var movieName = movie.Groups["title"].Value.Replace('.', ' ');
                                 var ext = movie.Groups["extension"].Value;
                                 if (ext == "mp4" || ext == "webm")
                                 {
+                                    //check if movie exists in current server db
                                     var m = await db.MovieDatas.Where(x => x.movie_name == name).FirstOrDefaultAsync();
                                     if (m == null)
                                     {
-                                        //get movieinfo from api 
-                                        if (MoviesAPI.countAPICalls > 30) { await Task.Delay(5000); MoviesAPI.countAPICalls = 0; }
-
-                                        //editMovieInfo, movie[0] is array from method GetMovieName
-                                        MovieInfo mInfo = await MoviesAPI.getMovieInfo(movie, databaseMovieCount);
-
-                                        if (mInfo.id != null)
-                                        {
-                                            if (mInfo.tagline.Length > 128) { mInfo.tagline = mInfo.tagline.Substring(0, 127); }
-                                            MovieData mData = new MovieData()
+                                        //creating a list of movies to be searched on the selected API 
+                                        movieListToAdd.Add(new Tuple<MovieData, Match>(
+                                            new MovieData() //movie data to be written to db
                                             {
                                                 movie_name = name,
                                                 movie_ext = ext,
@@ -367,44 +365,91 @@ namespace api.Resources
                                                 movie_folder = item.Directory.Name.ToString(),
                                                 movie_dir = item.Directory.FullName,
                                                 movie_added = DateTime.Now,
-                                                MovieInfo = mInfo
-                                            };
-                                            try
-                                            {
-                                                db.MovieDatas.Add(mData);
-                                                await db.SaveChangesAsync();
-                                                databaseMovieCount++;
-                                                //temp.Add(mData);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                Console.WriteLine(db.Database.Log);
-                                                Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
-                                            }
-                                            finally
-                                            {
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Debug.WriteLine("Movie " + name + " was not added as there was a problem!");
-                                        }
+                                            },
+                                            movie //movie regex
+                                        ));
                                     }
                                 }
-
                             }
                         }
-                        
                     }
                 }
-                
+                if(movieListToAdd.Count > 0)
+                {
+                    Debug.WriteLine("Movie list contains one or more objects to be added to DB!");
+                    Debug.WriteLine("Adding movies to local DB ...");
+                }
             }
             catch(Exception ex)
             {
                 Debug.WriteLine("Exception --> {0} -- {1}", ex.Message);
             }
         }
+        private static List<Tuple<MovieData,Match>> movieListToAdd;
+
+        private static async Task insertMoviesToDb()
+        {
+            Debug.WriteLine("Starting to add movies to local DB ...");
+            var list = new List<int>();
+            //item1 = MovieData, item2 = Match
+            foreach (var item in movieListToAdd)
+            {
+                try
+                {
+                    //get movieinfo from api 
+                    if (MoviesAPI.countAPICalls > 30) { await Task.Delay(5000); MoviesAPI.countAPICalls = 0; }
+                    //editMovieInfo, movie[0] is array from method GetMovieName
+                    MovieInfo mInfo = await MoviesAPI.getMovieInfo(item.Item2, databaseMovieCount);
+
+                    if (mInfo.id != null)
+                    {
+                        if (mInfo.tagline.Length > 128) { mInfo.tagline = mInfo.tagline.Substring(0, 127); }
+                        item.Item1.MovieInfo = mInfo;
+                        try
+                        {
+                            db.MovieDatas.Add(item.Item1);
+                            await db.SaveChangesAsync();
+                            //databaseMovieCount++;
+                            //temp.Add(mData);
+                            var movie = db.MovieDatas.Where(x => x.movie_name == item.Item1.movie_name).First();
+                            Debug.WriteLine("Movie " + movie.MovieInfo.title + " was added to the database as id " + movie.Id + "!");
+                            list.Add(movie.Id);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(db.Database.Log);
+                            Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Movie " + item.Item2.Groups["title"].ToString() + " was not added as there was a problem!");
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine("Error -> An error occured : " + ex.Message);
+                }
+                
+            }
+            Debug.WriteLine("End of import of movies.");
+            if (list.Count == movieListToAdd.Count)
+            {
+                Debug.WriteLine("Info -> All movies added");
+                Debug.WriteLine("Movies added " + list.Count);
+            }
+            else if (list.Count < movieListToAdd.Count)
+            {
+                Debug.WriteLine("Error -> Less movies added than found on local storage!");
+                Debug.WriteLine("Movies added " + list.Count);
+            }
+            else
+            {
+                Debug.WriteLine("Error -> Something went wrong with importing data to DB!");
+                Debug.WriteLine("Movies added " + list.Count);
+            }
+        }
+        
         /// <summary>
         /// Remove movie database entries if directory does not exist
         /// </summary>
