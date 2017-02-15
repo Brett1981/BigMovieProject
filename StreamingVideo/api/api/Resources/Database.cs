@@ -46,8 +46,9 @@ namespace api.Resources
         private static List<MovieData> _movies;
         
         /// <summary>
-        /// Movie Database  public / private items
+        /// Movie Database public / private items
         /// </summary>
+        /// <returns>MovieData</returns>
         public static List<MovieData> AllMovies
         {
             get { if (_movies != null) { return _movies; } else {  ForceMovieList(); return _movies; } }
@@ -217,7 +218,7 @@ namespace api.Resources
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return -1;
+                return ex.HResult;
             }
             
         }
@@ -276,7 +277,6 @@ namespace api.Resources
         {
             try
             {
-                
                 while (true)
                 {
                     if (!projectDebug && checkDbCount == 0)
@@ -357,7 +357,7 @@ namespace api.Resources
                                     {
                                         //creating a list of movies to be searched on the selected API 
                                         movieListToAdd.Add(new Tuple<MovieData, Match>(
-                                            new MovieData() //movie data to be written to db
+                                            new MovieData() //MovieData to be written to db
                                             {
                                                 movie_name = name,
                                                 movie_ext = ext,
@@ -366,7 +366,7 @@ namespace api.Resources
                                                 movie_dir = item.Directory.FullName,
                                                 movie_added = DateTime.Now,
                                             },
-                                            movie //movie regex
+                                            movie //Match movie regex
                                         ));
                                     }
                                 }
@@ -485,7 +485,7 @@ namespace api.Resources
         /// Retrieve a movie name from its folder and return an array of strings
         /// </summary>
         /// <param name="value">string</param>
-        /// <returns>string[]</returns>
+        /// <returns>Match</returns>
         private static Match GetMovieName(string value)
         {
             Match r = null;
