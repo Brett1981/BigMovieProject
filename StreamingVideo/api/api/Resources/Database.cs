@@ -50,7 +50,20 @@ namespace api.Resources
         /// </summary>
         public static List<Movie_Data> AllMovies
         {
-            get { if (_movies != null) { return _movies; } else {  ForceMovieList(); return _movies; } }
+            get
+            {
+                if (_movies != null) { return _movies; }
+                else
+                {
+                    try { ForceMovieList(); }
+                    catch (Exception e) { Debug.WriteLine("Exc -> ForceMovieList | " + e.Message); }
+                    finally
+                    {
+                        if (_movies == null || _movies.Count == 0) { _movies = new List<Movie_Data>(); }
+                    }
+                    return _movies;
+                }
+            }
             set { _movies = value; }
         }
         private static DateTime time;
@@ -223,9 +236,9 @@ namespace api.Resources
         /// <summary>
         /// Force creating the movie list when an element is deleted from db or added
         /// </summary>
-        public static async Task ForceMovieList()
+        public static void ForceMovieList()
         {
-            AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
+            AllMovies = db.Movie_Data.Select(x => x).ToList();
             OrganizeListByDate();
         }
 
@@ -240,7 +253,7 @@ namespace api.Resources
                 bool edited = false;
                 while (true)
                 {
-                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); AllMovies = db.Movie_Data.Select(x => x).ToList(); createListCount++; edited = true; }
+                    if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); AllMovies = await db.Movie_Data.Select(x => x).ToListAsync(); createListCount++; edited = true; }
                     if(DateTime.Now > CreateListTime.AddMinutes(5)) { AllMovies = await db.Movie_Data.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
                     Debug.WriteLine("Movie list --> waiting ...");
                     if (edited){ OrganizeListByDate(); }
@@ -259,6 +272,7 @@ namespace api.Resources
         /// </summary>
         private static void OrganizeListByDate()
         {
+            var d = AllMovies;
             if(AllMovies.Count > 0)
             {
                 AllMovies.Sort((x, y) => y.Movie_Info.release_date.Value.CompareTo(x.Movie_Info.release_date.Value));
