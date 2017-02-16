@@ -46,7 +46,7 @@ namespace api.Resources
         private static List<Movie_Data> _movies;
         
         /// <summary>
-        /// Movie Database public / private items
+        /// Movie Database  public / private items
         /// </summary>
         public static List<Movie_Data> AllMovies
         {
@@ -215,7 +215,7 @@ namespace api.Resources
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return ex.HResult;
+                return -1;
             }
             
         }
@@ -274,6 +274,7 @@ namespace api.Resources
         {
             try
             {
+                
                 while (true)
                 {
                     if (!projectDebug && checkDbCount == 0)
@@ -365,7 +366,7 @@ namespace api.Resources
                                                 enabled = true,
                                                 views = 0
                                             },
-                                            movie //Match movie regex
+                                            movie //movie regex
                                         ));
                                     }
                                 }
@@ -484,7 +485,7 @@ namespace api.Resources
         /// Retrieve a movie name from its folder and return an array of strings
         /// </summary>
         /// <param name="value">string</param>
-        /// <returns>Match</returns>
+        /// <returns>string[]</returns>
         private static Match GetMovieName(string value)
         {
             Match r = null;
