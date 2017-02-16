@@ -26,16 +26,16 @@ namespace api.Controllers
         
         // GET: api/Users
         [HttpGet,ActionName("GetUsers")]
-        public IQueryable<User> GetUsers()
+        public IQueryable<User_Info> GetUsers()
         {
-            return db.Users;
+            return db.User_Info;
         }
 
         //POST: api/Users/Login
         [HttpPost,ActionName("Login")]
         public async Task<IHttpActionResult> Login([FromBody] CustomUserModel data)
         {
-            var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)
             {
                 if(user.username == data.username && user.password == data.password) {
@@ -69,22 +69,23 @@ namespace api.Controllers
         [HttpPost, ActionName("Create")]
         public async Task<IHttpActionResult> Create([FromBody] CustomUserModel data)
         {
-            var user = await db.Users.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user == null)
             {
-                if (data.password != null && data.user_email != null)
+                if (data.password != null && data.email != null)
                 {
-                    user = new api.User() { username = data.username, password = data.password, user_email = data.user_email };
+                    user = new User_Info() { username = data.username, password = data.password, email = data.email };
                     if (data.image_url != null)
                     {
                         HttpClient client = new HttpClient();
                         //user.profile_image = await client.GetByteArrayAsync(data.image_url);
                     }
-                    if (data.user_birthday != null) { try { user.user_birthday = Convert.ToDateTime(data.user_birthday); } catch { user.user_birthday = DateTime.Now; } }
-                    if (data.user_display_name != null) { user.user_display_name = data.user_display_name; }
+                    if (data.birthday != null) { try { user.birthday = Convert.ToDateTime(data.birthday); } catch { user.birthday = DateTime.Now; } }
+                    if (data.display_name != null) { user.display_name = data.display_name; }
                     user.unique_id = api.Resources.Database.CreateGuid(data.username).ToString();
                     user.profile_created = DateTime.Now;
-                    db.Users.Add(user);
+                    user.groupId = db.User_Groups.Where(x => x.type == "user").Select(x => x.Id).First();
+                    db.User_Info.Add(user);
                     await db.SaveChangesAsync();
                     await History.Set("user", new History_User()
                     {
@@ -94,7 +95,7 @@ namespace api.Controllers
                         user_movie = "",
                         user_type = "UserCreationSuccess"
                     });
-                    return Ok(db.Users.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
+                    return Ok(db.User_Info.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
                 }
             }
             await History.Set("user", new History_User()
@@ -109,10 +110,10 @@ namespace api.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet,ActionName("GetUser"),ResponseType(typeof(User))]
+        [HttpGet,ActionName("GetUser"),ResponseType(typeof(User_Info))]
         public async Task<IHttpActionResult> GetUser(string value)
         {
-            User user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
+            User_Info user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if (user == null)
             {
                 await History.Set("user", new History_User()
@@ -139,12 +140,12 @@ namespace api.Controllers
         [HttpGet,ActionName("Check")]
         public async Task<IHttpActionResult> Check(string value)
         {
-            var user = await db.Users.Where(x => x.username == value).FirstOrDefaultAsync();
+            var user = await db.User_Info.Where(x => x.username == value).FirstOrDefaultAsync();
             if(user == null)
             {
                 return Ok(user);
             }
-            return Ok(new User());
+            return Ok(new User_Info());
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]CustomUserModel data)
@@ -222,7 +223,7 @@ namespace api.Controllers
         [HttpGet,ActionName("GetProfilePicture")]
         public async Task<IHttpActionResult> GetProfilePicture([FromUri] string value)
         {
-            var user = await db.Users.Where(x => x.unique_id == value).FirstOrDefaultAsync();
+            var user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if(user != null)
             {
                 await History.Set("user", new History_User()
@@ -244,16 +245,16 @@ namespace api.Controllers
             return Ok(await db.History_User.OrderByDescending(x => x.user_datetime).Where(x => x.user_id == value).Take(20).ToListAsync());
         }
         // DELETE: api/Users/5
-        [ResponseType(typeof(User))]
+        [ResponseType(typeof(User_Info))]
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
+            var user = await db.User_Info.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            db.Users.Remove(user);
+            db.User_Info.Remove(user);
             await db.SaveChangesAsync();
 
             return Ok(user);
@@ -270,7 +271,7 @@ namespace api.Controllers
 
         private bool UserExists(int id)
         {
-            return db.Users.Count(e => e.Id == id) > 0;
+            return db.User_Info.Count(e => e.Id == id) > 0;
         }
     }
 }

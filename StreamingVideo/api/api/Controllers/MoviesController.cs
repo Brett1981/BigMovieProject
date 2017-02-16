@@ -35,7 +35,7 @@ namespace api.Controllers
             }
             catch
             {
-                return View(new MovieData());
+                return View(new Movie_Data());
             }
         }
         // GET: Movies/Details/5
