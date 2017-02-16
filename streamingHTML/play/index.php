@@ -20,10 +20,10 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
         $data = json_decode(json_decode(json_encode($api)));
         $session = json_decode($api_session, true);
         if(isset($data) && $data != null){
-            $watching['movie_name'] = $data->Movie_Info->title;
-            $watching['homepage'] = $data->Movie_Info->homepage;
-            $watching['vote_average'] = $data->Movie_Info->vote_average;
-            $watching['watched'] = $data->views;
+            $watching['movie_name'] = $data->MovieInfo->title;
+            $watching['homepage'] = $data->MovieInfo->homepage;
+            $watching['vote_average'] = $data->MovieInfo->vote_average;
+            $watching['watched'] = $data->movie_views;
         }
         else{ header('location: ../index.php'); }
     }
@@ -64,10 +64,10 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php  if(isset($data) && $data != null){ 
-            if($data->Movie_Info->title != ""){ 
-                echo $data->Movie_Info->title; 
-            }elseif($data->name != ""){ 
-                echo $data->name; 
+            if($data->MovieInfo->title != ""){ 
+                echo $data->MovieInfo->title; 
+            }elseif($data->movie_name != ""){ 
+                echo $data->movie_name; 
             }else{ echo "Unknown movie";}  
         }?></title>
         <!-- VideoJs plugin and stylesheet -->
@@ -100,11 +100,11 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <div class="main">
                 <div>
                     <?php if(isset($data)){ ?>
-                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data->MovieInfo->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
                     <?php  $guid = $data->movie_guid;
-                            if($data->ext == "mp4"){ 
+                            if($data->movie_ext == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
-                            }elseif($data->ext == "webm"){
+                            }elseif($data->movie_ext == "webm"){
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>"; 
                             } 
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/

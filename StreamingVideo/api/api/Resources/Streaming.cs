@@ -14,7 +14,7 @@ namespace api.Resources
 {
     public class Streaming
     {
-        public static HttpResponseMessage StreamingContent(Movie_Data movie, RangeHeaderValue header)
+        public static HttpResponseMessage StreamingContent(MovieData movie, RangeHeaderValue header)
         {
             // This can prevent some unnecessary accesses. 
             // These kind of file names won't be existing at all. 
@@ -24,10 +24,10 @@ namespace api.Resources
 
             foreach(var mDir in VideoController.movieDir)
             {
-                if(Directory.Exists(mDir + @"\"+ movie.folder)) { path = mDir + @"\" + movie.folder; break; }
+                if(Directory.Exists(mDir + @"\"+ movie.movie_folder)) { path = mDir + @"\" + movie.movie_folder; break; }
                 if(path != "") { break;}
             }
-            FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.name + "." + movie.ext));
+            FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.movie_name + "." + movie.movie_ext));
 
             if (!fileInfo.Exists)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

@@ -45,7 +45,7 @@ if(isset($_GET['login']) && isset($_POST)){
 }
 elseif(isset($_GET['register'])){
     $reg = $_POST;
-    if(!empty($reg['username']) && !empty($reg['password']) && !empty($reg['email']) && !empty($reg['display_name'])){
+    if(!empty($reg['username']) && !empty($reg['password']) && !empty($reg['user_email']) && !empty($reg['user_display_name'])){
         $result = Server::register($reg);
         $data = json_decode($result); // decode string json so that we get stdclass object
         $results = $data->Result; //export result part of stdclass to var

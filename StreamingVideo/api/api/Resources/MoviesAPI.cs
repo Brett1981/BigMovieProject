@@ -15,7 +15,7 @@ namespace api.Resources
         private static Uri movieSearchURL = new Uri("http://api.themoviedb.org/3/search/movie");
         //private static string GenreURL = "http://api.themoviedb.org/3/genre/movie/list?api_key=";
         public static int countAPICalls = 0;
-        public static async Task<Movie_Info> getMovieInfo(Match data, int id)
+        public static async Task<MovieInfo> getMovieInfo(Match data, int id)
         {
             try
             {
@@ -46,10 +46,10 @@ namespace api.Resources
                             {
                                 countAPICalls++;
 
-                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.DataAPI>(await response.Content.ReadAsStringAsync());
-                                if (jsonData == null) { return new Movie_Info(); }
+                                var jsonData = JsonConvert.DeserializeObject<DataAPI>(await response.Content.ReadAsStringAsync());
+                                if (jsonData == null) { return new MovieInfo(); }
 
-                                var apiResult = new CustomClasses.results();
+                                results apiResult = new results();
 
                                 for (int i = 0; i < jsonData.results.Count; i++)
                                 {
@@ -58,7 +58,7 @@ namespace api.Resources
                                     {
                                         if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
                                         {
-                                            apiResult = new CustomClasses.results()
+                                            apiResult = new results()
                                             {
                                                 id = jsonData.results[i].id,
                                                 title = jsonData.results[i].title,
@@ -69,25 +69,25 @@ namespace api.Resources
                                         }
                                     }
                                 }
-                                if (apiResult == null) { return new Movie_Info(); }
+                                if (apiResult == null) { return new MovieInfo(); }
 
                                 //GlobalVar.GlobalApiCall.Counter++;
                                 if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
                                 string info = "";
                                 if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
-                                else { return new Movie_Info(); }
+                                else { return new MovieInfo(); }
                                 countAPICalls++;
-                                return CreateMovieInfo(JsonConvert.DeserializeObject<CustomClasses.MovieInfoToJSON>(info), id);
+                                return CreateMovieInfo(JsonConvert.DeserializeObject<MovieInfoJSON>(info), id);
                             }
                             else
                             {
-                                return new Movie_Info();
+                                return new MovieInfo();
                             }
                         }
                         catch(Exception ex)
                         {
                             Debug.WriteLine("Exception at getMovieInfo --> " + ex.Message);
-                            return new Movie_Info();
+                            return new MovieInfo();
                         }
                     }
                     catch (Exception e)
@@ -97,20 +97,20 @@ namespace api.Resources
                 }
                 else
                 {
-                    return new Movie_Info();
+                    return new MovieInfo();
 
                 }
-                return new Movie_Info();
+                return new MovieInfo();
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return new Movie_Info();
+                return new MovieInfo();
             }
         }
-        private static Movie_Info CreateMovieInfo(CustomClasses.MovieInfoToJSON data, int id)
+        private static MovieInfo CreateMovieInfo(MovieInfoJSON data, int id)
         {
-            return  new Movie_Info()
+            return  new MovieInfo()
             {
                 id = data.id,
                 adult = data.adult,
@@ -136,7 +136,7 @@ namespace api.Resources
             };
             
         }
-        private static string ListToString (List<CustomClasses.values> data)
+        private static string ListToString (List<values> data)
         {
             string x = "";
             for(int i = 0; i < data.Count; i++)
@@ -147,4 +147,48 @@ namespace api.Resources
             return x += "";
         }
     }
+
+    public partial class MovieInfoJSON
+    {
+        public int id { get; set; }
+        public Nullable<bool> adult { get; set; }
+        public string backdrop_path { get; set; }
+        public string budget { get; set; }
+        public string homepage { get; set; }
+        public string imdb_id { get; set; }
+        public string original_title { get; set; }
+        public string overview { get; set; }
+        public string popularity { get; set; }
+        public string poster_path { get; set; }
+        public string release_date { get; set; }
+        public string revenue { get; set; }
+        public string status { get; set; }
+        public string tagline { get; set; }
+        public string title { get; set; }
+        public string vote_average { get; set; }
+        public string vote_count { get; set; }
+        public List<values> genres { get; set; }
+        public List<values> production_countries { get; set; }
+        public List<values> production_companies { get; set; }
+        public List<values> spoken_languages { get; set; }
+    }
+    public class values
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+
+    public class DataAPI
+    {
+         public List<results> results { get; set; }
+    }
+    public class results
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string release_date { get; set; }
+        public List<int> genre_ids { get; set; }
+        public string poster_path { get; set; }
+    }
+
 }
