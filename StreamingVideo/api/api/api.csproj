@@ -272,39 +272,38 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="History_API.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
     <Compile Include="History_User.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
-    <Compile Include="MDBSQLEntities.Context.cs">
+    <Compile Include="MDBADO.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.Context.tt</DependentUpon>
+      <DependentUpon>MDBADO.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="MDBSQLEntities.cs">
+    <Compile Include="MDBADO.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
-    <Compile Include="MDBSQLEntities.Designer.cs">
+    <Compile Include="MDBADO.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseUserModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Movie_Data.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    <Compile Include="MovieData.cs">
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
-    <Compile Include="Movie_Info.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    <Compile Include="MovieInfo.cs">
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
-    <Compile Include="Resources\CustomClasses.cs" />
     <Compile Include="Resources\Database.cs" />
     <Compile Include="Resources\DataProcessing.cs" />
     <Compile Include="Resources\History.cs" />
@@ -312,15 +311,12 @@
     <Compile Include="Resources\MoviesAPI.cs" />
     <Compile Include="Resources\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
-    <Compile Include="Session_Play.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    <Compile Include="SessionPlay.cs">
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="User_Groups.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="User_Info.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    <Compile Include="User.cs">
+      <DependentUpon>MDBADO.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -334,15 +330,15 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="MDBSQLEntities.Context.tt">
+    <Content Include="MDBADO.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
-      <LastGenOutput>MDBSQLEntities.Context.cs</LastGenOutput>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
+      <LastGenOutput>MDBADO.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="MDBSQLEntities.tt">
+    <Content Include="MDBADO.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
-      <LastGenOutput>MDBSQLEntities.cs</LastGenOutput>
+      <DependentUpon>MDBADO.edmx</DependentUpon>
+      <LastGenOutput>MDBADO.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -370,12 +366,12 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="MDBSQLEntities.edmx">
+    <EntityDeploy Include="MDBADO.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MDBSQLEntities.Designer.cs</LastGenOutput>
+      <LastGenOutput>MDBADO.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="MDBSQLEntities.edmx.diagram">
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
+    <Content Include="MDBADO.edmx.diagram">
+      <DependentUpon>MDBADO.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\MovieDB.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

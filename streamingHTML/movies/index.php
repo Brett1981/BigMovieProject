@@ -78,18 +78,18 @@ else{
                 $movie = "<div id='m' class='movie' onClick='movie(this);'>
 
                         <div class='poster'>
-                            <img alt='poster' src='https://image.tmdb.org/t/p/w300/".$data[$i]["Movie_Info"]["poster_path"]."' width='120'/>
+                            <img alt='poster' src='https://image.tmdb.org/t/p/w300/".$data[$i]["MovieInfo"]["poster_path"]."' width='120'/>
                             <div class='gradient'></div>
                         </div>
                         <div class='movie_data'>
-                            <div class='id' style='display:none'>".$data[$i]["guid"]."</div>
+                            <div class='id' style='display:none'>".$data[$i]["movie_guid"]."</div>
                             <div class='title'>
-                                <p>".$data[$i]["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data[$i]["Movie_Info"]["release_date"]), 'Y').")</p>
-                                <p>".$data[$i]["Movie_Info"]["tagline"]."</p>
+                                <p>".$data[$i]["MovieInfo"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data[$i]["MovieInfo"]["release_date"]), 'Y').")</p>
+                                <p>".$data[$i]["MovieInfo"]["tagline"]."</p>
                             <p>";
                             $genres = array();
-                            if(strpos($data[$i]["Movie_Info"]["genres"], '|') !== false){
-                                $genres = explode("|",$data[$i]["Movie_Info"]["genres"]);
+                            if(strpos($data[$i]["MovieInfo"]["genres"], '|') !== false){
+                                $genres = explode("|",$data[$i]["MovieInfo"]["genres"]);
                                 for($y = 0; $y < count($genres);$y++){
                                     $x = explode(":",$genres[$y]);
                                     if($y < 2){
@@ -103,7 +103,7 @@ else{
                                     }
                                 }
                             }else{
-                                $genres = explode(":",$data[$i]["Movie_Info"]["genres"]);
+                                $genres = explode(":",$data[$i]["MovieInfo"]["genres"]);
                                 $movie .= (string)$genres[1];
                                 
                             }

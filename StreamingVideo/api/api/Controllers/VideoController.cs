@@ -86,13 +86,13 @@ namespace api.Controllers
                 Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
                 return NotFound();
             }
-            Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.name);
+            Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.movie_name);
             await History.Set("user", new History_User()
             {
-                user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.Movie_Info.title,
+                user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.MovieInfo.title,
                 user_datetime = DateTime.Now,
                 user_id = data.user_id,
-                user_movie = movie.guid,
+                user_movie = movie.movie_guid,
                 user_type = "AuthContent"
             });
             await Database.CreateSession(data);

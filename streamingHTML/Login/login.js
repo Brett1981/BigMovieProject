@@ -35,9 +35,9 @@ $("#register-button").click(function(event){
 
         var register = { username : f.username.value,
                     password : f.password.value, 
-                    email: f.email.value, 
-                    display_name : f.display_name.value,
-                    birthday : f.birthday.value, 
+                    user_email: f.email.value, 
+                    user_display_name : f.display_name.value,
+                    user_birthday : f.birthday.value, 
                     };
         console.log(register);
         postData(register,"register");
@@ -77,7 +77,6 @@ function postData(data,form){
     });
     
     req.done(function(info){
-        console.log(info);
         var json =  JSON.parse(info);
         if(json['response'] == 'success'){ 
             if(form == "login"){ loginSuccess(json,data,form);  }
