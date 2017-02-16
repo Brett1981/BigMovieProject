@@ -336,7 +336,6 @@ namespace api.Resources
                             if(mName.Count() > 0 )
                             {
                                 //create a string from folder name so that it can retrieve movie information from external API
-                                
                                 var item = new FileInfo(mName[0]);
                                 int idx = item.Name.LastIndexOf('.');
                                 var name = item.Name.Substring(0, idx);
@@ -482,7 +481,7 @@ namespace api.Resources
         /// Retrieve a movie name from its folder and return an array of strings
         /// </summary>
         /// <param name="value">string</param>
-        /// <returns>string[]</returns>
+        /// <returns>Match</returns>
         private static Match GetMovieName(string value)
         {
             Match r = null;
@@ -579,7 +578,6 @@ namespace api.Resources
         /// <returns></returns>
         public static async Task<string>ChangeUserPicture(CustomUserModel user)
         {
-
             var uData = await db.User_Info.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync();
             if (uData != null)
             {
