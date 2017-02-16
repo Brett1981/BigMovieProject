@@ -313,18 +313,15 @@ namespace api.Resources
         /// <summary>
         /// Method that checks directories
         /// </summary>
-        /// <returns>int</returns>
+        /// <returns>null</returns>
         private static async Task databaseMovieCheck(){
             try
             {
                 Debug.WriteLine("Checking database for new entries!");
-                //List<MovieData> temp = new List<MovieData>();
                 movieListToAdd = new List<Tuple<Movie_Data, Match>>();
                 foreach (var childDirs in VideoController.movieDir)
                 {
                     var dirs = Directory.GetDirectories(childDirs);
-                    // var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "//SerializationOverview.xml";
-
                     //var dbCount = db.MovieDatas.Count();
                     //if (dbCount == 0) { databaseMovieCount = 0; } else { databaseMovieCount = db.MovieDatas.Count(); }
 
