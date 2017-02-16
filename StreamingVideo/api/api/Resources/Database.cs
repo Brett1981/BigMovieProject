@@ -223,9 +223,9 @@ namespace api.Resources
         /// <summary>
         /// Force creating the movie list when an element is deleted from db or added
         /// </summary>
-        public static void ForceMovieList()
+        public static async Task ForceMovieList()
         {
-            AllMovies = db.Movie_Data.Select(x => x).ToList();
+            AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
             OrganizeListByDate();
         }
 
@@ -274,7 +274,6 @@ namespace api.Resources
         {
             try
             {
-                
                 while (true)
                 {
                     if (!projectDebug && checkDbCount == 0)
