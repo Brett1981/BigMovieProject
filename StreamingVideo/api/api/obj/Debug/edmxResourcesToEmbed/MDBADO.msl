@@ -1,64 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="MDBSQLModelStoreContainer" CdmEntityContainer="MDBSQLEntities">
-    <EntitySetMapping Name="MovieDatas">
-      <EntityTypeMapping TypeName="MDBSQLModel.MovieData">
-        <MappingFragment StoreEntitySet="MovieData">
-          <ScalarProperty Name="movie_added" ColumnName="movie_added" />
-          <ScalarProperty Name="movie_dir" ColumnName="movie_dir" />
-          <ScalarProperty Name="movie_views" ColumnName="movie_views" />
-          <ScalarProperty Name="movie_folder" ColumnName="movie_folder" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="movie_name" ColumnName="movie_name" />
-          <ScalarProperty Name="movie_ext" ColumnName="movie_ext" />
-          <ScalarProperty Name="movie_guid" ColumnName="movie_guid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="MovieInfoes">
-      <EntityTypeMapping TypeName="MDBSQLModel.MovieInfo">
-        <MappingFragment StoreEntitySet="MovieInfo">
-          <ScalarProperty Name="id" ColumnName="id" />
-          <ScalarProperty Name="id_movie" ColumnName="id_movie" />
-          <ScalarProperty Name="adult" ColumnName="adult" />
-          <ScalarProperty Name="backdrop_path" ColumnName="backdrop_path" />
-          <ScalarProperty Name="budget" ColumnName="budget" />
-          <ScalarProperty Name="homepage" ColumnName="homepage" />
-          <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
-          <ScalarProperty Name="original_title" ColumnName="original_title" />
-          <ScalarProperty Name="overview" ColumnName="overview" />
-          <ScalarProperty Name="popularity" ColumnName="popularity" />
-          <ScalarProperty Name="poster_path" ColumnName="poster_path" />
-          <ScalarProperty Name="release_date" ColumnName="release_date" />
-          <ScalarProperty Name="revenue" ColumnName="revenue" />
-          <ScalarProperty Name="status" ColumnName="status" />
-          <ScalarProperty Name="tagline" ColumnName="tagline" />
-          <ScalarProperty Name="title" ColumnName="title" />
-          <ScalarProperty Name="vote_average" ColumnName="vote_average" />
-          <ScalarProperty Name="vote_count" ColumnName="vote_count" />
-          <ScalarProperty Name="genres" ColumnName="genres" />
-          <ScalarProperty Name="production_countries" ColumnName="production_countries" />
-          <ScalarProperty Name="production_companies" ColumnName="production_companies" />
-          <ScalarProperty Name="spoken_languages" ColumnName="spoken_languages" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="MDBSQLModel.User">
-        <MappingFragment StoreEntitySet="User">
-          <ScalarProperty Name="user_email" ColumnName="user_email" />
-          <ScalarProperty Name="user_birthday" ColumnName="user_birthday" />
-          <ScalarProperty Name="last_logon" ColumnName="last_logon" />
-          <ScalarProperty Name="profile_created" ColumnName="profile_created" />
-          <ScalarProperty Name="user_display_name" ColumnName="user_display_name" />
-          <ScalarProperty Name="unique_id" ColumnName="unique_id" />
-          <ScalarProperty Name="profile_image" ColumnName="profile_image" />
-          <ScalarProperty Name="password" ColumnName="password" />
-          <ScalarProperty Name="username" ColumnName="username" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="History_API">
       <EntityTypeMapping TypeName="MDBSQLModel.History_API">
         <MappingFragment StoreEntitySet="History_API">
@@ -81,13 +23,85 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="SessionPlays">
-      <EntityTypeMapping TypeName="MDBSQLModel.SessionPlay">
-        <MappingFragment StoreEntitySet="SessionPlay">
+    <EntitySetMapping Name="Movie_Data">
+      <EntityTypeMapping TypeName="MDBSQLModel.Movie_Data">
+        <MappingFragment StoreEntitySet="Movie_Data">
+          <ScalarProperty Name="enabled" ColumnName="enabled" />
+          <ScalarProperty Name="added" ColumnName="added" />
+          <ScalarProperty Name="views" ColumnName="views" />
+          <ScalarProperty Name="dir" ColumnName="dir" />
+          <ScalarProperty Name="folder" ColumnName="folder" />
+          <ScalarProperty Name="guid" ColumnName="guid" />
+          <ScalarProperty Name="ext" ColumnName="ext" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Movie_Info">
+      <EntityTypeMapping TypeName="MDBSQLModel.Movie_Info">
+        <MappingFragment StoreEntitySet="Movie_Info">
+          <ScalarProperty Name="spoken_languages" ColumnName="spoken_languages" />
+          <ScalarProperty Name="production_companies" ColumnName="production_companies" />
+          <ScalarProperty Name="production_countries" ColumnName="production_countries" />
+          <ScalarProperty Name="genres" ColumnName="genres" />
+          <ScalarProperty Name="vote_count" ColumnName="vote_count" />
+          <ScalarProperty Name="vote_average" ColumnName="vote_average" />
+          <ScalarProperty Name="title" ColumnName="title" />
+          <ScalarProperty Name="tagline" ColumnName="tagline" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="revenue" ColumnName="revenue" />
+          <ScalarProperty Name="release_date" ColumnName="release_date" />
+          <ScalarProperty Name="poster_path" ColumnName="poster_path" />
+          <ScalarProperty Name="popularity" ColumnName="popularity" />
+          <ScalarProperty Name="overview" ColumnName="overview" />
+          <ScalarProperty Name="original_title" ColumnName="original_title" />
+          <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
+          <ScalarProperty Name="homepage" ColumnName="homepage" />
+          <ScalarProperty Name="budget" ColumnName="budget" />
+          <ScalarProperty Name="backdrop_path" ColumnName="backdrop_path" />
+          <ScalarProperty Name="adult" ColumnName="adult" />
+          <ScalarProperty Name="id_movie" ColumnName="id_movie" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Session_Play">
+      <EntityTypeMapping TypeName="MDBSQLModel.Session_Play">
+        <MappingFragment StoreEntitySet="Session_Play">
           <ScalarProperty Name="session_date" ColumnName="session_date" />
           <ScalarProperty Name="session_id" ColumnName="session_id" />
           <ScalarProperty Name="movie_id" ColumnName="movie_id" />
           <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="User_Groups">
+      <EntityTypeMapping TypeName="MDBSQLModel.User_Groups">
+        <MappingFragment StoreEntitySet="User_Groups">
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="desc" ColumnName="desc" />
+          <ScalarProperty Name="access" ColumnName="access" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="User_Info">
+      <EntityTypeMapping TypeName="MDBSQLModel.User_Info">
+        <MappingFragment StoreEntitySet="User_Info">
+          <ScalarProperty Name="display_name" ColumnName="display_name" />
+          <ScalarProperty Name="groupId" ColumnName="groupId" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="birthday" ColumnName="birthday" />
+          <ScalarProperty Name="last_logon" ColumnName="last_logon" />
+          <ScalarProperty Name="profile_created" ColumnName="profile_created" />
+          <ScalarProperty Name="profile_image" ColumnName="profile_image" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="unique_id" ColumnName="unique_id" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
