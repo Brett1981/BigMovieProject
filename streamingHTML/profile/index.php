@@ -1,9 +1,21 @@
 <?php
 session_start();
+
+//server communicator
 include_once '../server/serverComm.php';
 $client = Server::Client();
-$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/'); //default server path
+
+//root of project
+$dir_root = dirname(dirname(__FILE__ ));
+
+//navigation dir
+$dir_nav = $dir_root.'\website\navigation_left.php';
+
+//init variables
 $data = null;
+
+
+
 if(isset($_GET['user'])  || isset($_SESSION['guid'])){
     $user_id = null;
     $data = array('user' => null, 'history' => null);
@@ -29,7 +41,7 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
     </head>
     <body>
         <!-- Sidebar -->
-        <?php include $dir_nav.'website/navigation_left.php'; ?>
+        <?php include $dir_nav; ?>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
@@ -39,9 +51,9 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
                             <div class='profile_picture'>";
                     
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
-                    echo strlen($_SESSION['user_img']);
+                    //echo strlen($_SESSION['user_img']);
                     if(strlen($_SESSION['user_img']) > 100){
-                        $profile .= "<img alt='{$data['user']['user_display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user_img']}' />";
+                        $profile .= "<img alt='{$data['user']['display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user_img']}' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
@@ -51,10 +63,10 @@ if(isset($_GET['user'])  || isset($_SESSION['guid'])){
                                 </form></div>";
                     $profile .= "<div class='user_data'>
                                     <form  action='../upload.php?user=upload' method='post' class='user_data_form'>
-                                        <div><label>Email: </label> <input type='email' name='user_email' value='{$data['user']['user_email']}' readonly/></div>
+                                        <div><label>Email: </label> <input type='email' name='user_email' value='{$data['user']['email']}' readonly/></div>
                                         <div><label>Profile created: </label><input type='text' name='profile_created' value='{$data['user']['profile_created']}' readonly/></div>
                                         <div><label>Last logon: </label><input type='text' name='last_logon' value='{$data['user']['last_logon']}' readonly/></div>
-                                        <div><label>Birthday: </label><input type='date' name='user_birthday' value='{$data['user']['user_birthday']}' /></div>
+                                        <div><label>Birthday: </label><input type='date' name='user_birthday' value='{$data['user']['birthday']}' /></div>
                                     </form>
                                 </div>";
                     echo $profile;

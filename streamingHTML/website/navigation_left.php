@@ -1,10 +1,25 @@
 <?php 
 include_once '../server/serverComm.php';
 $client = Server::Client();
+
+//server communicator
+include_once '../server/serverComm.php';
+
+//root of project
+$dir_root = dirname(dirname(__FILE__ ));
+
+//Website url
 $server_path = 'http://'.$_SERVER['HTTP_HOST'];
-$icons = $server_path.'/streamingHTML/assets/icons/';
+$server_root = $server_path.'/'.basename(dirname(dirname(__FILE__)));
+//navigation dir
+$dir_nav = $dir_root.'\website\navigation_left.php';
+
+//content location
+$icons = $server_root.'/assets/icons/';
 $user_def_icon = $icons.'user_default_icon.png';
-$home = $server_path.'/streamingHTML/movies/';
+$home = $server_root.'/movies/';
+
+//init variables
 $img;
 $user;
 $guid_nav;
@@ -52,7 +67,7 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
 //star profile link!
 //$profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav; 
 //nov profile link!
-$profile = $server_path.'/streamingHTML/profile/index.php';
+$profile = $server_root.'/profile/index.php';
 
 
 /*if(isset($username) && $username != null){ $user[0] = $username; }else{ $user[0] = "Username";}*/
@@ -81,10 +96,10 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
                     </span>
                 </div>
                 <div class='links'>
-                  <a class='active' href='{$server_path}/streamingHTML/movies/'>Home</a>
+                  <a class='active' href='{$server_root}/movies/'>Home</a>
                   <a href='#'>Search</a>
                   <a href='#'>About</a>
-                  <a href='{$server_path}/streamingHTML/index.php?logout={$guid_nav}'>Logout</a>
+                  <a href='{$server_root}/index.php?logout={$guid_nav}'>Logout</a>
                 </div>";
                 if(isset($enableGenres) && $enableGenres == true){
                 $navigation .= "<div class='search'>

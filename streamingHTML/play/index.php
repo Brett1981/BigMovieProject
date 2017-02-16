@@ -1,8 +1,18 @@
 <?php 
 session_start();
-include '../server/serverComm.php';
+//server communicator
+include_once '../server/serverComm.php';
+
+//root of project
+$dir_root = dirname(dirname(__FILE__ ));
+
+//navigation dir
+$dir_nav = $dir_root.'\website\navigation_left.php';
+
+//Server client init
 $client = Server::Client();
-$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
+
+//Init variables
 $api;
 $guid;
 $session;
@@ -94,7 +104,7 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
     </head>
     <body>
         <!-- Sidebar -->
-        <?php include $dir_nav.'website/navigation_left.php'; ?>
+        <?php include $dir_nav; ?>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">

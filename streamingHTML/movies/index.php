@@ -1,15 +1,25 @@
 <?php
 session_start();
+
+//server communicator
 include_once '../server/serverComm.php';
-$dir_nav =  ($_SERVER['DOCUMENT_ROOT'].'/streamingHTML/');
-/*$_SESSION['guid'] = "3fbddcc4-a446-4e5b-9d27-a8c118009ced";*/
-//var_dump($_POST);
+
+//root of project
+$dir_root = dirname(dirname(__FILE__ ));
+
+//navigation dir
+$dir_nav = $dir_root.'\website\navigation_left.php';
+
+//genres init
 $enableGenres = true;
 $genreMovies;
 $top10;
 $last10;
 $all;
+
+//new client init
 $client = Server::Client();
+
 if(isset($_GET['id']) && $_GET['id'] != null){
     $_SESSION['guid'] = $_GET['id'];
 }
@@ -27,15 +37,7 @@ elseif(isset($_GET['last10'])){
 else{
     $all = Server::getAllMovies();
 }
-    
-/*if($_SESSION['guid'] == null && (isset($_POST['user_id']) && $_POST['user_id'] != null)){
-    $_SESSION['guid'] = $_POST['user_id'];
-}
-else{
-    header('Location: ../login/');
-}*/
 
-//echo $_SESSION['guid'];
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -54,7 +56,7 @@ else{
     </head>
     <body class="sidenav-active">
         <!-- Sidebar -->
-        <?php include $dir_nav.'website/navigation_left.php'; ?>
+        <?php include $dir_nav; ?>
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
@@ -78,12 +80,12 @@ else{
                 $movie = "<div id='m' class='movie' onClick='movie(this);'>
 
                         <div class='poster'>
-                            <img alt='poster' src='https://image.tmdb.org/t/p/w300/".$data[$i]["Movie_Info"]["poster_path"]."' width='120'/>
+                            <img alt='poster' src='https://image.tmdb.org/t/p/w160".$data[$i]["Movie_Info"]["poster_path"]."' width='120'/>
                             <div class='gradient'></div>
                         </div>
                         <div class='movie_data'>
                             <div class='id' style='display:none'>".$data[$i]["guid"]."</div>
-                            <div class='title'>
+                            <div class='title' style='min-width: 200px;'>
                                 <p>".$data[$i]["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data[$i]["Movie_Info"]["release_date"]), 'Y').")</p>
                                 <p>".$data[$i]["Movie_Info"]["tagline"]."</p>
                             <p>";
@@ -92,7 +94,7 @@ else{
                                 $genres = explode("|",$data[$i]["Movie_Info"]["genres"]);
                                 for($y = 0; $y < count($genres);$y++){
                                     $x = explode(":",$genres[$y]);
-                                    if($y < 2){
+                                    if(count($y) < 2){
                                         if($y == 0){
                                             $movie .= (string)$x[1] ."/";
                                         }
@@ -101,6 +103,10 @@ else{
                                             break;
                                         }
                                     }
+									else{
+										$movie .= (string)$x[1];
+										break;
+									}
                                 }
                             }else{
                                 $genres = explode(":",$data[$i]["Movie_Info"]["genres"]);
