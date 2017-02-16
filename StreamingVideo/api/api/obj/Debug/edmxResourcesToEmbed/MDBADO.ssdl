@@ -20,21 +20,20 @@
     <Property Name="user_movie" Type="nvarchar" MaxLength="50" />
     <Property Name="user_datetime" Type="datetime" />
   </EntityType>
-  <EntityType Name="Movie_Data">
+  <EntityType Name="MovieData">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="name" Type="nvarchar(max)" />
-    <Property Name="ext" Type="nvarchar" MaxLength="50" />
-    <Property Name="guid" Type="nvarchar(max)" />
-    <Property Name="folder" Type="nvarchar(max)" />
-    <Property Name="dir" Type="nvarchar(max)" />
-    <Property Name="views" Type="int" />
-    <Property Name="added" Type="datetime" />
-    <Property Name="enabled" Type="bit" Nullable="false" />
+    <Property Name="movie_name" Type="nvarchar(max)" />
+    <Property Name="movie_ext" Type="nvarchar" MaxLength="50" />
+    <Property Name="movie_guid" Type="nvarchar(max)" />
+    <Property Name="movie_folder" Type="nvarchar(max)" />
+    <Property Name="movie_dir" Type="nvarchar(max)" />
+    <Property Name="movie_views" Type="int" />
+    <Property Name="movie_added" Type="datetime" />
   </EntityType>
-  <EntityType Name="Movie_Info">
+  <EntityType Name="MovieInfo">
     <Key>
       <PropertyRef Name="id_movie" />
     </Key>
@@ -61,7 +60,7 @@
     <Property Name="production_companies" Type="nvarchar(max)" />
     <Property Name="spoken_languages" Type="nvarchar(max)" />
   </EntityType>
-  <EntityType Name="Session_Play">
+  <EntityType Name="SessionPlay">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -71,18 +70,7 @@
     <Property Name="session_id" Type="nvarchar" MaxLength="50" />
     <Property Name="session_date" Type="datetime" />
   </EntityType>
-  <EntityType Name="User_Groups">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="type" Type="nvarchar" MaxLength="50" Nullable="false" />
-    <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
-    <Property Name="access" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="desc" Type="nvarchar(max)" />
-    <Property Name="status" Type="bit" Nullable="false" />
-  </EntityType>
-  <EntityType Name="User_Info">
+  <EntityType Name="User">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -91,52 +79,34 @@
     <Property Name="username" Type="nvarchar" MaxLength="50" />
     <Property Name="password" Type="nvarchar(max)" />
     <Property Name="profile_image" Type="nvarchar(max)" />
-    <Property Name="display_name" Type="nvarchar" MaxLength="50" />
+    <Property Name="user_display_name" Type="nvarchar" MaxLength="50" />
     <Property Name="profile_created" Type="date" />
     <Property Name="last_logon" Type="datetime" />
-    <Property Name="birthday" Type="date" />
-    <Property Name="email" Type="nvarchar" MaxLength="50" />
-    <Property Name="groupId" Type="int" Nullable="false" />
+    <Property Name="user_birthday" Type="date" />
+    <Property Name="user_email" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <Association Name="FK_MovieInfo_ToMovieData">
-    <End Role="Movie_Data" Type="Self.Movie_Data" Multiplicity="1" />
-    <End Role="Movie_Info" Type="Self.Movie_Info" Multiplicity="0..1" />
+    <End Role="MovieData" Type="Self.MovieData" Multiplicity="1" />
+    <End Role="MovieInfo" Type="Self.MovieInfo" Multiplicity="0..1" />
     <ReferentialConstraint>
-      <Principal Role="Movie_Data">
+      <Principal Role="MovieData">
         <PropertyRef Name="Id" />
       </Principal>
-      <Dependent Role="Movie_Info">
+      <Dependent Role="MovieInfo">
         <PropertyRef Name="id_movie" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_UserGroup_ToUserInfo">
-    <End Role="User_Groups" Type="Self.User_Groups" Multiplicity="1" />
-    <End Role="User_Info" Type="Self.User_Info" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User_Groups">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="User_Info">
-        <PropertyRef Name="groupId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="MDBSQLModelStoreContainer">
     <EntitySet Name="History_API" EntityType="Self.History_API" Schema="dbo" Table="History.API" store:Type="Tables" />
     <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
-    <EntitySet Name="Movie_Data" EntityType="Self.Movie_Data" Schema="dbo" Table="Movie.Data" store:Type="Tables" />
-    <EntitySet Name="Movie_Info" EntityType="Self.Movie_Info" Schema="dbo" Table="Movie.Info" store:Type="Tables" />
-    <EntitySet Name="Session_Play" EntityType="Self.Session_Play" Schema="dbo" Table="Session.Play" store:Type="Tables" />
-    <EntitySet Name="User_Groups" EntityType="Self.User_Groups" Schema="dbo" Table="User.Groups" store:Type="Tables" />
-    <EntitySet Name="User_Info" EntityType="Self.User_Info" Schema="dbo" Table="User.Info" store:Type="Tables" />
+    <EntitySet Name="MovieData" EntityType="Self.MovieData" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MovieInfo" EntityType="Self.MovieInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SessionPlay" EntityType="Self.SessionPlay" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
-      <End Role="Movie_Data" EntitySet="Movie_Data" />
-      <End Role="Movie_Info" EntitySet="Movie_Info" />
-    </AssociationSet>
-    <AssociationSet Name="FK_UserGroup_ToUserInfo" Association="Self.FK_UserGroup_ToUserInfo">
-      <End Role="User_Groups" EntitySet="User_Groups" />
-      <End Role="User_Info" EntitySet="User_Info" />
+      <End Role="MovieData" EntitySet="MovieData" />
+      <End Role="MovieInfo" EntitySet="MovieInfo" />
     </AssociationSet>
   </EntityContainer>
 </Schema>
