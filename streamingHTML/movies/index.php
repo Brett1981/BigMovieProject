@@ -1,6 +1,7 @@
 <?php
 session_start();
-
+//movie list class
+include_once 'movieClass.php'; 
 //server communicator
 include_once '../server/serverComm.php';
 
@@ -16,6 +17,7 @@ $genreMovies;
 $top10;
 $last10;
 $all;
+
 
 //new client init
 $client = Server::Client();
@@ -60,67 +62,21 @@ else{
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
-            <div class="movies">
             <?php 
-                $data;
+                Movies::itemsInRow(6);
                 if(isset($genreMovies) && $genreMovies != null){
-                    $data = $genreMovies;
+                    echo Movies::createMovieList($genreMovies,'genre');
                 }
                 else if(isset($top10) && $top10 != null){
-                    $data = $top10;
+                    echo Movies::createMovieList($top10,'top10');
                 }
                  else if(isset($last10) && $last10 != null){
-                    $data = $last10;
+                    echo Movies::createMovieList($last10,'last10');
                 }
                 else{
-                    $data = $all;
-                }
-            
-                for($i = 0; $i < count($data); $i++){
-                $movie = "<div id='m' class='movie' onClick='movie(this);'>
-
-                        <div class='poster'>
-                            <img alt='poster' src='https://image.tmdb.org/t/p/w160".$data[$i]["Movie_Info"]["poster_path"]."' width='120'/>
-                            <div class='gradient'></div>
-                        </div>
-                        <div class='movie_data'>
-                            <div class='id' style='display:none'>".$data[$i]["guid"]."</div>
-                            <div class='title' style='min-width: 200px;'>
-                                <p>".$data[$i]["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data[$i]["Movie_Info"]["release_date"]), 'Y').")</p>
-                                <p>".$data[$i]["Movie_Info"]["tagline"]."</p>
-                            <p>";
-                            $genres = array();
-                            if(strpos($data[$i]["Movie_Info"]["genres"], '|') !== false){
-                                $genres = explode("|",$data[$i]["Movie_Info"]["genres"]);
-                                for($y = 0; $y < count($genres);$y++){
-                                    $x = explode(":",$genres[$y]);
-                                    if(count($y) < 2){
-                                        if($y == 0){
-                                            $movie .= (string)$x[1] ."/";
-                                        }
-                                        else{
-                                            $movie .= (string)$x[1];
-                                            break;
-                                        }
-                                    }
-									else{
-										$movie .= (string)$x[1];
-										break;
-									}
-                                }
-                            }else{
-                                $genres = explode(":",$data[$i]["Movie_Info"]["genres"]);
-                                $movie .= (string)$genres[1];
-                                
-                            }
-                    $movie .=  "</p></div>
-                        </div>
-                    </div>";
-                    echo $movie;
+                    echo Movies::createMovieList($all,'all');
                 }
             ?>
-            
-            </div>
         </div>
         <!-- /#page-content-wrapper -->
         <script type="application/javascript">

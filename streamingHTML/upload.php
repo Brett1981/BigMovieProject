@@ -1,8 +1,16 @@
 <?php
 session_start();
-include_once 'server/serverComm.php';
-$api = 'http://31.15.224.24:53851/api/user/changeprofilepicture';
+//server communicator
+include_once '../server/serverComm.php';
 $client = Server::Client();
+
+//root of project
+$dir_root = dirname(dirname(__FILE__ ));
+
+//navigation dir
+$dir_nav = $dir_root.'\uploads\index.php';
+
+//$api = 'http://31.15.224.24:53851/api/user/changeprofilepicture';
 $server_port = "8080";
 $isUploaded = 0;
 $target_dir = $_SERVER['DOCUMENT_ROOT']."/streamingHTML/uploads/";

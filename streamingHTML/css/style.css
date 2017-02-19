@@ -298,14 +298,21 @@ nav .search ul li a{
 }
 .main{
     position: relative;
+    overflow:hidden;
 }
 .movies{
-    width: auto;
-    height: 100%;
-    left:175px !important;
-    overflow:hidden;
+    /*width: 100%;
+    height: auto;
+    left:175px !important;*/
     margin-left: 50px;
-    
+}
+.last-movies{
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+.top-movies{
+    margin-left: 50px;
+    margin-bottom: 20px;
 }
 .movie{
     position: relative;
