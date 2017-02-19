@@ -39,14 +39,7 @@ namespace api.Controllers
                     if (movie != null)
                     {
                         Debug.WriteLine("Movie " + value + " is being served.");
-                        /*await History.Set("user", new History_User()
-                        {
-                            user_action = "User requesting to watch movie: " + value,
-                            user_datetime = DateTime.Now,
-                            user_id = "",
-                            user_movie = movie.movie_guid,
-                            user_type = "Request"
-                        });*/
+
                         //streaming content to client
                         return Streaming.StreamingContent(movie, base.Request.Headers.Range);
                     }
@@ -86,17 +79,43 @@ namespace api.Controllers
                 Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
                 return NotFound();
             }
-            Debug.WriteLine("User '"+data.user_id+"' is authorized to watch movie : " + movie.name);
-            await History.Set("user", new History_User()
+            CustomClasses.MovieSession a = new CustomClasses.MovieSession();
+            a.movieData = movie;
+            if (data.user_id.Length < 20)
             {
-                user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.Movie_Info.title,
-                user_datetime = DateTime.Now,
-                user_id = data.user_id,
-                user_movie = movie.guid,
-                user_type = "AuthContent"
-            });
-            await Database.CreateSession(data);
-            return Ok(movie);
+                //user is a guest
+                Debug.WriteLine("User 'Guest' is authorized to watch movie : " + movie.name);
+
+                Debug.WriteLine("Guest is authorized to watch movie : " + movie.name);
+                await History.Set("user", new History_User()
+                {
+                    user_action = "Guest auth to watch Movie -> " + movie.Movie_Info.title,
+                    user_datetime = DateTime.Now,
+                    user_id = data.user_id,
+                    user_movie = movie.guid,
+                    user_type = "AuthGuest Content"
+                });
+                a.sessionGuest = (Session_Guest)await Database.CreateSession<Session_Guest>(data);
+                
+            }
+            else
+            {
+                //user is registered
+                Debug.WriteLine("User '" + data.user_id + "' is authorized to watch movie : " + movie.name);
+                await History.Set("user", new History_User()
+                {
+                    user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.Movie_Info.title,
+                    user_datetime = DateTime.Now,
+                    user_id = data.user_id,
+                    user_movie = movie.guid,
+                    user_type = "AuthContent"
+                });
+                a.sessionPlay = (Session_Play)await Database.CreateSession<Session_Play>(data);
+            }
+            return Ok(a);
+
+            
+            
         }
 
         //GET: api/video/subs/value

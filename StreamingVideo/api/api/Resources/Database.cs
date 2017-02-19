@@ -210,6 +210,33 @@ namespace api.Resources
                 }
                 return movie;
             }
+            else
+            {
+                if(data.user_id.Length < 20)
+                {
+                    //it is a guest
+                    var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
+                    if(movie != null)
+                    {
+                        if (movie.views == null) { movie.views = 1; }
+                        else { movie.views++; }
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("Exception: GetMovie (object) --> " + e.Message);
+                        }
+                        finally
+                        {
+                            movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
+                        }
+                        return movie;
+                    }
+                    return new Movie_Data(); 
+                }
+            }
             return new Movie_Data();
         }
         
@@ -670,33 +697,64 @@ namespace api.Resources
         /// </summary>
         /// <param name="data">DatabaseUserModels</param>
         /// <returns>string</returns>
-        public static async Task<string> CreateSession(DatabaseUserModels data)
+        public static async Task<Object> CreateSession<T>(DatabaseUserModels data)
         {
-            var s0 = await db.Session_Play.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
-            if(s0 != null)
+            bool isGuest = false;
+            Guid g1;
+            if (data.user_id.Length > 30)
             {
-                if (s0.movie_id != "" && s0.session_id != "" && s0.session_date < DateTime.Now && s0.user_id != "")
+                var s0 = await db.Session_Play.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
+                if (s0 != null)
                 {
-                    db.Session_Play.Remove(s0);
-                    await db.SaveChangesAsync();
+                    if (s0.movie_id != "" && s0.session_id != "" && s0.session_date < DateTime.Now && s0.user_id != "")
+                    {
+                        db.Session_Play.Remove(s0);
+                        await db.SaveChangesAsync();
+                    }
                 }
+                isGuest = false;
+                g1 = new Guid(data.user_id);
+                
+            }
+            else
+            {
+                isGuest = true;
+                MD5 md5Hasher = MD5.Create();
+                g1 = new Guid(md5Hasher.ComputeHash(Encoding.Default.GetBytes(DateTime.Now.ToString())));
+            }
+            Guid g2 = new Guid(data.movie_id);
+
+            var result = g1.GetHashCode() ^ g2.GetHashCode() + DateTime.Now.GetHashCode();
+            List<CustomClasses.values> v = new List<CustomClasses.values>();
+            if (isGuest)
+            {
+                var s = new Session_Guest()
+                {
+                    session_date = DateTime.Now,
+                    session_id = CreateGuid(result.ToString()).ToString(),
+                    movie_id = data.movie_id,
+                };
+                db.Session_Guest.Add(s);
+                await db.SaveChangesAsync();
+                return s;
+            }
+            else
+            {
+                var s = new Session_Play()
+                {
+                    session_date = DateTime.Now,
+                    session_id = CreateGuid(result.ToString()).ToString(),
+                    movie_id = data.movie_id,
+                    user_id = data.user_id
+                };
+                db.Session_Play.Add(s);
+                await db.SaveChangesAsync();
+                return s;
             }
             
-            Guid g1 = new Guid(data.user_id);
-            Guid g2 = new Guid(data.movie_id);
-            var result = g1.GetHashCode() ^ g2.GetHashCode() + DateTime.Now.GetHashCode();
-            
-            var s = new Session_Play()
-            {
-                session_date = DateTime.Now,
-                session_id = CreateGuid(result.ToString()).ToString(),
-                movie_id = data.movie_id,
-                user_id = data.user_id
-            };
-            db.Session_Play.Add(s);
-            await db.SaveChangesAsync();
-            return s.session_id;
+
         }
+
         /// <summary>
         /// Retrieve a session from database 
         /// </summary>
@@ -706,14 +764,15 @@ namespace api.Resources
         {
            return await db.Session_Play.Where(x => x.movie_id == data.movie_id && x.user_id == data.user_id).FirstOrDefaultAsync();
         }
+
         /// <summary>
         /// Retrieve data from db by providing session guid that was generated by requesting a movie
         /// </summary>
         /// <param name="session">string</param>
-        /// <returns>SessionPlay</returns>
-        public static async Task<Session_Play> GetBySession(string session)
+        /// <returns>SessionGuest</returns>
+        public static async Task<Session_Guest> GetBySession(string session)
         {
-            return await db.Session_Play.Where(x => x.session_id == session).FirstOrDefaultAsync();
+            return await db.Session_Guest.Where(x => x.session_id == session).FirstOrDefaultAsync();
         }
         #endregion
 

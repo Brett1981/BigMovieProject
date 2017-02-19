@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="History_API">
           <Key>
             <PropertyRef Name="Id" />
@@ -65,6 +65,15 @@
           <Property Name="production_countries" Type="nvarchar(max)" />
           <Property Name="production_companies" Type="nvarchar(max)" />
           <Property Name="spoken_languages" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Session_Guest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="movie_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="session_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="session_date" Type="datetime" />
         </EntityType>
         <EntityType Name="Session_Play">
           <Key>
@@ -132,6 +141,7 @@
           <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
           <EntitySet Name="Movie_Data" EntityType="Self.Movie_Data" Schema="dbo" Table="Movie.Data" store:Type="Tables" />
           <EntitySet Name="Movie_Info" EntityType="Self.Movie_Info" Schema="dbo" Table="Movie.Info" store:Type="Tables" />
+          <EntitySet Name="Session_Guest" EntityType="Self.Session_Guest" Schema="dbo" Table="Session.Guest" store:Type="Tables" />
           <EntitySet Name="Session_Play" EntityType="Self.Session_Play" Schema="dbo" Table="Session.Play" store:Type="Tables" />
           <EntitySet Name="User_Groups" EntityType="Self.User_Groups" Schema="dbo" Table="User.Groups" store:Type="Tables" />
           <EntitySet Name="User_Info" EntityType="Self.User_Info" Schema="dbo" Table="User.Info" store:Type="Tables" />
@@ -144,8 +154,7 @@
             <End Role="User_Info" EntitySet="User_Info" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MDBSQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -289,7 +298,17 @@
             <End Role="User_Groups" EntitySet="User_Groups" />
             <End Role="User_Info" EntitySet="User_Info" />
           </AssociationSet>
+          <EntitySet Name="Session_Guest" EntityType="MDBSQLModel.Session_Guest" />
         </EntityContainer>
+        <EntityType Name="Session_Guest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="movie_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="session_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="session_date" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -398,6 +417,16 @@
                 <ScalarProperty Name="birthday" ColumnName="birthday" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="groupId" ColumnName="groupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Session_Guest">
+            <EntityTypeMapping TypeName="MDBSQLModel.Session_Guest">
+              <MappingFragment StoreEntitySet="Session_Guest">
+                <ScalarProperty Name="session_date" ColumnName="session_date" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

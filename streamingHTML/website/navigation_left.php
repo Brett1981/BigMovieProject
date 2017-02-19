@@ -1,9 +1,8 @@
 <?php 
-include_once '../server/serverComm.php';
 $client = Server::Client();
 
 //server communicator
-include_once '../server/serverComm.php';
+include_once '../server/serverClass.php';
 
 //root of project
 $dir_root = dirname(dirname(__FILE__ ));
@@ -23,11 +22,11 @@ $home = $server_root.'/movies/';
 $img;
 $user;
 $guid_nav;
-if($_SESSION['guid'] == null){
+/*if($_SESSION['guid'] == null){
     session_destroy();
     header('location: ../login/');
     
-}
+}*/
 if(isset($_SESSION['user_img']) && $_SESSION['user_img'] != null && $_SESSION['user_img'] != $_SESSION['user_img_backup']){
     $img = $_SESSION['user_img'];
     $_SESSION['user_img_backup'] = $_SESSION['user_img'];
@@ -44,7 +43,7 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
     
     $user = $_SESSION['user_data'];
     $guid_nav = $user["unique_id"];
-}else{
+}else if(isset($_SESSION['guid']) && !empty($_SESSION['guid'])){
     $user = Server::getUser($_SESSION['guid']);
     $guid_nav = $user["unique_id"];
     $img = null;
@@ -64,8 +63,13 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
     }
     $_SESSION['user_data'] = $user;
 }
-//star profile link!
-//$profile = $server_path.'/streamingHTML/profile/index.php?user='.$guid_nav; 
+else{
+    //user is guest
+    $user['username'] = "Guest";
+    $_SESSION['user_img'] = $user_def_icon;
+    $_SESSION['user_img_backup'] = $user_def_icon;
+    
+}
 //nov profile link!
 $profile = $server_root.'/profile/index.php';
 
@@ -79,13 +83,12 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
         </div>
         <nav>
             <div class='nav-scroll'>
-                <div class='user'>
-                    <a href='$profile'>";
-                        if(strlen($img) > 100){
-                            $navigation .= "<img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>";
+                <div class='user'>";
+                        if(isset($img) && strlen($img) > 100){
+                            $navigation .= "<a href='$profile'><img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>";
                         }
                         else{
-                            $navigation .= "<img class='user_img' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
+                            $navigation .= "<a href='#'><img class='user_img' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
                         }
                         $navigation .= "<!-- For modern browsers. -->
                         <i class='material-icons'>settings</i>
@@ -95,12 +98,19 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
                         <p class='user_username'>{$user["username"]}</p>
                     </span>
                 </div>
-                <div class='links'>
-                  <a class='active' href='{$server_root}/movies/'>Home</a>
+                <div class='links'>";
+                if(!isset($_SESSION['guid']) && $user["username"] == "Guest"){
+                  $navigation .= "<a id='user-login' href='#' >Login / Register</a>";
+                }
+$navigation .=    "<a class='active' href='{$server_root}/movies/'>Home</a>
                   <a href='#'>Search</a>
-                  <a href='#'>About</a>
-                  <a href='{$server_root}/index.php?logout={$guid_nav}'>Logout</a>
-                </div>";
+                  <a href='#'>About</a>";
+
+             if(isset($_SESSION['guid'])){
+$navigation .=     "<a href='{$server_root}/index.php?logout={$guid_nav}'>Logout</a>";
+             }     
+$navigation .= "</div>";            
+                
                 if(isset($enableGenres) && $enableGenres == true){
                 $navigation .= "<div class='search'>
                     <br/>
@@ -146,8 +156,99 @@ if(isset($watching) && $watching != null){
                                 <span class='tooltiptext'>Number of times this movie was viewed</span>
                             </div>
                         </div>
-                   </div>";
+                   </div>
+                </div>";
 }
- echo $navigation."</div></nav>";
+ echo $navigation."<script src='../website/login.js'></script></nav>";
+ echo "<!-- The Modal -->
+<div id='loginModal' class='modal'>
+
+  <!-- Modal content -->
+  <div class='modal-content'>
+    <div class='modal-header'>
+      <span class='close'>&times;</span>
+      <h2>Modal Header</h2>
+    </div>
+    <div class='modal-body'>
+      <p>Some text in the Modal Body</p>
+      <p>Some other text...</p>
+    </div>
+    <div class='modal-footer'>
+      <h3>Modal Footer</h3>
+    </div>
+  </div>
+</div>
+<style>
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+</style>
+"
 
 ?>

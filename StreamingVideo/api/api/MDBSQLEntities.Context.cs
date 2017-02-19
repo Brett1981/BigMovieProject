@@ -32,5 +32,6 @@ namespace api
         public virtual DbSet<Session_Play> Session_Play { get; set; }
         public virtual DbSet<User_Groups> User_Groups { get; set; }
         public virtual DbSet<User_Info> User_Info { get; set; }
+        public virtual DbSet<Session_Guest> Session_Guest { get; set; }
     }
 }

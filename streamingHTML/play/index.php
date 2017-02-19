@@ -1,7 +1,7 @@
 <?php 
 session_start();
 //server communicator
-include_once '../server/serverComm.php';
+include_once '../server/serverClass.php';
 
 //root of project
 $dir_root = dirname(dirname(__FILE__ ));
@@ -19,11 +19,12 @@ $session;
 $watching = array();
 
 if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
+    //play movie to registered user
     if(isset($_GET['id']) && $_GET['id'] != null){
         $mGuid = $_GET['id'];
         try {
-            $api = get_movie($_SESSION['guid'], $mGuid);
-            $api_session = get_session($_SESSION['guid'], $mGuid);
+            $api = getMovie($_SESSION['guid'], $mGuid);
+            $api_session = getSession($_SESSION['guid'], $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
@@ -37,11 +38,32 @@ if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
         }
         else{ header('location: ../index.php'); }
     }
-    else{ header('location: ../movies'); }
 }
-else{ header('location: ../login'); }
-function get_session($user_id, $movie_id){
-    if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
+else{ 
+    //play movie to guest
+    if(isset($_GET['id']) && $_GET['id'] != null){
+        $mGuid = $_GET['id'];
+        $guest_id = uniqid();
+        try {
+            $api = getMovie($guest_id, $mGuid);
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
+        $data = json_decode(json_decode(json_encode($api)));
+        $session = $data->sessionGuest->session_id;
+        if(isset($data) && $data != null){
+            $watching['movie_name'] = $data->movieData->Movie_Info->title;
+            $watching['homepage'] = $data->movieData->Movie_Info->homepage;
+            $watching['vote_average'] = $data->movieData->Movie_Info->vote_average;
+            $watching['watched'] = $data->movieData->views;
+        }
+        else{ header('location: ../index.php'); }
+    }
+    else{ header('location: ../movies'); }
+    
+}
+function getSessionRegistered($user_id, $movie_id){
+    if(isset($user_id) && isset($movie_id) && $movie_id != null){
         $u = array('user_id' => $user_id, 'movie_id' => $movie_id);
         $result = Server::getSession($u);
         if($result == null){
@@ -53,9 +75,10 @@ function get_session($user_id, $movie_id){
     }
     else{ header('location: ../movies/'); exit(); }
 }
-function get_movie($user_id, $movie_id, $username = null, $password = null)
+
+function getMovie($user_id, $movie_id, $username = null, $password = null)
 {
-    if((isset($user_id) && $user_id != null) && isset($movie_id) && $movie_id != null){
+    if(isset($user_id) && isset($movie_id) && $movie_id != null){
         $data = array('user_id' => $user_id, 'movie_id' => $movie_id);
         $result = Server::getMovie($data);
         if($result === null){
@@ -67,6 +90,8 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
     }
     else{ header('location: ../movies/'); exit(); }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -74,10 +99,10 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php  if(isset($data) && $data != null){ 
-            if($data->Movie_Info->title != ""){ 
-                echo $data->Movie_Info->title; 
-            }elseif($data->name != ""){ 
-                echo $data->name; 
+            if($data->movieData->Movie_Info->title != ""){ 
+                echo $data->movieData->Movie_Info->title; 
+            }elseif($data->movieData->name != ""){ 
+                echo $data->movieData->name; 
             }else{ echo "Unknown movie";}  
         }?></title>
         <!-- VideoJs plugin and stylesheet -->
@@ -110,9 +135,9 @@ function get_movie($user_id, $movie_id, $username = null, $password = null)
         <div class="main">
                 <div>
                     <?php if(isset($data)){ ?>
-                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
-                    <?php  $guid = $data->movie_guid;
-                            if($data->ext == "mp4"){ 
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($data)){ echo 'https://image.tmdb.org/t/p/w600'.$data->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
+                    <?php  $guid = $data->movieData->guid;
+                            if($data->movieData->ext == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
                             }elseif($data->ext == "webm"){
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>"; 

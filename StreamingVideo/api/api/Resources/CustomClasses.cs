@@ -61,5 +61,13 @@ namespace api.Resources
             public List<int> genre_ids { get; set; }
             public string poster_path { get; set; }
         }
+
+        public class MovieSession
+        {
+            public Movie_Data movieData { get; set; }
+            public Session_Guest sessionGuest { get; set; }
+            public Session_Play sessionPlay { get; set; }
+
+        }
     }
 }

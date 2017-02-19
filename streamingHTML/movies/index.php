@@ -3,7 +3,7 @@ session_start();
 //movie list class
 include_once 'movieClass.php'; 
 //server communicator
-include_once '../server/serverComm.php';
+include_once '../server/serverClass.php';
 
 //root of project
 $dir_root = dirname(dirname(__FILE__ ));
@@ -21,10 +21,6 @@ $all;
 
 //new client init
 $client = Server::Client();
-
-if(isset($_GET['id']) && $_GET['id'] != null){
-    $_SESSION['guid'] = $_GET['id'];
-}
 
 if(isset($_GET['genre']) && $_GET['genre'] != ""){
     $g = $_GET['genre'];
@@ -84,10 +80,9 @@ else{
               document.body.classList.toggle('sidenav-active');
             }
             function movie(x){
-               var text = $(x).children(".movie_data").children(".id")[0].innerHTML;
-                window.location.href = "../play/index.php?id="+text;
-                console.log(text);
+                window.location.href = "../play/index.php?id="+$(x).children(".movie_data").children(".id")[0].innerHTML;
             }
         </script>
+        
     </body>
 </html>

@@ -312,6 +312,9 @@
     <Compile Include="Resources\MoviesAPI.cs" />
     <Compile Include="Resources\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Session_Guest.cs">
+      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Session_Play.cs">
       <DependentUpon>MDBSQLEntities.tt</DependentUpon>
     </Compile>

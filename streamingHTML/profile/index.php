@@ -2,7 +2,7 @@
 session_start();
 
 //server communicator
-include_once '../server/serverComm.php';
+include_once '../server/serverClass.php';
 $client = Server::Client();
 
 //root of project
