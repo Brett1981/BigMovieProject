@@ -6,7 +6,7 @@ if(isset($_GET['logout']) && $_GET['logout'] !== null)
     $_SESSION['user_data'] = null;
     $_SESSION['user_img'] = null;
     session_destroy();
-    header('Location: login/');
+    header('Location: index.php');
 }
 elseif(isset($_GET['login']) && $_GET['login'] == "user" ){
     echo $_POST['username'];

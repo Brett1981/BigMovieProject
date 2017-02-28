@@ -47,7 +47,7 @@ session_start();
                             <input type="date" placeholder="Birthday" name="birthday">
                             <input type="text" placeholder="Display name" name="display_name" onblur="check(value,this)" required>
                             <button type="submit" id="register-button" class="preventSubmit">Register</button>
-                            <a id="switch2">Login</a>
+                            <a id="switch">Login</a>
                         </form>
 
                     </div>
