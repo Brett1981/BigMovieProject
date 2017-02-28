@@ -27,6 +27,11 @@ $guid_nav;
     header('location: ../login/');
     
 }*/
+if(isset($_GET['id']) && !empty($_GET['id'])){
+    if(strlen($_GET['id']) == 36){
+        $_SESSION['guid'] = $_GET['id'];
+    }
+}
 if(isset($_SESSION['user_img']) && $_SESSION['user_img'] != null && $_SESSION['user_img'] != $_SESSION['user_img_backup']){
     $img = $_SESSION['user_img'];
     $_SESSION['user_img_backup'] = $_SESSION['user_img'];
@@ -42,26 +47,9 @@ if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
     }
     
     $user = $_SESSION['user_data'];
-    $guid_nav = $user["unique_id"];
+    $guid_nav = $user['unique_id'];
 }else if(isset($_SESSION['guid']) && !empty($_SESSION['guid'])){
-    $user = Server::getUser($_SESSION['guid']);
-    $guid_nav = $user["unique_id"];
-    $img = null;
-    if($user['profile_image'] !== null){
-        $img = Server::getUserProfilePicture($_SESSION['guid']);
-    }
-    else{
-        $img = $user_def_icon;
-    }
-    if(!empty($img)){
-        $_SESSION['user_img'] = $img;
-        $_SESSION['user_img_backup'] = $img;
-    }
-    else{
-        $_SESSION['user_img'] = $user_def_icon;
-        $_SESSION['user_img_backup'] = $user_def_icon;
-    }
-    $_SESSION['user_data'] = $user;
+    getUserData($_SESSION['guid']);
 }
 else{
     //user is guest
@@ -69,6 +57,32 @@ else{
     $_SESSION['user_img'] = $user_def_icon;
     $_SESSION['user_img_backup'] = $user_def_icon;
     
+}
+
+function getUserData($id)
+{
+    $user = Server::getUser($id);
+    $guid_nav = $user["unique_id"];
+    $img = null;
+    if($user['profile_image'] !== null){
+        $_SESSION['guid'] = $user['unique_id'];
+        $img = Server::getUserProfilePicture($id);
+    }
+    else{
+        $img_def = $GLOBALS['user_def_icon'];
+    }
+    if(!empty($img) && strlen($img) > 60){
+        $_SESSION['user_img'] = $img;
+        $_SESSION['user_img_backup'] = $img;
+    }
+    else{
+        $_SESSION['user_img'] = $img_def;
+        $_SESSION['user_img_backup'] = $img_def;
+
+    }
+    $_SESSION['user_data'] = $user;
+    var_dump($_SESSION);
+   
 }
 //nov profile link!
 $profile = $server_root.'/profile/index.php';
@@ -107,7 +121,7 @@ $navigation .=    "<a class='active' href='{$server_root}/movies/'>Home</a>
                   <a href='#'>About</a>";
 
              if(isset($_SESSION['guid'])){
-$navigation .=     "<a href='{$server_root}/index.php?logout={$guid_nav}'>Logout</a>";
+$navigation .=     "<a href='{$server_root}/index.php?logout={$_SESSION['guid']}'>Logout</a>";
              }     
 $navigation .= "</div>";            
                 
@@ -167,88 +181,50 @@ if(isset($watching) && $watching != null){
   <div class='modal-content'>
     <div class='modal-header'>
       <span class='close'>&times;</span>
-      <h2>Modal Header</h2>
+      <h2>Login / Register</h2>
     </div>
-    <div class='modal-body'>
-      <p>Some text in the Modal Body</p>
-      <p>Some other text...</p>
+    <div class='modal-login' id='login' style='display:block;'>
+        <div class='modal-body'>
+            <form id='login-form' class='form' method='post' >
+                <input type='text' placeholder='Username' name='username'>
+                <input type='password' placeholder='Password' name='password'>
+                <button type='submit' id='login-button' class='preventSubmit'>Login</button>
+            </form>
+            <button id='switch'>Register</button>
+        </div>
+    </div>
+    <div class='modal-register' id='register' style='display:none;'>
+        <div class='modal-body'>
+            <form id='register-form' class='form' method='post'>
+                <input type='text' placeholder='Username' name='username' onblur='check(value,this)' required>
+                <input type='password' placeholder='Password' name='password' onblur='check(value,this)' required>
+                <input type='password' placeholder='Verify password' name='v_password' onblur='check(value,this)' required>
+                <input type='email' placeholder='Email' name='email' onblur='check(value,this)' required>
+                <input type='date' placeholder='Birthday' name='birthday'>
+                <input type='text' placeholder='Display name' name='display_name' onblur='check(value,this)' required>
+                <button type='submit' id='register-button' class='preventSubmit'>Register</button>
+            </form>
+            <button id='switch'>Login</button>
+        </div>
     </div>
     <div class='modal-footer'>
-      <h3>Modal Footer</h3>
     </div>
   </div>
+  <script type='text/javascript' src='../website/login.js'></script>
+  <ul class='bg-bubbles'>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 </div>
-<style>
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
 
-/* Modal Content */
-.modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    border: 1px solid #888;
-    width: 50%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
-    to {top:0; opacity:1}
-}
-
-@keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
-}
-
-/* The Close Button */
-.close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.modal-header {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-footer {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-}
-</style>
-"
+";
 
 ?>

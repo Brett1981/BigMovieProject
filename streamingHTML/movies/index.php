@@ -4,7 +4,6 @@ session_start();
 include_once 'movieClass.php'; 
 //server communicator
 include_once '../server/serverClass.php';
-
 //root of project
 $dir_root = dirname(dirname(__FILE__ ));
 

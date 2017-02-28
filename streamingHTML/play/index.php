@@ -17,27 +17,30 @@ $api;
 $guid;
 $session;
 $watching = array();
-
-if(isset($_SESSION['guid']) && $_SESSION['guid'] != null){
+if(isset($_SESSION['user_data']['unique_id']) && $_SESSION['user_data']['unique_id'] != null){
     //play movie to registered user
     if(isset($_GET['id']) && $_GET['id'] != null){
         $mGuid = $_GET['id'];
         try {
-            $api = getMovie($_SESSION['guid'], $mGuid);
-            $api_session = getSession($_SESSION['guid'], $mGuid);
+            $api = getMovie($_SESSION['user_data']['unique_id'], $mGuid);
+            $api_session = getSessionRegistered($_SESSION['user_data']['unique_id'], $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
         $data = json_decode(json_decode(json_encode($api)));
         $session = json_decode($api_session, true);
         if(isset($data) && $data != null){
-            $watching['movie_name'] = $data->Movie_Info->title;
-            $watching['homepage'] = $data->Movie_Info->homepage;
-            $watching['vote_average'] = $data->Movie_Info->vote_average;
-            $watching['watched'] = $data->views;
+            $watching['movie_name'] = $data->movieData->Movie_Info->title;
+            $watching['homepage'] = $data->movieData->Movie_Info->homepage;
+            $watching['vote_average'] = $data->movieData->Movie_Info->vote_average;
+            $watching['watched'] = $data->movieData->views;
         }
         else{ header('location: ../index.php'); }
     }
+    else{
+        header('location: ../index.php');
+    }
+    
 }
 else{ 
     //play movie to guest

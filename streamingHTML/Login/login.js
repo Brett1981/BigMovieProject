@@ -3,15 +3,13 @@ $("#switch").click(function(event){
     h1.text("Register");
     var parent = $('.container').find('div');
     var first = parent.first();
-    //.addClass("hidden")
     var last = parent.last();
-    //.removeClass("hidden")
     first.addClass("hidden");
     last.removeClass("hidden");
 });
 $("#login-button").click(function(event){
     event.preventDefault();
-    var f = event.currentTarget.form
+    var f = event.currentTarget;
     var user = {username : f.username.value,
                 password : f.password.value
                };

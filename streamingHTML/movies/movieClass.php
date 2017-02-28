@@ -68,7 +68,7 @@ class Movies {
         self::$html_all .= "</div>";
         self::$html_lastAdded .= "</div>";
         self::$html_mostViewed .= "</div>";
-        return self::$html_lastAdded.self::$html_mostViewed.self::$html_all;
+        return self::$html_lastAdded."</hr>".self::$html_mostViewed."</hr>".self::$html_all;
     }
 
     //partial
