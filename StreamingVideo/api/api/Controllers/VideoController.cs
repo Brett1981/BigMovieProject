@@ -31,11 +31,25 @@ namespace api.Controllers
             {
                 //get user id and movie id from session in database
                 var s = await Database.GetBySession(value);
-                if (s != null && s.movie_id != null)
+
+                Session_Play sp = new Session_Play();
+                Session_Guest sg = new Session_Guest();
+                string movieId = "";
+
+                if (s is Session_Play)
+                {
+                    sp = (Session_Play)s;
+                    movieId = sp.movie_id;
+                }
+                else {
+                    sg = (Session_Guest)s;
+                    movieId = sg.movie_id; 
+                }
+                if (sp != null || sg != null && movieId != null)
                 {
                     Debug.WriteLine("User requesting to watch movie: " + value);
                     //Getting movie from DB
-                    var movie = await Database.Get(s.movie_id);
+                    var movie = await Database.Get(movieId);
                     if (movie != null)
                     {
                         Debug.WriteLine("Movie " + value + " is being served.");

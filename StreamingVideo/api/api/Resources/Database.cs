@@ -602,7 +602,7 @@ namespace api.Resources
         /// Returns the top 10 most played movies 
         /// </summary>
         /// <returns>MovieData</returns>
-        public static async Task<List< Movie_Data>> GetTop10()
+        public static async Task<List<Movie_Data>> GetTop10()
         {
             return await db.Movie_Data.Where(x => x.views > 0).Take(5).ToListAsync();
         }
@@ -770,9 +770,15 @@ namespace api.Resources
         /// </summary>
         /// <param name="session">string</param>
         /// <returns>SessionGuest</returns>
-        public static async Task<Session_Guest> GetBySession(string session)
+        public static async Task<Object> GetBySession(string session)
         {
-            return await db.Session_Guest.Where(x => x.session_id == session).FirstOrDefaultAsync();
+            Session_Guest guest;
+            guest = await db.Session_Guest.Where(x => x.session_id == session).FirstOrDefaultAsync();
+            if(guest == null)
+            {
+                return await db.Session_Play.Where(x => x.session_id == session).FirstOrDefaultAsync();
+            }
+            return guest;
         }
         #endregion
 
