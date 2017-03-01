@@ -97,7 +97,7 @@ function changeHtmlDom(data){
         h1.text("Welcome, " + data.cred.username);
         sessionStorage.setItem('user_id', data.client.uid);
         setTimeout(function(){ 
-            redirectTo[0] = "../movies/index.php?id="+data.client.uid; 
+            redirectTo[0] = "../movies/index.php?uid="+data.client.uid; 
             redirectTo.myMethod(); 
         }, 2000);
     }
