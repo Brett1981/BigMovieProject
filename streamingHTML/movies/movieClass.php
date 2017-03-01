@@ -14,11 +14,11 @@ class Movies {
     private static $data_partial;
     private static $html_partial;
 
-    public static function createMovieList($data, $type){
+    public static function createMovieList($movies, $type){
         if ($type != 'all') {
-           return Movies::Partial($data);
+           return Movies::Partial($movies);
         } else{
-           return Movies::All($data);
+           return Movies::All($movies);
         }
     }
     
@@ -26,55 +26,55 @@ class Movies {
         self::$nRow = $row;
     }
     //last 6 movies added 
-    private static function LastAdded($data){
+    private static function LastAdded($movie){
         $sort;
-        foreach ($data as $key => $part) {
+        foreach ($movie as $key => $part) {
            $sort[$key] = strtotime($part['added']);
         }
-        array_multisort($sort,SORT_DESC,$data);
-        return array_slice($data,0,self::$nRow);
+        array_multisort($sort,SORT_DESC,$movie);
+        return array_slice($movie,0,self::$nRow);
     }
 
     //most viewed
-    private static function MostViewed($data){
+    private static function MostViewed($movie){
         $sort;
-        foreach ($data as $key => $part) {
+        foreach ($movie as $key => $part) {
            $sort[$key] = (int)$part['views'];
         }
-        array_multisort($sort,SORT_DESC,$data);
-        return array_slice($data,0,self::$nRow);
+        array_multisort($sort,SORT_DESC,$movie);
+        return array_slice($movie,0,self::$nRow);
     }
     
     //all
-    private static function All($data){
+    private static function All($movies){
 
-        self::$data_all = $data;
-        self::$data_lastAdded = Movies::LastAdded($data);
-        self::$data_mostViewed = Movies::MostViewed($data);
+        self::$data_all = $movies;
+        self::$data_lastAdded = Movies::LastAdded($movies);
+        self::$data_mostViewed = Movies::MostViewed($movies);
 
         self::$html_all = "<div class='movies'>";
-        self::$html_lastAdded = "<div class='last-movies'>";
-        self::$html_mostViewed = "<div class='top-movies'>";
+        self::$html_lastAdded = "<div class='seperator-movies'><div class='last-movies'>";
+        self::$html_mostViewed = "<div class='seperator-movies'><div class='top-movies'>";
 
         foreach(self::$data_lastAdded as $item){
-            self::$html_lastAdded .= Movies::movieToHtml($item);
+            self::$html_lastAdded .= Movies::movieToHtmlTopView($item);
         }
         foreach(self::$data_mostViewed as $item){
-            self::$html_mostViewed .= Movies::movieToHtml($item);
+            self::$html_mostViewed .= Movies::movieToHtmlTopView($item);
         }
         foreach(self::$data_all as $item){
             self::$html_all .= Movies::movieToHtml($item);
         }
         self::$html_all .= "</div>";
-        self::$html_lastAdded .= "</div>";
-        self::$html_mostViewed .= "</div>";
-        return self::$html_lastAdded."</hr>".self::$html_mostViewed."</hr>".self::$html_all;
+        self::$html_lastAdded .= "</div></div>";
+        self::$html_mostViewed .= "</div></div>";
+        return self::$html_lastAdded.self::$html_mostViewed.self::$html_all;
     }
 
     //partial
-    private static function Partial($data){
+    private static function Partial($movie){
         self::$html_partial = "<div class='movies'>";
-        foreach($data as $item){
+        foreach($movie as $item){
             self::$html_partial .= Movies::movieToHtml($item);
         }
         self::$html_partial .= "</div>";
@@ -82,34 +82,49 @@ class Movies {
     }
 
     //write movie html and return it
-    private static function movieToHtml($data){
-        $movie ="<div id='m' class='movie' onClick='movie(this);'>
+    private static function movieToHtml($movie){
+        $movieHtml ="<div id='m' class='movie' onClick='movie(this);'>
                     <div class='poster'>
-                        <img alt='poster' src='https://image.tmdb.org/t/p/w160".$data["Movie_Info"]["poster_path"]."' width='120'/>
+                        <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>
                     </div>
                     <div class='movie_data'>
-                        <div class='id' style='display:none'>".$data["guid"]."</div>
+                        <div class='id' style='display:none'>".$movie["guid"]."</div>
                         <div class='title' style='min-width: 200px;'>
-                            <p>".$data["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($data["Movie_Info"]["release_date"]), 'Y').")</p>
-                            <p>".$data["Movie_Info"]["tagline"]."</p>
+                            <p>".$movie["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($movie["Movie_Info"]["release_date"]), 'Y').")</p>
+                            <p>".$movie["Movie_Info"]["tagline"]."</p>
                             <p>";
                         $genres = array();
-                        if(strpos($data["Movie_Info"]["genres"], '|') !== false){
-                            $genres = explode("|",$data["Movie_Info"]["genres"]);
-                            $movie .= Movies::getGenres($genres);
+                        if(strpos($movie["Movie_Info"]["genres"], '|') !== false){
+                            $genres = explode("|",$movie["Movie_Info"]["genres"]);
+                            $movieHtml .= Movies::getGenres($genres);
                         }else{
-                            $genres = explode(":",$data["Movie_Info"]["genres"]);
-                            $movie .= (string)$genres[1];
+                            $genres = explode(":",$movie["Movie_Info"]["genres"]);
+                            $movieHtml .= (string)$genres[1];
 
                         }
-                $movie .=  "</p>
+                $movieHtml .=  "</p>
                         </div>
                     </div>
                 </div>";
-        return $movie;
+        return $movieHtml;
     }
-
+    
+    private static function movieToHtmlTopView($movie){
+        $movieHtml ="<div id='m' class='movie' onClick='movie(this);'>
+                    <div class='poster'>
+                        <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
+                        <div class='gradient'></div>
+                    </div>
+                    <div class='movie_data'>
+                        <div class='id' style='display:none'>".$movie["guid"]."</div>
+                        <div class='title'>
+                            <p>".$movie["Movie_Info"]["title"]."</p>
+                        </div>
+                    </div>
+                </div>";
+        return $movieHtml;
+    }
     private static function getGenres($data){
         $genre = "";
         for($i = 0; $i < count($data);$i++){

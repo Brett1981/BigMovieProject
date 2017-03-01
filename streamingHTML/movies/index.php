@@ -65,7 +65,7 @@ else{
                 else if(isset($top10) && $top10 != null){
                     echo Movies::createMovieList($top10,'top10');
                 }
-                 else if(isset($last10) && $last10 != null){
+                else if(isset($last10) && $last10 != null){
                     echo Movies::createMovieList($last10,'last10');
                 }
                 else{

@@ -3,92 +3,55 @@ $client = Server::Client();
 
 //server communicator
 include_once '../server/serverClass.php';
-
+include_once 'navigationClass.php';
 //root of project
-$dir_root = dirname(dirname(__FILE__ ));
-
+$data['dirRoot']        = dirname(dirname(__FILE__ ));
 //Website url
-$server_path = 'http://'.$_SERVER['HTTP_HOST'];
-$server_root = $server_path.'/'.basename(dirname(dirname(__FILE__)));
+$data['serverPath']     = 'http://'.$_SERVER['HTTP_HOST'];
+$data['serverRoot']     = $data['serverPath'].'/'.basename(dirname(dirname(__FILE__)));
 //navigation dir
-$dir_nav = $dir_root.'\website\navigation_left.php';
-
+$data['dirNav']         = $data['dirRoot'].'\website\navigation_left.php';
 //content location
-$icons = $server_root.'/assets/icons/';
-$user_def_icon = $icons.'user_default_icon.png';
-$home = $server_root.'/movies/';
+$data['icons']          = $data['serverRoot'].'/assets/icons/';
+$data['userDefIcon']    = $data['icons'] .'user_default_icon.png';
+$data['homePage']       = $data['serverRoot'].'/movies/';
+//nov profile link!
+$data['profilePage']    = $data['serverRoot'].'/profile/index.php';
 
 //init variables
 $img;
 $user;
 $guid_nav;
-/*if($_SESSION['guid'] == null){
-    session_destroy();
-    header('location: ../login/');
+$logedIn = false;
+if(isset($_SESSION['user']) && !empty($_SESSION['user']) && !empty($_SESSION['user']['unique_id'])){
     
-}*/
-if(isset($_GET['id']) && !empty($_GET['id'])){
-    if(strlen($_GET['id']) == 36){
-        $_SESSION['guid'] = $_GET['id'];
-    }
+    $user = $_SESSION['user'];
 }
-if(isset($_SESSION['user_img']) && $_SESSION['user_img'] != null && $_SESSION['user_img'] != $_SESSION['user_img_backup']){
-    $img = $_SESSION['user_img'];
-    $_SESSION['user_img_backup'] = $_SESSION['user_img'];
-}
-
-if(isset($_SESSION['user_data']) && $_SESSION['user_data'] != null){
-    if(empty($_SESSION['user_img'])){
-        $img = $user_def_icon;
-        $_SESSION['user_img'] = $user_def_icon;
+elseif((isset($_GET['uid']) && !empty($_GET['uid'])) 
+        && empty($_SESSION['user']['unique_id'])){
+    if(strlen($_GET['uid']) == 36 ){
+        $data['userGuid'] = $_GET['uid'];
+        //init navigation class
+        $navData = new Navigation($data);
+        $user = $navData->user;
+        $_SESSION['user'] = $user;
+        
     }
-    else{
-        $img = $_SESSION['user_img'];
-    }
-    
-    $user = $_SESSION['user_data'];
-    $guid_nav = $user['unique_id'];
-}else if(isset($_SESSION['guid']) && !empty($_SESSION['guid'])){
-    getUserData($_SESSION['guid']);
 }
 else{
-    //user is guest
-    $user['username'] = "Guest";
-    $_SESSION['user_img'] = $user_def_icon;
-    $_SESSION['user_img_backup'] = $user_def_icon;
-    
+    $navData = new Navigation($data);
+    $user = $navData->user;
+    $_SESSION['user'] = $user;
 }
 
-function getUserData($id)
-{
-    $user = Server::getUser($id);
-    $guid_nav = $user["unique_id"];
-    $img = null;
-    if($user['profile_image'] !== null){
-        $_SESSION['guid'] = $user['unique_id'];
-        $img = Server::getUserProfilePicture($id);
+if(isset($user) && !empty($user)){
+    if(isset($user['unique_id']) && !empty($user['unique_id'])){
+        $logedIn = true;
     }
     else{
-        $img_def = $GLOBALS['user_def_icon'];
+        $logedIn = false;
     }
-    if(!empty($img) && strlen($img) > 60){
-        $_SESSION['user_img'] = $img;
-        $_SESSION['user_img_backup'] = $img;
-    }
-    else{
-        $_SESSION['user_img'] = $img_def;
-        $_SESSION['user_img_backup'] = $img_def;
-
-    }
-    $_SESSION['user_data'] = $user;
-    var_dump($_SESSION);
-   
 }
-//nov profile link!
-$profile = $server_root.'/profile/index.php';
-
-
-/*if(isset($username) && $username != null){ $user[0] = $username; }else{ $user[0] = "Username";}*/
 
 $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
           <div></div>
@@ -98,30 +61,34 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
         <nav>
             <div class='nav-scroll'>
                 <div class='user'>";
-                        if(isset($img) && strlen($img) > 100){
-                            $navigation .= "<a href='$profile'><img class='user_img' src='data:image/jpeg;base64, $img' style='width:100px;'/>";
+                        if($logedIn){
+                            if(strpos($_SESSION['user']['profile_image'], 'user_def_icon.png') !== false)
+                                $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' ";
+                            else
+                                $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
                         }
                         else{
-                            $navigation .= "<a href='#'><img class='user_img' src='../assets/icons/user_default_icon.png' style='width:100px;'/>";
+                            $navigation .= "<a href='#'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
                         }
+                        $navigation .= " style='width:100px;'/> ";
                         $navigation .= "<!-- For modern browsers. -->
                         <i class='material-icons'>settings</i>
                     </a>
                     <span>
                         <p>Welcome:</p>
-                        <p class='user_username'>{$user["username"]}</p>
+                        <p class='user_username'>{$_SESSION['user']['username']}</p>
                     </span>
                 </div>
                 <div class='links'>";
-                if(!isset($_SESSION['guid']) && $user["username"] == "Guest"){
+                if(!$logedIn){
                   $navigation .= "<a id='user-login' href='#' >Login / Register</a>";
                 }
-$navigation .=    "<a class='active' href='{$server_root}/movies/'>Home</a>
+$navigation .=    "<a class='active' href='{$data['serverRoot']}/movies/'>Home</a>
                   <a href='#'>Search</a>
                   <a href='#'>About</a>";
 
-             if(isset($_SESSION['guid'])){
-$navigation .=     "<a href='{$server_root}/index.php?logout={$_SESSION['guid']}'>Logout</a>";
+             if(isset($logedIn)){
+$navigation .=     "<a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a>";
              }     
 $navigation .= "</div>";            
                 
