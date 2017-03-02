@@ -9,7 +9,7 @@ $('#user-login').click(function(){
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-    if (event.target == $('.close')[0] ||event.target == $('#loginModal')[0]) {
+    if (event.target == $('.close')[0] ||event.target == $('#loginModal')[0] ||event.target.className == 'bg-bubbles') {
         $('#loginModal').css("display","none");
     }
 }
@@ -21,18 +21,24 @@ $('.close').click = function() {
     console.log("escape clicked");
     $('#loginModal').css("display","none");
 }
+var modalFooterItems = $('.modal-footer').children();
+var mf = $('.modal-footer');
+var ml = $('.modal-login');
+var mr = $('.modal-register');
 
-$('#switch').click(function(){
-    if(this.innerHTML == 'Register'){
-        $('.modal-login').css("display","none");
-        $('.modal-register').css("display","block");
-    }
-    else{
-        $('.modal-login').css("display","block");
-        $('.modal-register').css("display","none");
-    }
+$('#modal-footer-login').click(function(){
+    toggleModalFooterItems();
+});
+$('#modal-footer-register').click(function(){
+    toggleModalFooterItems(); 
 });
 
+function toggleModalFooterItems(){
+    ml.toggle();
+    mr.toggle();
+    mf.find(modalFooterItems[0]).toggle();
+    mf.find(modalFooterItems[1]).toggle();
+}
 $('#login-form').submit(function(event){
     event.preventDefault();
     var f = event.currentTarget;

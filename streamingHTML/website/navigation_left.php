@@ -1,9 +1,10 @@
 <?php
-$client = Server::Client();
+
 
 //server communicator
 include_once '../server/serverClass.php';
 include_once 'navigationClass.php';
+$client = Server::Client();
 //root of project
 $data['dirRoot']        = dirname(dirname(__FILE__ ));
 //Website url
@@ -79,18 +80,18 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
                         <p class='user_username'>{$_SESSION['user']['username']}</p>
                     </span>
                 </div>
-                <div class='links'>";
+                <div class='links'><ul>";
                 if(!$logedIn){
-                  $navigation .= "<a id='user-login' href='#' >Login / Register</a>";
+                  $navigation .= "<li id='user-login'><a href='#' >Login / Register</a></li>";
                 }
-$navigation .=    "<a class='active' href='{$data['serverRoot']}/movies/'>Home</a>
-                  <a href='#'>Search</a>
-                  <a href='#'>About</a>";
+$navigation .=    "<li class='active'><a href='{$data['serverRoot']}/movies/' >Home</a></li>
+                  <li><a href='#'>Search</a></li>
+                  <li><a href='#'>About</a></li>";
 
-             if(isset($logedIn)){
-$navigation .=     "<a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a>";
+             if($logedIn){
+$navigation .=     "<li><a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a></li>";
              }
-$navigation .= "</div>";
+$navigation .= "</ul></div>";
 
                 if(isset($enableGenres) && $enableGenres == true){
                 $navigation .= "<div class='search'>
@@ -157,7 +158,6 @@ if(isset($watching) && $watching != null){
                 <input type='password' placeholder='Password' name='password'>
                 <button type='submit' id='login-button' class='preventSubmit'>Login</button>
             </form>
-            <button id='switch'>Register</button>
         </div>
     </div>
     <div class='modal-register' id='register' style='display:none;'>
@@ -171,10 +171,11 @@ if(isset($watching) && $watching != null){
                 <input type='text' placeholder='Display name' name='display_name' onblur='check(value,this)' required>
                 <button type='submit' id='register-button' class='preventSubmit'>Register</button>
             </form>
-            <button id='switch'>Login</button>
         </div>
     </div>
     <div class='modal-footer'>
+        <p style=''><a id='modal-footer-register'>If you do not have an account register here</a></p>
+        <p style='display:none;'><a id='modal-footer-login'>Click here if you have an account</a></p>
     </div>
   </div>
   <script type='text/javascript' src='../website/login.js'></script>
