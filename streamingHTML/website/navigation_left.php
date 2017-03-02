@@ -1,4 +1,4 @@
-<?php 
+<?php
 $client = Server::Client();
 
 //server communicator
@@ -24,10 +24,10 @@ $user;
 $guid_nav;
 $logedIn = false;
 if(isset($_SESSION['user']) && !empty($_SESSION['user']) && !empty($_SESSION['user']['unique_id'])){
-    
+
     $user = $_SESSION['user'];
 }
-elseif((isset($_GET['uid']) && !empty($_GET['uid'])) 
+elseif((isset($_GET['uid']) && !empty($_GET['uid']))
         && empty($_SESSION['user']['unique_id'])){
     if(strlen($_GET['uid']) == 36 ){
         $data['userGuid'] = $_GET['uid'];
@@ -35,7 +35,7 @@ elseif((isset($_GET['uid']) && !empty($_GET['uid']))
         $navData = new Navigation($data);
         $user = $navData->user;
         $_SESSION['user'] = $user;
-        
+
     }
 }
 else{
@@ -89,9 +89,9 @@ $navigation .=    "<a class='active' href='{$data['serverRoot']}/movies/'>Home</
 
              if(isset($logedIn)){
 $navigation .=     "<a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a>";
-             }     
-$navigation .= "</div>";            
-                
+             }
+$navigation .= "</div>";
+
                 if(isset($enableGenres) && $enableGenres == true){
                 $navigation .= "<div class='search'>
                     <br/>
@@ -108,11 +108,11 @@ $navigation .= "</div>";
                         <li><a href='index.php?genre=history'>History</a></li>
                         <li><a href='index.php?genre=horror'>Horror</a></li>
                         <li><a href='index.php?genre=scifi'>Science Fiction</a></li>
-                        <li><a href='index.php?genre=thriller'>Thriller</a></li>           
+                        <li><a href='index.php?genre=thriller'>Thriller</a></li>
                     </ul>
                 </div>
             ";
-            
+
           }
 
 //src='".$def."user_default_icon.png'

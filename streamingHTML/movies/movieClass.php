@@ -1,18 +1,21 @@
 <?php
 class Movies {
-    private static $data_all; 
+    private static $data_all;
     private static $html_all;
-    
-    private static $data_lastAdded; 
+
+    private static $data_lastAdded;
     private static $html_lastAdded;
-    
-    private static $data_mostViewed; 
+    private static $html_lastAddedTitle;
+
+    private static $data_mostViewed;
     private static $html_mostViewed;
-    
+    private static $html_mostViewedTitle;
+
     private static $nRow;
-    
+
     private static $data_partial;
     private static $html_partial;
+
 
     public static function createMovieList($movies, $type){
         if ($type != 'all') {
@@ -21,30 +24,31 @@ class Movies {
            return Movies::All($movies);
         }
     }
-    
+
     public static function itemsInRow($row = 6){
         self::$nRow = $row;
     }
-    //last 6 movies added 
-    private static function LastAdded($movie){
+    //last 6 movies added
+    private static function LastAdded($movies){
         $sort;
-        foreach ($movie as $key => $part) {
-           $sort[$key] = strtotime($part['added']);
+        foreach ($movies as $key => $part) {
+            $sort[$key] = strtotime($part['added']);
         }
-        array_multisort($sort,SORT_DESC,$movie);
-        return array_slice($movie,0,self::$nRow);
+        array_multisort($sort,SORT_DESC,$movies);
+        return array_slice($movies,0,self::$nRow);
     }
 
     //most viewed
-    private static function MostViewed($movie){
+    private static function MostViewed($movies){
         $sort;
-        foreach ($movie as $key => $part) {
-           $sort[$key] = (int)$part['views'];
+        foreach ($movies as $key => $part) {
+
+            $sort[$key] = (int)$part['views'];
         }
-        array_multisort($sort,SORT_DESC,$movie);
-        return array_slice($movie,0,self::$nRow);
+        array_multisort($sort,SORT_DESC,$movies);
+        return array_slice($movies,0,self::$nRow);
     }
-    
+
     //all
     private static function All($movies){
 
@@ -52,9 +56,12 @@ class Movies {
         self::$data_lastAdded = Movies::LastAdded($movies);
         self::$data_mostViewed = Movies::MostViewed($movies);
 
+        self::$html_lastAddedTitle = "<div class='last-added title'><a>Latest movies</a><hr></div>";
+        self::$html_mostViewedTitle = "<div class='most-viewed title'><a>Popular movies</a><hr></div>";
+
         self::$html_all = "<div class='movies'>";
-        self::$html_lastAdded = "<div class='seperator-movies'><div class='last-movies'>";
-        self::$html_mostViewed = "<div class='seperator-movies'><div class='top-movies'>";
+        self::$html_lastAdded = "<div class='seperator-movies'>".self::$html_lastAddedTitle."<div class='last-movies'>";
+        self::$html_mostViewed = "<div class='seperator-movies'>".self::$html_mostViewedTitle."<div class='top-movies'>";
 
         foreach(self::$data_lastAdded as $item){
             self::$html_lastAdded .= Movies::movieToHtmlTopView($item);
@@ -68,7 +75,7 @@ class Movies {
         self::$html_all .= "</div>";
         self::$html_lastAdded .= "</div></div>";
         self::$html_mostViewed .= "</div></div>";
-        return self::$html_lastAdded.self::$html_mostViewed.self::$html_all;
+        return self::$html_mostViewed.self::$html_lastAdded;
     }
 
     //partial
@@ -109,7 +116,7 @@ class Movies {
                 </div>";
         return $movieHtml;
     }
-    
+
     private static function movieToHtmlTopView($movie){
         $movieHtml ="<div id='m' class='movie' onClick='movie(this);'>
                     <div class='poster'>

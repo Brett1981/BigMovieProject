@@ -29,17 +29,7 @@ class Server {
         return self::$httpType."://".self::$serverIp.":".self::$serverPort;
     }
     //GET
-    private static function getData($api = null,$data = null){
-        if($api != null){
-            try{
-               return json_decode(file_get_contents(Server::$client.$api.$data),true);
-            }
-            catch(Exception $e){
-                echo 'there was an error ', $e->getMessage(),"\n";
-            }
-        }
-        else{ header('locaton ../index.php'); }
-    }
+
     //POST
     private static function postData($data,$api){
         $pData = json_encode($data);
@@ -56,16 +46,13 @@ class Server {
         return $result;
     }
 
-    public static function getDataTest(){
+    public static function getData(){
       $movies = array();
       include 'MovieObjectClass.php';
-      for($i = 0; $i < 10; $i++){
-        $movieData = json_decode(json_encode(new MovieDataObject()),true);
-        $movieInfo = json_decode(json_encode(new MovieInfoObject()),true);
-        foreach($movieData as $key => $value){
-          $movies[$i][$key] = $value;
-        }
-        $movies[$i]['Movie_Info'] = $movieInfo;
+      for($i = 0; $i < 100; $i++){
+        $movieData = new MovieDataObject();
+        $movieInfo = new MovieInfoObject();
+        $movies[] = array('Movie_Data' => $movieData,'Movie_Info' => $movieInfo);
       }
       return $movies;
     }
