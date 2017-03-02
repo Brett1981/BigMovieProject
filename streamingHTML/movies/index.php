@@ -1,7 +1,7 @@
 <?php
 session_start();
 //movie list class
-include_once 'movieClass.php'; 
+include_once 'movieClass.php';
 //server communicator
 include_once '../server/serverClass.php';
 //root of project
@@ -15,6 +15,7 @@ $enableGenres = true;
 $genreMovies;
 $top10;
 $last10;
+$showall;
 $all;
 
 
@@ -31,8 +32,13 @@ elseif(isset($_GET['top10'])){
 elseif(isset($_GET['last10'])){
     $last10 = Server::getLast10();
 }
+elseif(isset($_GET['showall'])){
+    $showall = Server::getAllMovies();
+}
 else{
     $all = Server::getAllMovies();
+    //Unit test for movies//
+    //$all = Server::getDataTest();
 }
 
 ?>
@@ -49,7 +55,7 @@ else{
   src="https://code.jquery.com/jquery-3.1.1.min.js"
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
-        
+
     </head>
     <body class="sidenav-active">
         <!-- Sidebar -->
@@ -57,8 +63,8 @@ else{
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
-            <?php 
-                Movies::itemsInRow(6);
+            <?php
+                Movies::itemsInRow(5);
                 if(isset($genreMovies) && $genreMovies != null){
                     echo Movies::createMovieList($genreMovies,'genre');
                 }
@@ -68,8 +74,12 @@ else{
                 else if(isset($last10) && $last10 != null){
                     echo Movies::createMovieList($last10,'last10');
                 }
+                elseif(isset($showall) && $showall != null){
+                    echo Movies::createMovieList($showall,'showall');
+                }
                 else{
                     echo Movies::createMovieList($all,'all');
+                    echo "<div class='show-more'><a href='index.php?showall'>Show more</a></div>";
                 }
             ?>
         </div>
@@ -82,6 +92,6 @@ else{
                 window.location.href = "../play/index.php?id="+$(x).children(".movie_data").children(".id")[0].innerHTML;
             }
         </script>
-        
+
     </body>
 </html>
