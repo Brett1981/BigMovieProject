@@ -54,74 +54,74 @@ if(isset($user) && !empty($user)){
     }
 }
 
-$navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <nav>
+$navigation = "<div class='navigacija'>
+                <div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+            <nav>
             <div class='nav-scroll'>
                 <div class='user'>";
-                        if($logedIn){
-                            if(strpos($_SESSION['user']['profile_image'], 'user_def_icon.png') !== false)
-                                $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' ";
-                            else
-                                $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
-                        }
-                        else{
-                            $navigation .= "<a href='#'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
-                        }
+                if($logedIn){
+                    if(strpos($_SESSION['user']['profile_image'], 'user_def_icon.png') !== false)
+                        $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' ";
+                    else
+                        $navigation .= "<a href='{$data['profilePage']}'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
+                }
+                else{
+                    $navigation     .= "<a href='#'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";
+                }
                         $navigation .= " style='width:100px;'/> ";
                         $navigation .= "<!-- For modern browsers. -->
-                        <i class='material-icons'>settings</i>
-                    </a>
-                    <span>
-                        <p>Welcome:</p>
-                        <p class='user_username'>{$_SESSION['user']['username']}</p>
-                    </span>
+                                    <i class='material-icons'>settings</i>
+                                    </a>
+                                    <span>
+                                        <p>Welcome:</p>
+                                        <p class='user_username'>{$_SESSION['user']['username']}</p>
+                                    </span>
                 </div>
-                <div class='links'><ul>
-                    <li>
-                        <a>Menu</a>
-                            <ul>";
+                <div class='hamburger-menu-top'>
+                    <div class='links'><ul>
+                        <li>
+                            <a>Menu</a>
+                                    <ul>";
                 if(!$logedIn){
-                  $navigation .= "<li id='user-login'><a href='#' >Login</a></li>";
+                    $navigation     .=    "<li id='user-login'><a id='login' href='#' >Login</a></li>";
                 }
-$navigation .=    "<li class='active'><a href='{$data['serverRoot']}/movies/' >Home</a></li>
-                  <li><a href='#'>Search</a></li>
-                  <li><a href='#'>About</a></li>";
+                    $navigation     .=    "<li class='active'><a id='home' href='{$data['serverRoot']}/movies/' >Home</a></li>
+                                           <li><a id='search' href='#'>Search</a></li>
+                                           <li><a id='about' href='#'>About</a></li>";
 
-             if($logedIn){
-$navigation .=     "<li><a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a></li>";
-             }
-    $navigation .= "</ul>
-                    </li>
-                    </ul>
-                    </div>";
+                if($logedIn){
+                    $navigation     .=     "<li><a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a></li>";
+                }
+                    $navigation     .= "</ul>
+                                    </li>
+                                </ul>
+                        </div>";
 
                 if(isset($enableGenres) && $enableGenres == true){
-                $navigation .= "<div class='search'>
-                    <br/>
-                    <br/>
-                    <ul>
-                        <li><a>Genres</a>
-                            <ul>
-                                <li><a href='index.php'>All</a></li>
-                                <li><a href='index.php?genre=action'>Action</a></li>
-                                <li><a href='index.php?genre=adventure'>Adventure</a></li>
-                                <li><a href='index.php?genre=animation'>Animation</a></li>
-                                <li><a href='index.php?genre=comedy'>Comedy</a></li>
-                                <li><a href='index.php?genre=drama'>Drama</a></li>
-                                <li><a href='index.php?genre=family'>Family</a></li>
-                                <li><a href='index.php?genre=history'>History</a></li>
-                                <li><a href='index.php?genre=horror'>Horror</a></li>
-                                <li><a href='index.php?genre=scifi'>Science Fiction</a></li>
-                                <li><a href='index.php?genre=thriller'>Thriller</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            ";
+                    $navigation     .=      "<div class='search'>
+                                                <ul>
+                                                    <li><a>Genres</a>
+                                                        <ul>
+                                                            <li><a href='index.php'>All</a></li>
+                                                            <li><a href='index.php?genre=action'>Action</a></li>
+                                                            <li><a href='index.php?genre=adventure'>Adventure</a></li>
+                                                            <li><a href='index.php?genre=animation'>Animation</a></li>
+                                                            <li><a href='index.php?genre=comedy'>Comedy</a></li>
+                                                            <li><a href='index.php?genre=drama'>Drama</a></li>
+                                                            <li><a href='index.php?genre=family'>Family</a></li>
+                                                            <li><a href='index.php?genre=history'>History</a></li>
+                                                            <li><a href='index.php?genre=horror'>Horror</a></li>
+                                                            <li><a href='index.php?genre=scifi'>Science Fiction</a></li>
+                                                            <li><a href='index.php?genre=thriller'>Thriller</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>";
 
           }
 
@@ -188,20 +188,8 @@ if(isset($watching) && $watching != null){
     </div>
   </div>
   <script type='text/javascript' src='../website/login.js'></script>
-  <ul class='bg-bubbles'>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
 </div>
-
+</div>
 ";
 
 ?>

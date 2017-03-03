@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 $('#user-login').click(function(){
+    
     $('#loginModal').css("display","block");
+    
 })
 
 // When the user clicks anywhere outside of the modal, close it

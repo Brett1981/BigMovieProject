@@ -151,6 +151,9 @@ body{
       -ms-transform: translateX(225px);
       transform: translateX(225px);
     }
+    .hamburger-menu-top{
+        display: block;
+    }
     nav ul{
         position: relative;
         display: inline;
@@ -300,39 +303,100 @@ body{
 }
 
 @media only screen and (max-width: 1024px){
+
     .hamburger {
-        display: none;
-    }
-    nav {
-        background-color: white;
-        display: block;
         position: fixed;
-        height: 75px;
-        width: 100%;
-        -webkit-transition: -webkit-transform 0.3s;
-        transition: transform 0.3s;
-        z-index:10;
-       
+        z-index: 9999;
+        padding: 24px;
     }
+
+    .hamburger:hover { cursor: pointer; }
+
+    .hamburger div {
+        position: relative;
+        background-color: black;
+        border-radius: 1px;
+        height: 6px;
+        width: 30px;
+    }
+
+    .hamburger div:not(:last-child) { margin-bottom: 5px; }
+
+nav {
+    background-color: white;
+    display: block;
+    position: fixed;
+    height: 75px;
+    width: 100%;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+    z-index:10;
+    box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
+    -moz-box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
+    -webkit-box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
+    -o-box-shadow: 0px 10px 5px rgba(0,0,0,0.6);
+
+}
     nav div{
         position: relative;
         display:inline-flex;
         direction:rtl;
         width:100%;
+        
     }
-    nav div:nth-child(n+2){
-        width:50%;
+        
+        nav div:nth-child(n+2){
+            
+        }
+        nav div:nth-child(n+2):hover{
+
+        }
+        nav div:nth-child(n+2) div{
+            /*width:calc(100%/3);*/
+            position: relative;
+            display: inline-flex;
+            flex-direction:column-reverse;
+            text-align: center;
+
+        }
+        nav div:nth-child(n+2) div ul{
+            list-style: none;
+            background-color: rgba(255, 255, 255, 0.69);
+        }
+
+        nav div:nth-child(n+2) div ul > li > ul{
+            line-height: 0px;
+            font-weight: 500;
+            text-decoration: none;
+            margin: 0 auto;
+        }
+        nav div:nth-child(n+2) div ul > li > ul li{
+            font-size: 14px !important;
+            height: 25px;
+            padding: 2.5px;
+            margin: 2px 0px;
+        }
+        nav div:nth-child(n+2) div ul > li > ul > li:hover{
+            background-color: #41295a;
+            color:white;
+            cursor: pointer;
+        }
+    
+    nav ul{
+        padding: 0;
+        margin: 0px 30px;
+
     }
-    nav div:nth-child(n+2):hover{
-        background-color: black;
-    }
+
+
     nav .user {
         display: flex;
         box-sizing: border-box;
         height: 75px;
+        width:40%;
     }
         nav .user img{
-
+            margin-right: 25px !important;
         }
         nav .user span{
             width:auto;
@@ -342,6 +406,7 @@ body{
         nav .user span p{
             line-height: 35px;
             text-align: right;
+            display: none;
             
         }
         nav .user a{
@@ -354,11 +419,13 @@ body{
         }
     
     nav a {
-      display: inline-block;
-      text-decoration: none;
-      text-align: center;
-      color: black;
-      padding: 10px;
+        display: inline-block;
+        text-decoration: none;
+        text-align: center;
+        color: black;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
     
         nav a:first-child img{
@@ -403,61 +470,15 @@ body{
         left:30px;
 
     }
-
-    nav ul{
-        position: relative;
-        display: inline;
-        width:100%;
-        margin: 0 auto;
-        padding: 0;
-        list-style: none;
-        height: auto;
-        margin: 0 auto;
-        background-color: rgba(255, 255, 255, 0.42);
-        line-height: 50px;
-        text-align: center;
-    }
-    nav ul > li{
-        height: 75px;
-    }
-    nav ul > li > ul{
+    nav div .hamburger-menu-top{
         display: none;
-        position: relative;
-        width: 100%;
-        margin: 0 auto;
-        background-color: rgba(255, 255, 255, 0.93);
-        
-    }
-    
-    nav ul > li > ul li{
-        font-size: 14px !important;
-        height: 50px;
-        line-height: 30px;
-        border-bottom: 1px solid black;
-    }
-    
-    nav ul > li:hover{
-        background-color: #909090;
-        cursor: pointer;
-    }
-    nav ul >li:hover > ul{
-        display: block;
         position: absolute;
-        background-color: rgba(255, 255, 255, 0.61);
-    }
-    nav ul >li:hover > ul li{
-        
-    }
-
-    nav ul > li a{
-        font-weight: 500;
-        text-decoration: none;
-        color:black;
+        top:75px;
+        width:100%;
+        height:  auto;
+        background-color:rgba(150, 150, 150, 0.54);
     }
     
-    nav ul > li ul > li{
-        margin: 0 auto;
-    }
 
     section {
       color: white;
@@ -567,6 +588,10 @@ body{
         min-width: 300px !important;
         top:75px;
     }
+    
+    .video-js{
+        height: calc(100vh - 75px) !important;
+    }
 }
 @media only screen and (max-width: 480px){
      nav a:first-child + span{
@@ -610,7 +635,6 @@ body{
 
     -webkit-flex-wrap: wrap; /* Safari 6.1+ */
     flex-wrap: wrap;
-    width: 95%;
 }
 .seperator-movies hr{
     border: 0;
@@ -629,7 +653,7 @@ body{
     -webkit-flex-wrap: wrap; /* Safari 6.1+ */
     flex-wrap: wrap;
 
-    width: 95%;
+    width: 100%;
     margin-bottom: 50px;
 }
     .last-movies .movie{
@@ -689,7 +713,7 @@ body{
     -webkit-flex-wrap: wrap; /* Safari 6.1+ */
     flex-wrap: wrap;
 
-    width: 95%;
+    width: 100%;
 }
 
     .top-movies .movie{
