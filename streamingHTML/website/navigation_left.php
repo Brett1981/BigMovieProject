@@ -80,9 +80,12 @@ $navigation = "<div class='hamburger' id='hamburger' onclick='toggleSidenav();'>
                         <p class='user_username'>{$_SESSION['user']['username']}</p>
                     </span>
                 </div>
-                <div class='links'><ul>";
+                <div class='links'><ul>
+                    <li>
+                        <a>Menu</a>
+                            <ul>";
                 if(!$logedIn){
-                  $navigation .= "<li id='user-login'><a href='#' >Login / Register</a></li>";
+                  $navigation .= "<li id='user-login'><a href='#' >Login</a></li>";
                 }
 $navigation .=    "<li class='active'><a href='{$data['serverRoot']}/movies/' >Home</a></li>
                   <li><a href='#'>Search</a></li>
@@ -91,25 +94,31 @@ $navigation .=    "<li class='active'><a href='{$data['serverRoot']}/movies/' >H
              if($logedIn){
 $navigation .=     "<li><a href='{$data['serverRoot']}/index.php?logout={$_SESSION['user']['unique_id']}'>Logout</a></li>";
              }
-$navigation .= "</ul></div>";
+    $navigation .= "</ul>
+                    </li>
+                    </ul>
+                    </div>";
 
                 if(isset($enableGenres) && $enableGenres == true){
                 $navigation .= "<div class='search'>
                     <br/>
                     <br/>
-                    <a>Genres:</a>
                     <ul>
-                        <li><a href='index.php'>All</a></li>
-                        <li><a href='index.php?genre=action'>Action</a></li>
-                        <li><a href='index.php?genre=adventure'>Adventure</a></li>
-                        <li><a href='index.php?genre=animation'>Animation</a></li>
-                        <li><a href='index.php?genre=comedy'>Comedy</a></li>
-                        <li><a href='index.php?genre=drama'>Drama</a></li>
-                        <li><a href='index.php?genre=family'>Family</a></li>
-                        <li><a href='index.php?genre=history'>History</a></li>
-                        <li><a href='index.php?genre=horror'>Horror</a></li>
-                        <li><a href='index.php?genre=scifi'>Science Fiction</a></li>
-                        <li><a href='index.php?genre=thriller'>Thriller</a></li>
+                        <li><a>Genres</a>
+                            <ul>
+                                <li><a href='index.php'>All</a></li>
+                                <li><a href='index.php?genre=action'>Action</a></li>
+                                <li><a href='index.php?genre=adventure'>Adventure</a></li>
+                                <li><a href='index.php?genre=animation'>Animation</a></li>
+                                <li><a href='index.php?genre=comedy'>Comedy</a></li>
+                                <li><a href='index.php?genre=drama'>Drama</a></li>
+                                <li><a href='index.php?genre=family'>Family</a></li>
+                                <li><a href='index.php?genre=history'>History</a></li>
+                                <li><a href='index.php?genre=horror'>Horror</a></li>
+                                <li><a href='index.php?genre=scifi'>Science Fiction</a></li>
+                                <li><a href='index.php?genre=thriller'>Thriller</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             ";
