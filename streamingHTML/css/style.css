@@ -51,28 +51,81 @@ body{
 
 /*-----------------!ToolTip-------------*/
 /*--------------------Nav---------------*/
+.hamburger{
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}
+    .hamburger:hover { cursor: pointer; }
+
+    .hamburger div {
+        margin-bottom: 5px;
+        border-radius: 1px;
+        height: 5px;
+        width: 30px;
+        margin-bottom: 5px;
+        position: relative;
+    }
+    .hamburger div:nth-child(1){
+        top:0px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: center;
+    }
+    .hamburger div:nth-child(2){
+        top:0px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: left center;
+    }
+    .hamburger div:nth-child(3){
+        top:0px;
+        -webkit-transform-origin: left center;
+        -moz-transform-origin: left center;
+        -o-transform-origin: left center;
+        transform-origin: center;
+    }
+    .hamburger.open{
+        box-sizing: content-box;
+    }
+    .hamburger.open div{
+        width:30px;
+    }
+    .hamburger.open div:nth-child(1){
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+        top:10px;
+
+    }
+    .hamburger.open div:nth-child(2){
+        opacity: 0;
+    }
+    .hamburger.open div:nth-child(3){
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        top: -10px;
+    }
+
 @media only screen and (min-width: 1024px) {
     /*--- hamburger ---*/
     .hamburger {
       position: fixed;
       z-index: 9999;
-      padding: 15px;
+      padding: 10px;
     }
-
-    .hamburger:hover { cursor: pointer; }
-
     .hamburger div {
-      background-color: white;
-      border-radius: 1px;
-      height: 6px;
-      width: 30px;
-    }
-
-    .hamburger div:not(:last-child) { margin-bottom: 5px; }
-
-    .hamburger:hover div{
-        transform: rotate( 180deg);
-        transition: transform 1s ease;
+        background-color: white;
     }
     /*-- nav --*/
 
@@ -139,8 +192,6 @@ body{
 
     }
 
-
-
     nav, .hamburger, .cover {
       -webkit-transition: -webkit-transform 0.5s;
       transition: transform 0.5s;
@@ -156,7 +207,6 @@ body{
     }
     nav ul{
         position: relative;
-        display: inline;
         width:auto;
         margin: 0 auto;
         padding: 0;
@@ -164,33 +214,36 @@ body{
         height: auto;
         margin: 0 auto;
         background-color: rgba(255, 255, 255, 0.21);
+        margin: 10px 0px;
     }
+        nav div ul > li   {
+            background-color: #f5f5f5;
+        }
+        nav ul > li{
+            max-width: auto;
+        }
+        nav ul > li > a:nth-child(0){
+            border-bottom: 1px solid black;
+        }
 
-    nav ul > li{
-        max-width: auto;
-    }
-    nav ul > li > a:nth-child(0){
-        border-bottom: 1px solid black;
-    }
+        nav ul > li ul li:hover{
+            background-color: #41295a;
+            cursor: pointer;
+        }
 
-    nav ul > li ul li:hover{
-        background-color: #41295a;
-        cursor: pointer;
-    }
+        nav ul > li ul li:hover a{
+            color:white;
+            background-color: #41295a;
+        }
 
-    nav ul > li ul li:hover a{
-        color:white;
-        background-color: #41295a;
-    }
+        nav ul > li a{
+            font-weight: 500;
+            text-decoration: none;
+            color:black;
+        }
+        nav ul li ul a{
 
-    nav ul > li a{
-        font-weight: 500;
-        text-decoration: none;
-        color:black;
-    }
-    nav ul li ul a{
-        
-    }
+        }
 
 
     section {
@@ -206,10 +259,14 @@ body{
         margin-top:20px;
         border-top: 1px solid rgba(160, 160, 160, 0.74);
         border-bottom: 1px solid rgba(160, 160, 160, 0.74);
+        background-color: #f5f5f5;
+        width:100%;
+        box-sizing: content-box;
+        
     }
 
     nav .movie_information{
-        position: relative;
+        position: absolute;
         text-decoration: none;
         margin: 0 auto;
         padding: 0;
@@ -288,6 +345,7 @@ body{
         }
 
     .sidenav-active .main { margin-left: 225px; }
+
     .main {
         -webkit-transition: margin-left 0.5s;
         transition: margin-left 0.5s;
@@ -299,65 +357,59 @@ body{
         overflow:hidden;
         min-width: 300px !important;
     }
-    
+
 }
 
 @media only screen and (max-width: 1024px){
 
     .hamburger {
-        position: fixed;
+        position: absolute;
         z-index: 9999;
-        padding: 24px;
+        padding: 11px;
+
     }
-
-    .hamburger:hover { cursor: pointer; }
-
     .hamburger div {
-        position: relative;
         background-color: black;
-        border-radius: 1px;
-        height: 6px;
-        width: 30px;
     }
 
-    .hamburger div:not(:last-child) { margin-bottom: 5px; }
 
 nav {
     background-color: white;
     display: block;
-    position: fixed;
-    height: 75px;
+    position: relative;
+    height: 50px;
     width: 100%;
-    -webkit-transition: -webkit-transform 0.3s;
-    transition: transform 0.3s;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
     z-index:10;
-    box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
-    -moz-box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
-    -webkit-box-shadow: 0px 10px 5px rgba(0,0,0,0.6); 
+    box-shadow: 0px 10px 5px rgba(0,0,0,0.6);
+    -moz-box-shadow: 0px 10px 5px rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px 10px 5px rgba(0,0,0,0.6);
     -o-box-shadow: 0px 10px 5px rgba(0,0,0,0.6);
 
 }
-    nav div{
+    nav div:first-child{
         position: relative;
         display:inline-flex;
         direction:rtl;
         width:100%;
-        
+
     }
-        
+
         nav div:nth-child(n+2){
-            
+            width:100%;
         }
         nav div:nth-child(n+2):hover{
 
         }
         nav div:nth-child(n+2) div{
-            /*width:calc(100%/3);*/
             position: relative;
             display: inline-flex;
-            flex-direction:column-reverse;
+            flex-direction:column;
             text-align: center;
-
+        }
+        nav div:nth-child(n+2) div a{
+            padding: 10px;
         }
         nav div:nth-child(n+2) div ul{
             list-style: none;
@@ -369,19 +421,25 @@ nav {
             font-weight: 500;
             text-decoration: none;
             margin: 0 auto;
+            direction: ltr;
+            
         }
         nav div:nth-child(n+2) div ul > li > ul li{
             font-size: 14px !important;
             height: 25px;
-            padding: 2.5px;
+            padding: 2px;
             margin: 2px 0px;
+            display: -webkit-inline-box;
         }
         nav div:nth-child(n+2) div ul > li > ul > li:hover{
             background-color: #41295a;
             color:white;
             cursor: pointer;
         }
-    
+        nav div:nth-child(n+2) div ul > li > ul > li:hover a{
+            color:white;
+        }
+
     nav ul{
         padding: 0;
         margin: 0px 30px;
@@ -392,8 +450,8 @@ nav {
     nav .user {
         display: flex;
         box-sizing: border-box;
-        height: 75px;
-        width:40%;
+        height: 50px;
+        width:40% !important;
     }
         nav .user img{
             margin-right: 25px !important;
@@ -401,51 +459,49 @@ nav {
         nav .user span{
             width:auto;
             direction:ltr;
-            
+
         }
         nav .user span p{
             line-height: 35px;
             text-align: right;
             display: none;
-            
+
         }
         nav .user a{
             width:auto;
-            box-sizing:border-box;
+            box-sizing:content-box;
         }
 
         nav .user i{
             display: none;
         }
-    
+
     nav a {
         display: inline-block;
         text-decoration: none;
-        text-align: center;
+        text-align: left;
         color: black;
-        padding: 10px;
+
         width: 100%;
         box-sizing: border-box;
     }
-    
+
         nav a:first-child img{
             position: relative;
-            border-radius: 60px !important;
             margin:0 auto;
-            border: 5px solid #41295a;
-            width: 50px !important;
+            padding: 5px;
+            width: 40px !important;
         }
 
         nav a:first-child  img:hover{
-            border: 5px solid #8856bc;
-            transition-property: color 1s ease-in-out;
+            cursor: pointer;
         }
         nav a:first-child + span{
             display: inline-flex;
             flex-direction: row;
             width:100%;
             font-size:18px;
-            
+
         }
 
         nav a:first-child + span p:not(:last-child){
@@ -465,20 +521,17 @@ nav {
         }
 
     nav i{
-        position: relative;
-        top:0px;
-        left:30px;
-
+        position:relative;
     }
     nav div .hamburger-menu-top{
         display: none;
         position: absolute;
-        top:75px;
+        top:50px;
         width:100%;
-        height:  auto;
+        height:auto;
         background-color:rgba(150, 150, 150, 0.54);
     }
-    
+
 
     section {
       color: white;
@@ -488,94 +541,68 @@ nav {
     }
 
     nav .movie_watching{
-        position: relative;
         text-align: center;
-        margin-top:20px;
+        margin:20px auto;
         border-top: 1px solid rgba(160, 160, 160, 0.74);
         border-bottom: 1px solid rgba(160, 160, 160, 0.74);
     }
 
     nav .movie_information{
-        position: relative;
-        text-decoration: none;
         margin: 0 auto;
-        padding: 0;
-        display: inline-flex;
-        flex-direction: column;
-        width: 100%;
+        background-color: rgba(255, 255, 255, 0.69);
+        display:inline-block !important;
+            
+    }
+    nav .movie_information div{
+        position: relative;
+        width: calc(100%/6) !important;
+        height: 100px;
+        display: inline-block;
+        margin: auto auto;
+        box-sizing: content-box;
+        
+    }
+    nav .homepage{
+        
+    }
+    nav .homepage a{
+        margin: 0 auto;
+        padding: 0px !important;
+    }
+    nav .homepage i{
+        left:calc(100%/2.5);
+        margin: auto auto;
+    }
+    nav .homepage p{
+        text-align: center;
+    }
+    nav .movie_information div i{
+        margin-top: 10px;
+    }
+    nav .movie_information div:nth-child(1){
+        
+    }
+    nav .movie_information .watched .tooltip{
+        width: 60% !important;
+        box-sizing: border-box;
+    }
+            
+    nav .movie_information div:hover{
+        background-color: #f5f5f5;
+    }
+    nav .movie_information .vote_average{
+        font-size: 18px;
     }
 
-        nav .movie_information .homepage{
-            display: block;
-            width:100%;
-        }
-
-        nav .movie_information .homepage a{
-            display: inline-flex;
-            flex-direction: row;
-            margin: 0 auto;
-            color: black;
-            font-size: 18px;
-            width: 100%;
-        }
-
-        nav .movie_information .homepage a i{
-            left:24px;
-            margin: 15px 20px;
-        }
-        nav .movie_information .homepage a p{
-            margin-left: 20px;
-        }
-
-        nav .movie_information .vote_average:hover{
-            background-color: #f5f5f5;
-        }
-        nav .movie_information .vote_average{
-            display: inline-flex;
-            flex-direction: row;
-            margin: 0 auto;
-            width:100%;
-            font-size: 24px;
-        }
-        nav .movie_information .vote_average i{
-            position: relative;
-            margin: 25px 20px;
-            max-height: 32px;
-            left: 24px;
-        }
-        nav .movie_information .vote_average p{
-            position: inherit;
-            margin-left: 20px;
-        }
-        nav .movie_information .watched:hover{
-            background-color: #f5f5f5;
-        }
-        nav .movie_information .watched{
-            display: inline-flex;
-            flex-direction: row;
-            margin: 0 auto;
-            width:100%;
-            font-size: 24px;
-        }
-
-        nav .movie_information .watched  i{
-             position: relative;
-            margin: 25px 20px;
-            max-height: 32px;
-            left: 24px;
-            transform: rotate(45deg);
-        }
-
-        nav .movie_information .watched div{
-            width:120px;
-            text-align:justify;
-            text-overflow: clip;
-            top:24px;
-            margin-left: 10px;
-        }
+    nav .movie_information .watched div{
+        width:120px;
+        text-overflow: clip;
+        top:0px;
+        height: 25px;
+    }
 
     .sidenav-active .main { margin-left: 0px; }
-    
+
     .main {
         -webkit-transition: margin-left 0.5s;
         transition: margin-left 0.5s;
@@ -586,11 +613,10 @@ nav {
         padding: 0;
         overflow:hidden;
         min-width: 300px !important;
-        top:75px;
     }
-    
+
     .video-js{
-        height: calc(100vh - 75px) !important;
+        height: calc(100vh - 50px) !important;
     }
 }
 @media only screen and (max-width: 480px){
@@ -1270,14 +1296,14 @@ form {
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
+    position: absolute; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
+    height: 100vh; /* Full height */
+    overflow: hidden; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -1287,7 +1313,7 @@ form {
     position: relative;
     margin: auto;
     padding: 0;
-    width: 50%;
+    width: 75%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;

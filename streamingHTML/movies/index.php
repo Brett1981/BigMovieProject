@@ -87,7 +87,7 @@ else{
         <script type="application/javascript" src="../website/nav.js"></script>
         <script type="application/javascript" src="movies.js"></script>
 
-        
+
 
     </body>
 </html>

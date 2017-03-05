@@ -9,10 +9,15 @@ $('#user-login').click(function(){
     
 })
 
+$('#login-pic').click(function(){
+    $('#loginModal').css("display","block");
+})
+
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target == $('.close')[0] ||event.target == $('#loginModal')[0] ||event.target.className == 'bg-bubbles') {
         $('#loginModal').css("display","none");
+        $('.hamburger-menu-top').css("display","none");
     }
 }
 
@@ -41,6 +46,10 @@ function toggleModalFooterItems(){
     mf.find(modalFooterItems[0]).toggle();
     mf.find(modalFooterItems[1]).toggle();
 }
+
+/* If user is loged in and browser is on a device or smaller monitor*/
+
+/* Login / Register */
 $('#login-form').submit(function(event){
     event.preventDefault();
     var f = event.currentTarget;
