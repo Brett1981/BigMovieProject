@@ -111,7 +111,7 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
         <!-- VideoJs plugin and stylesheet -->
         <script src="../assets/videojs/video.min.js"></script>
         <link href="../assets/videojs/video-js.min.css" rel="stylesheet"> 
-        <!-- If you'd like to support IE8 -->
+        <!-- support IE8 -->
         <script src="../assets/videojs/ie8/videojs-ie8.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -129,8 +129,9 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
                     mainPlayer.currentTime = sec;
             }
         </script>
+        
     </head>
-    <body>
+    <body class="sidenav-active">
         <!-- Sidebar -->
         <?php include $dir_nav; ?>
         <!-- /#sidebar-wrapper -->
@@ -138,7 +139,7 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
         <div class="main">
                 <div>
                     <?php if(isset($play)){ ?>
-                    <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w600'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w600'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
                     <?php  $guid = $play->movieData->guid;
                             if($play->movieData->ext == "mp4"){ 
                                 echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
@@ -152,6 +153,95 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
                           <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                         </p>
                     </video>
+                    <script src="videojs.hotkeys.min.js"></script>
+                    <script>
+                      // initialize the plugin
+                      videojs('my-video').ready(function() {
+                        this.hotkeys({
+                          volumeStep: 0.1,
+                          seekStep: 5,
+                          enableMute: true,
+                          enableFullscreen: true,
+                          enableNumbers: false,
+                          enableVolumeScroll: true,
+                          // Enhance existing simple hotkey with a complex hotkey
+                          fullscreenKey: function(e) {
+                            // fullscreen with the F key or Ctrl+Enter
+                            return ((e.which === 70) || (e.ctrlKey && e.which === 13));
+                          },
+                          // Custom Keys
+                          customKeys: {
+                            // Add new simple hotkey
+                            simpleKey: {
+                              key: function(e) {
+                                // Toggle something with S Key
+                                return (e.which === 83);
+                              },
+                              handler: function(player, options, e) {
+                                // Example
+                                if (player.paused()) {
+                                  player.play();
+                                } else {
+                                  player.pause();
+                                }
+                              }
+                            },
+                            // Add new complex hotkey
+                            complexKey: {
+                              key: function(e) {
+                                // Toggle something with CTRL + D Key
+                                return (e.ctrlKey && e.which === 68);
+                              },
+                              handler: function(player, options, event) {
+                                // Example
+                                if (options.enableMute) {
+                                  player.muted(!player.muted());
+                                }
+                              }
+                            },
+                            // Override number keys example from https://github.com/ctd1500/videojs-hotkeys/pull/36
+                            numbersKey: {
+                              key: function(event) {
+                                // Override number keys
+                                return ((event.which > 47 && event.which < 59) || (event.which > 95 && event.which < 106));
+                              },
+                              handler: function(player, options, event) {
+                                // Do not handle if enableModifiersForNumbers set to false and keys are Ctrl, Cmd or Alt
+                                if (options.enableModifiersForNumbers || !(event.metaKey || event.ctrlKey || event.altKey)) {
+                                  var sub = 48;
+                                  if (event.which > 95) {
+                                    sub = 96;
+                                  }
+                                  var number = event.which - sub;
+                                  player.currentTime(player.duration() * number * 0.1);
+                                }
+                              }
+                            },
+                            emptyHotkey: {
+                              // Empty
+                            },
+                            withoutKey: {
+                              handler: function(player, options, event) {
+                                  console.log('withoutKey handler');
+                              }
+                            },
+                            withoutHandler: {
+                              key: function(e) {
+                                  return true;
+                              }
+                            },
+                            malformedKey: {
+                              key: function() {
+                                console.log('I have a malformed customKey. The Key function must return a boolean.');
+                              },
+                              handler: function(player, options, event) {
+                                //Empty
+                              }
+                            }
+                          }
+                        });
+                      });
+                    </script>
                     <?php } ?>
                 </div>
             </div>
@@ -161,5 +251,7 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
               document.body.classList.toggle('sidenav-active');
             }
         </script>
+        <script type="text/javascript" src="../website/nav.js"></script>
+        <script type="text/javascript" src="play.js"></script>
     </body>
 </html>

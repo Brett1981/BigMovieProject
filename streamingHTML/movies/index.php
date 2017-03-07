@@ -84,14 +84,10 @@ else{
             ?>
         </div>
         <!-- /#page-content-wrapper -->
-        <script type="application/javascript">
-            function toggleSidenav() {
-              document.body.classList.toggle('sidenav-active');
-            }
-            function movie(x){
-                window.location.href = "../play/index.php?id="+$(x).children(".movie_data").children(".id")[0].innerHTML;
-            }
-        </script>
+        <script type="application/javascript" src="../website/nav.js"></script>
+        <script type="application/javascript" src="movies.js"></script>
+
+
 
     </body>
 </html>

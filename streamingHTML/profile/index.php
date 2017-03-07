@@ -39,7 +39,7 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
   crossorigin="anonymous"></script>
     </head>
-    <body>
+    <body class="sidenav-active">
         <!-- Sidebar -->
         <?php include $dir_nav; ?>
         <!-- /#sidebar-wrapper -->
@@ -99,5 +99,6 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
               document.body.classList.toggle('sidenav-active');
             }
         </script>
+        <script type="application/javascript" src="../website/nav.js"></script>
     </body>
 </html>
