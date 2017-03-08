@@ -262,7 +262,7 @@ body{
         background-color: #f5f5f5;
         width:100%;
         box-sizing: content-box;
-        
+
     }
 
     nav .movie_information{
@@ -422,7 +422,7 @@ nav {
             text-decoration: none;
             margin: 0 auto;
             direction: ltr;
-            
+
         }
         nav div:nth-child(n+2) div ul > li > ul li{
             font-size: 14px !important;
@@ -551,7 +551,7 @@ nav {
         margin: 0 auto;
         background-color: rgba(255, 255, 255, 0.69);
         display:inline-block !important;
-            
+
     }
     nav .movie_information div{
         position: relative;
@@ -560,10 +560,10 @@ nav {
         display: inline-block;
         margin: auto auto;
         box-sizing: content-box;
-        
+
     }
     nav .homepage{
-        
+
     }
     nav .homepage a{
         margin: 0 auto;
@@ -580,13 +580,13 @@ nav {
         margin-top: 10px;
     }
     nav .movie_information div:nth-child(1){
-        
+
     }
     nav .movie_information .watched .tooltip{
         width: 60% !important;
         box-sizing: border-box;
     }
-            
+
     nav .movie_information div:hover{
         background-color: #f5f5f5;
     }
@@ -1293,7 +1293,7 @@ form {
   }
 }
 
-/* The Modal (background) */
+/* The Login Modal (background)  */
 .modal {
     display: none; /* Hidden by default */
     position: absolute; /* Stay in place */
@@ -1439,3 +1439,108 @@ form button:hover {
   color:black;
 }
 /*---------------------!LOGIN-------------------------*/
+
+/* ------------------- MOVIE MODAL ------------------*/
+.modal-movie {
+    display: none; /* Hidden by default */
+    position: absolute; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100vh; /* Full height */
+    overflow: hidden; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-movie-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 75%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+.modal-movie-content div{
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.modal-movie-content input{
+    display:block;
+    position: relative;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+    outline: 0;
+    border: 2px solid #ebebeb;
+    border-radius: 4px;
+    box-shadow:inset 0 -2px #ebebeb;
+    background-color: white;
+    border-radius: 3px;
+    font-size: 20px;
+    color:#422466;
+    -webkit-transition-duration: 0.25s;
+          transition-duration: 0.25s;
+    font-weight: 300;
+}
+.modal-movie-content input:focus {
+    border-color: #62c2e4;
+    outline: none;
+    box-shadow:inset 0 -2px #62c2e4;
+}
+
+.modal-movie-header {
+    padding: 2px 16px;
+    color: rgba(69, 69, 69, 0.55);
+    background-color: #fefefe;
+}
+
+.modal-movie-header h2{
+    text-align: center;
+}
+
+.modal-movie-body {
+    padding: 20px 16px ;
+    background-color: #fefefe;
+}
+
+.modal-movie-footer {
+    padding: 2px 16px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.5);
+    height: auto;
+    border-radius: 5px;
+}
+.modal-movie-footer p{
+    text-align: center;
+}
+
+.modal-movie-footer p > a{
+    cursor: pointer;
+}
+.modal-movie-footer p:hover > a{
+    color:black;
+}
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+/*--------------------!MOVIE MODAL ------------------*/

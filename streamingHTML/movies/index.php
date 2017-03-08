@@ -36,9 +36,9 @@ elseif(isset($_GET['showall'])){
     $showall = Server::getAllMovies();
 }
 else{
-    $all = Server::getAllMovies();
+    //$all = Server::getAllMovies();
     //Unit test for movies//
-    //$all = Server::getDataTest();
+    $all = Server::getDataTest();
 }
 
 ?>
@@ -51,11 +51,7 @@ else{
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-        <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
-
+        <script src="../assets/js/jquery-3.1.1.min.js"></script>
     </head>
     <body class="sidenav-active">
         <!-- Sidebar -->
@@ -83,11 +79,19 @@ else{
                 }
             ?>
         </div>
+        <div id='movieModal' class='modal-movie'>
+          <div class='modal-movie-content'>
+            <div class='modal-movie-header'>
+              <span class='close'>&times;</span>
+              <h2></h2>
+            </div>
+            <div class='modal-movie-body' style='display:block;'>
+            </div>
+          </div>
+        </div>
         <!-- /#page-content-wrapper -->
         <script type="application/javascript" src="../website/nav.js"></script>
         <script type="application/javascript" src="movies.js"></script>
-
-
 
     </body>
 </html>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 //server communicator
 include_once '../server/serverClass.php';
@@ -40,9 +40,9 @@ if(isset($_SESSION['user']['unique_id']) && !empty($_SESSION['user']['unique_id'
     else{
         header('location: ../index.php');
     }
-    
+
 }
-else{ 
+else{
     //play movie to guest
     if(isset($_GET['id']) && $_GET['id'] != null){
         $mGuid = $_GET['id'];
@@ -63,7 +63,7 @@ else{
         else{ header('location: ../index.php'); }
     }
     else{ header('location: ../movies'); }
-    
+
 }
 function getSessionRegistered($user_id, $movie_id){
     if(isset($user_id) && isset($movie_id) && $movie_id != null){
@@ -101,35 +101,31 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?php  if(isset($play) && $play != null){ 
-            if($play->movieData->Movie_Info->title != ""){ 
-                echo $play->movieData->Movie_Info->title; 
-            }elseif($play->movieData->name != ""){ 
-                echo $play->movieData->name; 
-            }else{ echo "Unknown movie";}  
+        <title><?php  if(isset($play) && $play != null){
+            if($play->movieData->Movie_Info->title != ""){
+                echo $play->movieData->Movie_Info->title;
+            }elseif($play->movieData->name != ""){
+                echo $play->movieData->name;
+            }else{ echo "Unknown movie";}
         }?></title>
+        <script src="../assets/js/jquery-3.1.1.min.js"></script>
         <!-- VideoJs plugin and stylesheet -->
         <script src="../assets/videojs/video.min.js"></script>
-        <link href="../assets/videojs/video-js.min.css" rel="stylesheet"> 
+        <link href="../assets/videojs/video-js.min.css" rel="stylesheet">
         <!-- support IE8 -->
         <script src="../assets/videojs/ie8/videojs-ie8.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-        <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script type="text/javascript">
 
             function onLoad() {
                 var sec = parseInt(document.location.search.substr(1));
-                
+
                 if (!isNaN(sec))
                     mainPlayer.currentTime = sec;
             }
         </script>
-        
+
     </head>
     <body class="sidenav-active">
         <!-- Sidebar -->
@@ -141,11 +137,11 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
                     <?php if(isset($play)){ ?>
                     <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w600'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
                     <?php  $guid = $play->movieData->guid;
-                            if($play->movieData->ext == "mp4"){ 
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>"; 
+                            if($play->movieData->ext == "mp4"){
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>";
                             }elseif($play->ext == "webm"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>"; 
-                            } 
+                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>";
+                            }
                             /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
                          ?>
                         <p class="vjs-no-js">

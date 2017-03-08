@@ -34,10 +34,7 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
         <title><?php echo $data['user']['display_name']. " profile"?></title>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <script
-  src="https://code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous"></script>
+        <script src="../assets/js/jquery-3.1.1.min.js"></script>
     </head>
     <body class="sidenav-active">
         <!-- Sidebar -->
@@ -45,11 +42,11 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
-            <?php 
+            <?php
                 if(isset($data['user']) && $data['user'] != null){
                     $profile = "<div class='user_profile'>
                             <div class='profile_picture'>";
-                    
+
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
                     //echo strlen($_SESSION['user_img']);
                     if(strlen($_SESSION['user']['profile_image']) > 100){
@@ -70,12 +67,12 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
                                     </form>
                                 </div>";
                     echo $profile;
-                                
+
                     if(isset($_SESSION['post_message'])){
                         echo "<div class='error'>{$_SESSION['post_message']}</div>";
                         $_SESSION['post_message'] = "";
                     }
-                                    
+
                     echo "</div>";
                     $history = "<div class='user_log'><table><tbody><tr><th>Action</th><th>Type</th><th>Date</th></tr></tbody><tbody>";
                     foreach($data['history'] as $array){
