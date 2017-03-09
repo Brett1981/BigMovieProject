@@ -56,6 +56,13 @@ class Server {
       }
       return $movies;
     }
+    
+    public static function getOnlyOneMovie(){
+        include 'MovieObjectClass.php';
+        $movieData = new MovieDataObject();
+        $movieInfo = new MovieInfoObject();
+        return array('Movie_Data' => $movieData,'Movie_Info' => $movieInfo);
+    }
     //GET: all movies
     public static function getAllMovies(){
         return Server::getData("/api/video/allmovies");

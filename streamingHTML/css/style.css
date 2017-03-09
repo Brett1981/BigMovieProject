@@ -1298,7 +1298,6 @@ form {
     display: none; /* Hidden by default */
     position: absolute; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -1313,6 +1312,7 @@ form {
     position: relative;
     margin: auto;
     padding: 0;
+    margin-top:100px;
     width: 75%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
@@ -1445,11 +1445,11 @@ form button:hover {
     display: none; /* Hidden by default */
     position: absolute; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    
     left: 0;
     top: 0;
     width: 100%; /* Full width */
-    height: 100vh; /* Full height */
+    height: 100%; /* Full height */
     overflow: hidden; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
@@ -1461,16 +1461,17 @@ form button:hover {
     margin: auto;
     padding: 0;
     width: 75%;
+    top: 100px; /* Location of the box */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
     animation-duration: 0.4s;
+    background-color: #fefefe;
 }
 
 .modal-movie-content div{
-    margin-bottom: 10px;
-    border-radius: 5px;
+   padding: 10px;
 }
 .modal-movie-content input{
     display:block;
@@ -1502,9 +1503,7 @@ form button:hover {
 }
 
 .modal-movie-header {
-    padding: 2px 16px;
     color: rgba(69, 69, 69, 0.55);
-    background-color: #fefefe;
 }
 
 .modal-movie-header h2{
@@ -1512,8 +1511,7 @@ form button:hover {
 }
 
 .modal-movie-body {
-    padding: 20px 16px ;
-    background-color: #fefefe;
+    
 }
 
 .modal-movie-footer {

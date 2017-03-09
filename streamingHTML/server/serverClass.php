@@ -69,9 +69,25 @@ class Server {
       }
       return $movies;
     }
+    
+    public static function getDataOneTest(){
+         include 'MovieObjectClass.php';
+        $movies = array();
+        $movieData = json_decode(json_encode(new MovieDataObject()),true);
+        $movieInfo = json_decode(json_encode(new MovieInfoObject()),true);
+        foreach($movieData as $key => $value){
+          $movies[0][$key] = $value;
+        }
+        $movies[0]['Movie_Info'] = $movieInfo;
+        return $movies;
+    }
     //GET: all movies
     public static function getAllMovies(){
         return Server::getData("/api/video/allmovies");
+    }
+    
+    public static function getMovieById($data){
+        return Server::getData("/api/video/getmoviebyid",$data);
     }
     //GET: movies by genre
     public static function getByGenre($data){
