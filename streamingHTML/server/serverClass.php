@@ -87,7 +87,7 @@ class Server {
     }
     
     public static function getMovieById($data){
-        return Server::getData("/api/video/getmoviebyid",$data);
+        return Server::getData("/api/video/getmoviebyid/",$data);
     }
     //GET: movies by genre
     public static function getByGenre($data){

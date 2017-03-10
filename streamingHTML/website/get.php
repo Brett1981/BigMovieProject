@@ -1,5 +1,5 @@
 <?php
-$debug = true;
+$debug = false;
 
 include '../server/serverClass.php';
 
@@ -7,12 +7,12 @@ $client = Server::Client();
 
 if(isset($_GET['id']) && !empty($_GET['id'])){
     if(!$debug){
-        $response = Server::GetMovieById(array('movie_id' => $id));    
+        $response = Server::GetMovieById($_GET['id']);    
     }
     else{
         $response = Server::getDataOneTest();
     }
-    echo json_encode($response,true);
+    echo json_encode($response);
     exit();
 }
 

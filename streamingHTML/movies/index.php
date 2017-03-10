@@ -36,9 +36,9 @@ elseif(isset($_GET['showall'])){
     $showall = Server::getAllMovies();
 }
 else{
-    //$all = Server::getAllMovies();
+    $all = Server::getAllMovies();
     //Unit test for movies//
-    $all = Server::getDataTest();
+    //$all = Server::getDataTest();
 }
 
 ?>

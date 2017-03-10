@@ -13,8 +13,8 @@ function modalMovie(id){
       m.done(function(data){
             var d = JSON.parse(data);
             console.log(d);
-            var minfo = d[0].Movie_Info;
-            var mdata = d[0];
+            var minfo = d.Movie_Info;
+            var mdata = d;
             mh[0].innerHTML = minfo.original_title;
             mm[0].innerHTML = "<div>"+mdata.guid+"</div>";
             $('#movieModal').show();
