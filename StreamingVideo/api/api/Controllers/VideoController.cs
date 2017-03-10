@@ -83,6 +83,13 @@ namespace api.Controllers
             return Ok(await Database.GetMovie(value));
         }
 
+        //GET: api/video/moviebyid
+        [HttpGet, ActionName("GetMovieById")]
+        public async Task<IHttpActionResult> GetMovieById([FromUri]string value)
+        {
+            return Ok(await Database.Get(value));
+        }
+
         //POST: api/video/getmovie (object)
         [HttpPost,ActionName("GetMovie")]
         public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
@@ -131,7 +138,7 @@ namespace api.Controllers
             
             
         }
-
+        
         //GET: api/video/subs/value
         [HttpGet,ActionName("Subs")]
         public async Task<IHttpActionResult> Subs([FromUri]string value)
