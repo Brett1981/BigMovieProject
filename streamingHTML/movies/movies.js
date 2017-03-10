@@ -1,7 +1,11 @@
 function movie(x){
     var id = $(x).children(".movie_data").children(".id")[0].innerHTML;
     modalMovie(id);
-    //window.location.href = "../play/index.php?id="+id;
+
+}
+
+function watch(id){
+    window.location.href = "../play/index.php?id="+id;
 }
 
 function modalMovie(id){
@@ -13,18 +17,21 @@ function modalMovie(id){
       m.done(function(data){
             var d = JSON.parse(data);
             console.log(d);
-            var minfo = d.Movie_Info;
-            var mdata = d;
-            mh[0].innerHTML = minfo.original_title;
-            mm[0].innerHTML = "<div>"+mdata.guid+"</div>";
-            $('#movieModal').show();
-            
+            if(d != null){
+              var minfo = d.Movie_Info;
+              var mdata = d;
+              mh[0].innerHTML = minfo.original_title;
+              mm[0].innerHTML = createMovieModalDiv(mdata);
+              $('#movieModal').show();
+            }
+            else{
+              alert("No movie was found! Contact the site's administrator!");
+              $('#movieModal').hide();
+            }
         })
         .fail(function(data){
             alert(data);
-      });      
-      
-      
+      });
   }
 }
 
@@ -43,4 +50,48 @@ function closeMovieModal(){
 
 function getMovieInfo(id){
     return $.get("../website/get.php?id="+id, function(){})
+}
+
+function createMovieModalDiv(data){
+    var minfo = data.Movie_Info;
+    var mDiv = "";
+          mDiv += "<div class='top-modal-data'>";
+            mDiv += "<div class='left-modal-data'><img alt='poster' src='https://image.tmdb.org/t/p/w300" + minfo.poster_path +"'/></div>";
+
+            mDiv += "<div class='right-modal-data'>";
+              mDiv += "<div>"
+                      + "<p>"+minfo.tagline+"</p>"
+                    + "</div>";
+              mDiv += "<div>"
+                      + "<a href='"+minfo.homepage+"'>"
+                        + "<i class='material-icons' style='font-size:32px;color:darkviolet'>link</i>"
+                        + "<p>More information</p>"
+                      + "</a>"
+
+                      + "<a href='http://www.imdb.com/title/"+minfo.imdb_id+"'>"
+                        + "<i class='material-icons' style='font-size:32px;color:darkviolet'>movie</i>"
+                        + "<p>IMDb</p>"
+                      + "</a>"
+
+                   +  "</div>";
+              mDiv += "<div>"
+                      + "<div>"
+                        + "<p>"+"</p>"
+                      + "</div>"
+
+                      + "<div>"
+                      + "</div>"
+
+                      + "<div>"
+                      + "</div>"
+                   + "</div>";
+            mDiv +="</div>";
+          mDiv += "</div>";
+            mDiv += "<a class='bottom-modal-data' href='#'"; mDiv += 'onclick="watch(\''+data.guid+'\')">';
+              mDiv   += "<div class='bottom-modal-data-div'>"
+                      + "<p>Play</p>"
+                      + "<i class='material-icons' style='font-size:32px; color:white;'>play_circle_outline</i>"
+                    + "</div>"
+                  + "</a>";
+        return mDiv;
 }

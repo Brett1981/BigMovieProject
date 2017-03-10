@@ -85,7 +85,7 @@ else{
               <span class='close'>&times;</span>
               <h2></h2>
             </div>
-            <div class='modal-movie-body' style='display:block;'>
+            <div class='modal-movie-body'>
             </div>
           </div>
         </div>
