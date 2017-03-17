@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MovieDB_Windows_app.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MovieData" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GenreData" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="APIip" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">31.15.224.24</Value>
+    </Setting>
+    <Setting Name="APIport" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">53851</Value>
+    </Setting>
+    <Setting Name="ImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WEBport" Type="System.String" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
+    <Setting Name="WEBDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">streaming</Value>
+    </Setting>
+    <Setting Name="WEBip" Type="System.String" Scope="User">
+      <Value Profile="(Default)">31.15.224.24</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

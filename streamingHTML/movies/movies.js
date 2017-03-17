@@ -20,7 +20,7 @@ function modalMovie(id){
             if(d != null){
               var minfo = d.Movie_Info;
               var mdata = d;
-              mh[0].innerHTML = minfo.original_title;
+              mh[0].innerHTML = "<p>"+minfo.original_title+"</p><p>("+minfo.release_date.substring(0,4)+")</p>";
               mm[0].innerHTML = createMovieModalDiv(mdata);
               $('#movieModal').show();
             }
@@ -38,12 +38,21 @@ function modalMovie(id){
 $('#movieModal .close').on('click',function(event){
   closeMovieModal();
 });
-$('#movieModal').on('click',function(){
-  if($('#movieModal').is(':visible')){
+$('#movieModal').on('click',function(e){
+  if($('#movieModal').is(':visible') && e.target == this){
     closeMovieModal();
   }
 })
 
+$('#movieModal')
+  .on('show', function () {
+    $('body').on('wheel.modal mousewheel.modal', function () {
+      return false;
+    });
+  })
+  .on('hidde', function () {
+    $('body').off('wheel.modal mousewheel.modal');
+  });
 function closeMovieModal(){
   $('#movieModal').hide();
 }
@@ -54,6 +63,7 @@ function getMovieInfo(id){
 
 function createMovieModalDiv(data){
     var minfo = data.Movie_Info;
+    var release = minfo.release_date.split('T');
     var mDiv = "";
           mDiv += "<div class='top-modal-data'>";
             mDiv += "<div class='left-modal-data'><img alt='poster' src='https://image.tmdb.org/t/p/w300" + minfo.poster_path +"'/></div>";
@@ -76,10 +86,11 @@ function createMovieModalDiv(data){
                    +  "</div>";
               mDiv += "<div>"
                       + "<div>"
-                        + "<p>"+"</p>"
+                        + "<p>"+release[0]+"</p>"
                       + "</div>"
 
                       + "<div>"
+                        + "<p>"+"</p>"
                       + "</div>"
 
                       + "<div>"

@@ -59,7 +59,7 @@ class Movies {
         self::$html_lastAddedTitle = "<div class='last-added title'><a>Latest movies</a><hr></div>";
         self::$html_mostViewedTitle = "<div class='most-viewed title'><a>Popular movies</a><hr></div>";
 
-        self::$html_all = "<div class='movies'>";
+        /*self::$html_all = "<div class='movies'>";*/
         self::$html_lastAdded = "<div class='seperator-movies'>".self::$html_lastAddedTitle."<div class='last-movies'>";
         self::$html_mostViewed = "<div class='seperator-movies'>".self::$html_mostViewedTitle."<div class='top-movies'>";
 
@@ -69,10 +69,10 @@ class Movies {
         foreach(self::$data_mostViewed as $item){
             self::$html_mostViewed .= Movies::movieToHtmlTopView($item);
         }
-        foreach(self::$data_all as $item){
+        /*foreach(self::$data_all as $item){
             self::$html_all .= Movies::movieToHtml($item);
         }
-        self::$html_all .= "</div>";
+        self::$html_all .= "</div>";*/
         self::$html_lastAdded .= "</div></div>";
         self::$html_mostViewed .= "</div></div>";
         return self::$html_mostViewed.self::$html_lastAdded;

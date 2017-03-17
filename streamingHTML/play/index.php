@@ -149,7 +149,7 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
                           <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
                         </p>
                     </video>
-                    <script src="videojs.hotkeys.min.js"></script>
+                    <script src="../assets/videojs/videojs.hotkeys.min.js"></script>
                     <script>
                       // initialize the plugin
                       videojs('my-video').ready(function() {

@@ -307,6 +307,7 @@
     <Compile Include="Resources\CustomClasses.cs" />
     <Compile Include="Resources\Database.cs" />
     <Compile Include="Resources\DataProcessing.cs" />
+    <Compile Include="Resources\Enum\MovieEnum.cs" />
     <Compile Include="Resources\History.cs" />
     <Compile Include="Resources\Library1.cs" />
     <Compile Include="Resources\MoviesAPI.cs" />

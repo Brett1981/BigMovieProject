@@ -23,6 +23,7 @@ using System.Net;
 using System.Web.Http;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using api.Resources.Enum;
 
 namespace api.Resources
 {
@@ -605,6 +606,19 @@ namespace api.Resources
         public static async Task<List<Movie_Data>> GetTop10()
         {
             return await db.Movie_Data.Where(x => x.views > 0).Take(5).ToListAsync();
+        }
+
+        public static async Task<Movie_Data> ChangeMovieOnlineStatus(string guid,MovieStatus status)
+        {
+            var movie = await db.Movie_Data.Where(x => x.guid == guid).FirstAsync();
+            if(movie != null)
+            { 
+                if(status == MovieStatus.Enable) movie.enabled = true;
+                else if(status == MovieStatus.Disable) movie.enabled = false;
+                await db.SaveChangesAsync();
+                return movie;
+            }
+            return null;
         }
 
         #endregion
