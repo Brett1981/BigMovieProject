@@ -24,10 +24,10 @@ namespace MovieDB_Windows_app
         }
 
         private static HttpClient client = new HttpClient();
-        private List<Movie_Data> movieData = new List<Movie_Data>();
+        private List<Movie.Data> movieData = new List<Movie.Data>();
         //private jsonGenresClass genresData = new jsonGenresClass();
         
-        public async Task<List<Movie_Data>> getMovieData(bool force = false)
+        public async Task<List<Movie.Data>> GetMovieData(bool force = false)
         {
             try
             {
@@ -36,21 +36,21 @@ namespace MovieDB_Windows_app
                 {
                     Properties.Settings.Default.MovieData = responseMovie;
                     Properties.Settings.Default.Save();
-                    return JsonConvert.DeserializeObject<List<Movie_Data>>(responseMovie);
+                    return JsonConvert.DeserializeObject<List<Movie.Data>>(responseMovie);
                 }
                 else
                 {
-                    return JsonConvert.DeserializeObject<List<Movie_Data>>(Properties.Settings.Default.MovieData);
+                    return JsonConvert.DeserializeObject<List<Movie.Data>>(Properties.Settings.Default.MovieData);
                 }
             }
             catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return new List<Movie_Data>();
+                return new List<Movie.Data>();
             }
         }
 
-        public async Task<List<User_Info>> getUsersData()
+        public async Task<List<User.Info>> GetUsersData()
         {
             try
             {
@@ -58,25 +58,32 @@ namespace MovieDB_Windows_app
                 var response = await Communication.GetAllUsers();
                 if (response != String.Empty)
                 {
-                    return JsonConvert.DeserializeObject<List<User_Info>>(response);
+                    return JsonConvert.DeserializeObject<List<User.Info>>(response);
                 }
                 else
                 {
 
-                    return new List<User_Info>();
+                    return new List<User.Info>();
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return new List<User_Info>();
+                return new List<User.Info>();
             }
         }
 
         public class Communication
         {
+            private static StringContent CreateHttpContent<T>(object data )
+            {
+                return new StringContent(
+                        JsonConvert.SerializeObject(data),
+                        Encoding.UTF8,
+                        "application/json");
+            }
+
             //Get API
-             
             public static async Task<string> GetAllMovies()
             {
                 return await client.GetStringAsync(conAddress + "/api/video/allmovies");
@@ -86,28 +93,65 @@ namespace MovieDB_Windows_app
             {
                 return await client.GetStringAsync(conAddress + "/api/user/getusers");
             }
-            
-            //Edit API
-            public static async Task<string> UpdateMovieData()
+
+            public static async Task<Movie.Data> GetMovie(string guid)
             {
-                return await client.GetStringAsync(conAddress + "/api/video/edit");
+                return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + "/api/video/getmovie/" + guid));
             }
 
-            //Enable/disable movie API
-            public static async Task<System.Net.HttpStatusCode> ChangeMovieStatus(string guid,string status)
+            /// <summary>
+            /// Force refresh on API and returns new movie list
+            /// </summary>
+            /// <returns>List<Movie.Data></returns>
+            public static async Task<List<Movie.Data>> Refresh()
             {
-                List<values> v = new List<values>();
-                v.Add(new values() { id = 0, name = Convert.ToBase64String(Encoding.ASCII.GetBytes(guid)) });
-                v.Add(new values() { id = 1, name = status });
-                string jsonData = string.Format("={0}", JsonConvert.SerializeObject(v));
-                var content = new StringContent(
-                        jsonData,
-                        Encoding.UTF8,
-                        "application/x-www-form-urlencoded");
+                return JsonConvert.DeserializeObject<List<Movie.Data>>(await client.GetStringAsync(conAddress + "/api/administration/refresh"));
+            }
+            
+            /// <summary>
+            /// Administration API
+            /// </summary>
+            /// <param name="content"></param>
+            /// <returns></returns>
+            private static async Task<HttpResponseMessage> SetMovieStatus(StringContent content )
+            {
+                return await client.PostAsync(conAddress + "/api/administration/setmoviestatus", content);
+            }
 
-                HttpResponseMessage response = await client.PostAsync(conAddress + "/api/video/setmoviestatus", content);
-                Debug.WriteLine(response.StatusCode);
-                return response.StatusCode;
+            private static async Task<HttpResponseMessage> Auth(StringContent content)
+            {
+                return await client.PostAsync(conAddress + "/api/administration/auth", content);
+            } 
+
+            //Enable/disable movie API
+            public static async Task<HttpResponseMessage> ChangeMovieStatus(Movie.Data movie,User.Info user = null)
+            {
+                if(user == null)
+                {
+                    user = GlobalVar.GlobalCurrentUser;
+                }
+                return await SetMovieStatus(
+                    CreateHttpContent<AuthMovieEdit>(
+                        new AuthMovieEdit()
+                        {
+                            User = user,
+                            Movie = movie
+                        }
+                    ));
+            }
+
+            public static async Task<HttpResponseMessage> Login(Auth.Login data)
+            {
+                return await Auth(CreateHttpContent<Auth.Login>(data));
+            }
+
+            /// <summary>
+            /// Custom auth class for communication with API for movie edit
+            /// </summary>
+            public class AuthMovieEdit
+            {
+                public User.Info User { get; set; }
+                public Movie.Data Movie { get; set; }
             }
         }
 
@@ -119,6 +163,31 @@ namespace MovieDB_Windows_app
                 return Image.FromStream(response);
             }
         }
+
+        public class Auth
+        {
+            public class Login
+            {
+                public string username { get; set; }
+                public string password { get; set; }
+            }
+
+            public class User
+            {
+                public int Id { get; set; }
+
+                public string username { get; set; }
+                public string password { get; set; }
+                public string unique_id { get; set; }
+                public string image_url { get; set; }
+                public string display_name { get; set; }
+                public Nullable<System.DateTime> profile_created { get; set; }
+                public Nullable<System.DateTime> birthday { get; set; }
+                public string email { get; set; }
+            }
+
+        }
+  
 
 
     }

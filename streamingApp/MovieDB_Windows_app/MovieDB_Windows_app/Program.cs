@@ -16,7 +16,7 @@ namespace MovieDB_Windows_app
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Application.Run(new Views.Login());
         }
     }
 }

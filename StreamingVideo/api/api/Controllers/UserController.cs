@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Web.Http.Cors;
 using api.Models;
+using api.Resources.Auth;
 
 namespace api.Controllers
 {
@@ -33,7 +34,7 @@ namespace api.Controllers
 
         //POST: api/Users/Login
         [HttpPost,ActionName("Login")]
-        public async Task<IHttpActionResult> Login([FromBody] CustomUserModel data)
+        public async Task<IHttpActionResult> Login([FromBody] Auth.User data)
         {
             var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)
@@ -67,7 +68,7 @@ namespace api.Controllers
 
         //POST: api/Users/Create
         [HttpPost, ActionName("Create")]
-        public async Task<IHttpActionResult> Create([FromBody] CustomUserModel data)
+        public async Task<IHttpActionResult> Create([FromBody] Auth.User data)
         {
             var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user == null)
@@ -148,7 +149,7 @@ namespace api.Controllers
             return Ok(new User_Info());
         }
         [HttpPost,ActionName("ChangeProfilePicture")]
-        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody]CustomUserModel data)
+        public async Task<IHttpActionResult> ChangeProfilePicture([FromBody] Auth.User data)
         { 
             try
             {

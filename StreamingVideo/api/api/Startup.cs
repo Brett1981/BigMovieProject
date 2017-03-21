@@ -14,15 +14,16 @@ namespace api
 {
     public partial class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public async void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            DatabaseMovieCheck();
+            await DatabaseMovieCheck();
         }
 
         public async Task DatabaseMovieCheck()
         {
             Thread t1;
+            await Task.Delay(0);
             try
             {
                 t1 = new Thread(async () => await Database.CheckDB())

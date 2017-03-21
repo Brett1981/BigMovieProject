@@ -444,6 +444,7 @@
             this.MinimumSize = new System.Drawing.Size(836, 461);
             this.Name = "Edit";
             this.Text = "Edit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Edit_FormClosing);
             this.Load += new System.EventHandler(this.Edit_Load);
             ((System.ComponentModel.ISupportInitialize)(this.posterImage)).EndInit();
             this.ResumeLayout(false);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -14,10 +15,11 @@ namespace MovieDB_Windows_app.Views
 {
     public partial class Edit : Form
     {
-        private static Movie_Data movie = new Movie_Data();
+        private static Movie.Data movie = new Movie.Data();
         private static Button movieButton = new Button();
         private static API api = new API();
-        public Edit(Movie_Data data,Button mbutton)
+        private bool Edited = false;
+        public Edit(Movie.Data data,Button mbutton)
         {
             InitializeComponent();
             movie = data;
@@ -38,8 +40,8 @@ namespace MovieDB_Windows_app.Views
 
         private void GetMovieInfoToObject(string item)
         {
-            Movie_Data m = new Movie_Data() {
-                Movie_Info = new Movie_Info()
+            Movie.Data m = new Movie.Data() {
+                Movie_Info = new Movie.Info()
             };
             var sitem = item.Split(new string[] { "TextBox", "CheckedBox", "Image" }, StringSplitOptions.None);
             if (sitem != null && sitem[0] != "poster" )
@@ -109,33 +111,38 @@ namespace MovieDB_Windows_app.Views
 
         private async void enabledCheckedBox_Click(object sender, EventArgs e)
         {
-            bool currentStatus = enabledCheckedBox.Checked;
-            if (!enabledCheckedBox.Checked)
-            {
-                if (MessageBox.Show("Are you sure you want to DISABLE this movie!", "Action", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                {
-                    await API.Communication.ChangeMovieStatus(movie.guid,"disable");
-                    enabledCheckedBox.Checked = false;
-                }
-            }
-            else
-            {
-                if (MessageBox.Show("Are you sure you want to ENABLE this movie!", "Action", MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
-                {
+            bool currentStatus = false;
+            Movie.Data temp = movie;
+            string desc = "";
 
-                    await API.Communication.ChangeMovieStatus(movie.guid, "enable");
-                    enabledCheckedBox.Checked = true;
-                }
-            }
-            if(currentStatus != !enabledCheckedBox.Checked)
+            if (!enabledCheckedBox.Checked) { desc = "Are you sure you want to DISABLE this movie!"; currentStatus = false; }
+            else { desc = "Are you sure you want to DISABLE this movie!"; currentStatus = true; }
+
+            if (MessageBox.Show(desc, temp.Movie_Info.title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
-                this.DialogResult = DialogResult.OK;
+                temp.enabled = currentStatus;
+                Debug.WriteLine(await API.Communication.ChangeMovieStatus(temp));
+                var m = await API.Communication.GetMovie(temp.guid);
+                if (m.enabled == currentStatus)
+                {
+                    enabledCheckedBox.Checked = currentStatus;
+                    Edited = true;
+                }
             }
         }
 
         private void enabledCheckedBox_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Edit_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Edited)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+            else this.DialogResult = DialogResult.Cancel;
         }
     }
 }

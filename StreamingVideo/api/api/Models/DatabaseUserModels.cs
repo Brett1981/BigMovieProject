@@ -10,18 +10,4 @@ namespace api.Models
         public string user_id { get; set; }
         public string movie_id { get; set; }
     }
-    public class CustomUserModel
-    {
-        public int Id { get; set; }
-
-        public string username { get; set; }
-        public string password { get; set; }
-        public string unique_id { get; set; }
-        public string image_url { get; set; }
-        public string display_name { get; set; }
-        public Nullable<System.DateTime> profile_created { get; set; }
-        public Nullable<System.DateTime> birthday { get; set; }
-        public string email { get; set; }
-
-    }
 }

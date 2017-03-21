@@ -30,13 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,17 +46,17 @@
             this.usersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.moviesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanTempFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.userLogedIn = new System.Windows.Forms.ToolStripStatusLabel();
+            this.rightClickMovieContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.enableDisableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.rightClickMovieContextMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // imageList1
             // 
@@ -81,7 +81,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripProgressBar1,
             this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2});
+            this.toolStripStatusLabel2,
+            this.toolStripStatusLabel3,
+            this.userLogedIn});
             this.statusStrip1.Location = new System.Drawing.Point(0, 460);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(963, 22);
@@ -103,6 +105,12 @@
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(60, 17);
+            this.toolStripStatusLabel3.Text = "Welcome:";
             // 
             // menuStrip1
             // 
@@ -142,8 +150,7 @@
             this.programToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
             this.usersToolStripMenuItem,
-            this.moviesToolStripMenuItem,
-            this.searchToolStripMenuItem});
+            this.moviesToolStripMenuItem});
             this.programToolStripMenuItem.Name = "programToolStripMenuItem";
             this.programToolStripMenuItem.Size = new System.Drawing.Size(65, 23);
             this.programToolStripMenuItem.Text = "Program";
@@ -151,48 +158,76 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh data";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // usersToolStripMenuItem
             // 
             this.usersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshListToolStripMenuItem1});
             this.usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            this.usersToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.usersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.usersToolStripMenuItem.Text = "Users";
             // 
             // refreshListToolStripMenuItem1
             // 
             this.refreshListToolStripMenuItem1.Name = "refreshListToolStripMenuItem1";
-            this.refreshListToolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
+            this.refreshListToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.refreshListToolStripMenuItem1.Text = "Refresh list";
             // 
             // moviesToolStripMenuItem
             // 
             this.moviesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshListToolStripMenuItem});
+            this.cleanTempFilesToolStripMenuItem});
             this.moviesToolStripMenuItem.Name = "moviesToolStripMenuItem";
-            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.moviesToolStripMenuItem.Text = "Movies";
             // 
-            // refreshListToolStripMenuItem
+            // cleanTempFilesToolStripMenuItem
             // 
-            this.refreshListToolStripMenuItem.Name = "refreshListToolStripMenuItem";
-            this.refreshListToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
-            this.refreshListToolStripMenuItem.Text = "Refresh list";
-            // 
-            // searchToolStripMenuItem
-            // 
-            this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.searchToolStripMenuItem.Text = "Search";
+            this.cleanTempFilesToolStripMenuItem.Name = "cleanTempFilesToolStripMenuItem";
+            this.cleanTempFilesToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.cleanTempFilesToolStripMenuItem.Text = "Clean temp files";
+            this.cleanTempFilesToolStripMenuItem.Click += new System.EventHandler(this.cleanTempFilesToolStripMenuItem_Click);
             // 
             // searchTextBox
             // 
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(200, 23);
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
+            // 
+            // userLogedIn
+            // 
+            this.userLogedIn.Name = "userLogedIn";
+            this.userLogedIn.Size = new System.Drawing.Size(0, 17);
+            // 
+            // rightClickMovieContextMenu
+            // 
+            this.rightClickMovieContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.enableDisableToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.viewToolStripMenuItem});
+            this.rightClickMovieContextMenu.Name = "rightClickMovieContextMenu";
+            this.rightClickMovieContextMenu.Size = new System.Drawing.Size(159, 70);
+            // 
+            // enableDisableToolStripMenuItem
+            // 
+            this.enableDisableToolStripMenuItem.Name = "enableDisableToolStripMenuItem";
+            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.enableDisableToolStripMenuItem.Text = "Enable / Disable";
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.viewToolStripMenuItem.Text = "View";
             // 
             // Main
             // 
@@ -206,19 +241,19 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
             this.Text = "MovieDatabase";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.rightClickMovieContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -234,9 +269,14 @@
         private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshListToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem moviesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem refreshListToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox searchTextBox;
+        private System.Windows.Forms.ToolStripMenuItem cleanTempFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+        private System.Windows.Forms.ToolStripStatusLabel userLogedIn;
+        private System.Windows.Forms.ContextMenuStrip rightClickMovieContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem enableDisableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
     }
 }
 

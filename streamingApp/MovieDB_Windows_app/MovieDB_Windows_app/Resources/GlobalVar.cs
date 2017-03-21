@@ -22,8 +22,8 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static List<Movie_Data> _globalMovieData;
-        public static List<Movie_Data> GlobalMovieData
+        static List<Movie.Data> _globalMovieData;
+        public static List<Movie.Data> GlobalMovieData
         {
             get
             {
@@ -61,8 +61,8 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static Movie_Data _globalMovieClick;
-        public static Movie_Data GlobalMovieItemClick
+        static Movie.Data _globalMovieClick;
+        public static Movie.Data GlobalMovieItemClick
         {
             get
             {
@@ -74,8 +74,8 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static List<User_Info> _globalUserInfo;
-        public static List<User_Info> GlobalUserInfo
+        static List<User.Info> _globalUserInfo;
+        public static List<User.Info> GlobalUserInfo
         {
             get
             {
@@ -84,6 +84,19 @@ namespace MovieDB_Windows_app.Resources
             set
             {
                 _globalUserInfo = value;
+            }
+        }
+
+        static User.Info _globalCurrentUser;
+        public static User.Info GlobalCurrentUser
+        {
+            get
+            {
+                return _globalCurrentUser;
+            }
+            set
+            {
+                _globalCurrentUser = value;
             }
         }
 

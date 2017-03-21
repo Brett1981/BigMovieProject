@@ -185,33 +185,6 @@ namespace api.Controllers
             }
             return Ok(s.session_id);
         }
-        //POST api/video/enable or disable 
-        [HttpPost, ActionName("SetMovieStatus")]
-        public async Task<IHttpActionResult> SetMovieStatus([FromBody] string data)
-        {
-            var x = JsonConvert.DeserializeObject<List<CustomClasses.values>>(data);
-            var mguid = Encoding.UTF8.GetString(
-                Convert.FromBase64String(
-                    x[0].name
-                    )
-                );
-            if (mguid != null)
-            {
-                Movie_Data movie;
-                if(x[1].name.ToLower() == MovieStatus.Enable.ToString().ToLower())
-                {
-                    movie = await Database.ChangeMovieOnlineStatus(mguid, MovieStatus.Enable);
-                    if (movie != null && movie.enabled == true) return Ok("Movie "+movie.Movie_Info.title+" is enabled!");
-                }
-                else
-                {
-                    movie = await Database.ChangeMovieOnlineStatus(mguid, MovieStatus.Disable);
-                    if (movie != null && movie.enabled == false) return Ok("Movie " + movie.Movie_Info.title + " is disabled!");
-                }
-                
-                return Conflict();
-            }
-            return BadRequest();
-        }
+        
     }
 }

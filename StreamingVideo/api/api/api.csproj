@@ -263,6 +263,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\DatabaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
@@ -304,14 +305,16 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
-    <Compile Include="Resources\CustomClasses.cs" />
-    <Compile Include="Resources\Database.cs" />
-    <Compile Include="Resources\DataProcessing.cs" />
+    <Compile Include="Resources\Auth\Auth.cs" />
+    <Compile Include="Resources\Classes\CustomClasses.cs" />
+    <Compile Include="Resources\Database\Database.cs" />
+    <Compile Include="Resources\Functions\Functions.cs" />
+    <Compile Include="Resources\Not done or empty\DataProcessing.cs" />
     <Compile Include="Resources\Enum\MovieEnum.cs" />
-    <Compile Include="Resources\History.cs" />
-    <Compile Include="Resources\Library1.cs" />
-    <Compile Include="Resources\MoviesAPI.cs" />
-    <Compile Include="Resources\Streaming.cs" />
+    <Compile Include="Resources\Database\History.cs" />
+    <Compile Include="Resources\Not done or empty\Library1.cs" />
+    <Compile Include="Resources\Database\MoviesAPI.cs" />
+    <Compile Include="Resources\Database\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Session_Guest.cs">
       <DependentUpon>MDBSQLEntities.tt</DependentUpon>
@@ -428,6 +431,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\users\" />
+    <Folder Include="Resources\NewFolder1\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

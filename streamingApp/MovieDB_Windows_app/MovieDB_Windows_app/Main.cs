@@ -15,10 +15,11 @@ namespace MovieDB_Windows_app
 {
     public partial class Main : Form
     {
-        public static Movie_Data movie_click_data { get; set; }
+        public static Movie.Data movie_click_data { get; set; }
         public bool isPersistantStoragePrimary = false;
+        API api = new API();
 
-        public Main()
+        public Main(User.Info u = null)
         {
             InitializeComponent();
             var dir = AppDomain.CurrentDomain.BaseDirectory;
@@ -41,26 +42,28 @@ namespace MovieDB_Windows_app
                 Properties.Settings.Default.ImagePath = dir + @"Data\Images";
             }
             Properties.Settings.Default.Save();
+            GlobalVar.GlobalCurrentUser = u;
+            userLogedIn.Text = u.username;
+            rightClickMovieContextMenu.ItemClicked += RightClickMovieContextMenu_ItemClicked;
         }
-
-        
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            SetMovieList();
+           await SetMovieList();
         }
-        public async void SetMovieList()
+        public async Task SetMovieList(List<Movie.Data> list = null)
         {
-            API api = new API();
-            GlobalVar.GlobalMovieData = await api.getMovieData();
+            if(list == null)
+                GlobalVar.GlobalMovieData = await api.GetMovieData();
+
             if (GlobalVar.GlobalMovieData == null || GlobalVar.GlobalMovieData.Count < 0) MessageBox.Show("No connection could be made to the server!");
             else
             {
-                GlobalVar.GlobalUserInfo = await api.getUsersData();
+                GlobalVar.GlobalUserInfo = await api.GetUsersData();
                 DisplayMovieData(GlobalVar.GlobalMovieData);
             }
         }
-        private async void DisplayMovieData(List<Movie_Data> data)
+        private async void DisplayMovieData(List<Movie.Data> data)
         {
             if (flowLayoutPanel1.Controls.Count > 0) flowLayoutPanel1.Controls.Clear();
             toolStripProgressBar1.Value = 0;
@@ -76,12 +79,14 @@ namespace MovieDB_Windows_app
                     Width   = 160,
                     Visible = true,
                     BackgroundImageLayout   = ImageLayout.Stretch,
-                    Text    = data[i].Movie_Info.id.ToString(),
+                    Text    = "",
+                    Tag     = data[i]
                 };
                 bttn.BackgroundImage = await GetImage(data[i].Movie_Info.poster_path);
-                bttn.Click += new EventHandler(button_movie_Click);
-
+                //bttn.Click += new EventHandler(button_movie_Click);
+                bttn.MouseUp += new MouseEventHandler(button_mouse_Click);
                 bttns.Add(bttn);
+                //bttn.BackgroundImage.Dispose();
                 flowLayoutPanel1.Controls.Add(bttn);
             }
             GlobalVar.GlobalMovieButtonList = new List<Button>(bttns);
@@ -103,6 +108,7 @@ namespace MovieDB_Windows_app
             try
             {
                 x.Save(path + "\\" + image, System.Drawing.Imaging.ImageFormat.Jpeg);
+
             }
             catch(Exception ex)
             {
@@ -111,31 +117,87 @@ namespace MovieDB_Windows_app
             return x;
         } 
 
-        private void button_movie_Click(object sender, EventArgs e)
+        private async void button_movie_Click(object sender, EventArgs e)
         {
             var item = (Button)sender;
-            GlobalVar.GlobalMovieId = item.AccessibilityObject.Name;
-
-            movie_click_data = GlobalVar.GlobalMovieData
-                .Where(x => x.Movie_Info.id.ToString() == GlobalVar.GlobalMovieId)
-                .First();
-
-            if(movie_click_data == null)
-            {
+            var m = (Movie.Data)item.Tag;
+            if(m == null)
                 MessageBox.Show("There seems to be no movie selected!");
-                
-            }
             else
             {
-                Views.Edit ed = new Views.Edit(movie_click_data, item);
+                Views.Edit ed = new Views.Edit(m, item);
                 if (ed.ShowDialog() == DialogResult.OK)
-                {
-                   SetMovieList();
-                }
-               
+                    await SetMovieList();
+
+            }
+        }
+        private void button_mouse_Click(object sender, MouseEventArgs e)
+        {
+            
+            switch (e.Button)
+            {
+                case MouseButtons.Right:
+                    SetContextMenu((Button)sender);
+                    break;
+                default:
+                    button_movie_Click(sender, new EventArgs());
+                    break;
             }
         }
 
+        //Context menu
+        private void SetContextMenu(Button b)
+        {
+            rightClickMovieContextMenu.Tag = b;
+            rightClickMovieContextMenu.Show(Cursor.Position.X, Cursor.Position.Y);
+        }
+        //context menu item clicked
+        private async void RightClickMovieContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            var b = (Button)rightClickMovieContextMenu.Tag;
+            var m = (Movie.Data)b.Tag;
+            string desc = "";
+            switch (e.ClickedItem.Text)
+            {
+                case "Enable / Disable":
+                    {
+                        if (m.enabled)
+                        {
+                            desc = "Are you sure you want to DISABLE this movie!";
+                            m.enabled = false;
+                        }
+                        else
+                        {
+                            desc = "Are you sure you want to ENABLE this movie!";
+                            m.enabled = true;
+                        }
+                        if (MessageBox.Show(desc, m.Movie_Info.title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
+                        {
+                            var r = await API.Communication.ChangeMovieStatus(m);
+                            var x = await r.Content.ReadAsStringAsync();
+                            if (x.Contains("disabled") || x.Contains("enabled"))
+                                await SetMovieList(await API.Communication.Refresh());
+                        }
+                            
+
+                    }
+                    break;
+                case "Edit":
+                    {
+                        Views.Edit edit = new Views.Edit(m,b);
+                        edit.Show();
+                    }
+                    break;
+                case "View":
+                    {
+                        Views.ViewMovie view = new Views.ViewMovie(m.guid);
+                        view.Show();
+                    }
+                    break;
+            }
+        }
+
+        //search box
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
             flowLayoutPanel1.Controls.Clear();
@@ -173,6 +235,35 @@ namespace MovieDB_Windows_app
                 }
                 
             }
+        }
+
+        /// <summary>
+        /// Refreshes movie list and creates new List in API
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await SetMovieList(await API.Communication.Refresh());
+        }
+
+        //clean temp folder
+        private void cleanTempFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            flowLayoutPanel1.Controls.Clear();
+            foreach(FileInfo img in new DirectoryInfo(Properties.Settings.Default.ImagePath).GetFiles())
+            {
+                img.Delete();
+            }
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            flowLayoutPanel1.Controls.Clear();
+            GlobalVar.GlobalCurrentUser = null;
+            GlobalVar.GlobalMovieButtonList = null;
+            GlobalVar.GlobalMovieData = null;
+            Application.Exit();
         }
     }
 }
