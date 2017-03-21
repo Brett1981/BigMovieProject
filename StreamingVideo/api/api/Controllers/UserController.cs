@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Web.Http.Cors;
 using api.Models;
 using api.Resources.Auth;
+using api.Resources.Functions;
 
 namespace api.Controllers
 {
@@ -34,7 +35,7 @@ namespace api.Controllers
 
         //POST: api/Users/Login
         [HttpPost,ActionName("Login")]
-        public async Task<IHttpActionResult> Login([FromBody] Auth.User data)
+        public async Task<IHttpActionResult> Login([FromBody] Auth.Login data)
         {
             var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)

@@ -54,7 +54,7 @@ $('#login-form').submit(function(event){
     event.preventDefault();
     var f = event.currentTarget;
     var user = {username : f[0].value,
-                password : f[1].value
+                password : btoa(f[1].value)
                };
     console.log(user);
     postData(user,"login");      

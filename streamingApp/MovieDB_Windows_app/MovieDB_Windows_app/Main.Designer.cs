@@ -37,6 +37,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.userLogedIn = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,7 +49,6 @@
             this.moviesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanTempFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
-            this.userLogedIn = new System.Windows.Forms.ToolStripStatusLabel();
             this.rightClickMovieContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.enableDisableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,8 +82,8 @@
             this.toolStripProgressBar1,
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
-            this.toolStripStatusLabel3,
-            this.userLogedIn});
+            this.userLogedIn,
+            this.toolStripStatusLabel3});
             this.statusStrip1.Location = new System.Drawing.Point(0, 460);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(963, 22);
@@ -108,9 +108,16 @@
             // 
             // toolStripStatusLabel3
             // 
+            this.toolStripStatusLabel3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(60, 17);
             this.toolStripStatusLabel3.Text = "Welcome:";
+            // 
+            // userLogedIn
+            // 
+            this.userLogedIn.Name = "userLogedIn";
+            this.userLogedIn.Size = new System.Drawing.Size(0, 17);
             // 
             // menuStrip1
             // 
@@ -158,7 +165,7 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.refreshToolStripMenuItem.Text = "Refresh data";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
@@ -167,13 +174,13 @@
             this.usersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshListToolStripMenuItem1});
             this.usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            this.usersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.usersToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.usersToolStripMenuItem.Text = "Users";
             // 
             // refreshListToolStripMenuItem1
             // 
             this.refreshListToolStripMenuItem1.Name = "refreshListToolStripMenuItem1";
-            this.refreshListToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.refreshListToolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
             this.refreshListToolStripMenuItem1.Text = "Refresh list";
             // 
             // moviesToolStripMenuItem
@@ -181,7 +188,7 @@
             this.moviesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cleanTempFilesToolStripMenuItem});
             this.moviesToolStripMenuItem.Name = "moviesToolStripMenuItem";
-            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.moviesToolStripMenuItem.Text = "Movies";
             // 
             // cleanTempFilesToolStripMenuItem
@@ -196,11 +203,6 @@
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(200, 23);
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
-            // 
-            // userLogedIn
-            // 
-            this.userLogedIn.Name = "userLogedIn";
-            this.userLogedIn.Size = new System.Drawing.Size(0, 17);
             // 
             // rightClickMovieContextMenu
             // 

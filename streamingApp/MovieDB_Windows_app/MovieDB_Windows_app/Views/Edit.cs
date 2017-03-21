@@ -111,24 +111,25 @@ namespace MovieDB_Windows_app.Views
 
         private async void enabledCheckedBox_Click(object sender, EventArgs e)
         {
-            bool currentStatus = false;
             Movie.Data temp = movie;
             string desc = "";
 
-            if (!enabledCheckedBox.Checked) { desc = "Are you sure you want to DISABLE this movie!"; currentStatus = false; }
-            else { desc = "Are you sure you want to DISABLE this movie!"; currentStatus = true; }
+            if (enabledCheckedBox.Checked) { desc = "Are you sure you want to DISABLE this movie!"; }
+            else { desc = "Are you sure you want to ENABLE this movie!"; }
 
             if (MessageBox.Show(desc, temp.Movie_Info.title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
-                temp.enabled = currentStatus;
+                temp.enabled = !enabledCheckedBox.Checked;
                 Debug.WriteLine(await API.Communication.ChangeMovieStatus(temp));
                 var m = await API.Communication.GetMovie(temp.guid);
-                if (m.enabled == currentStatus)
+
+                if (m.enabled == temp.enabled)
                 {
-                    enabledCheckedBox.Checked = currentStatus;
+                    enabledCheckedBox.Checked = (m.enabled == true) ? true : false;
                     Edited = true;
                 }
             }
+            
         }
 
         private void enabledCheckedBox_CheckedChanged(object sender, EventArgs e)

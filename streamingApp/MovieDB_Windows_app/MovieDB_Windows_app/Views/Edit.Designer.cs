@@ -356,6 +356,7 @@
             // 
             // enabledCheckedBox
             // 
+            this.enabledCheckedBox.AutoCheck = false;
             this.enabledCheckedBox.AutoSize = true;
             this.enabledCheckedBox.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.enabledCheckedBox.Location = new System.Drawing.Point(57, 344);

@@ -21,7 +21,8 @@ namespace MovieDB_Windows_app.Views
 
         private async void button1_Click(object sender, EventArgs e)
         {
-
+            loginButton.Enabled = false;
+            loginButton.Text = "Wait";
             var login = await API.Communication.Login(new API.Auth.Login()
                 {
                     username = usernameTextBox.Text,
@@ -29,14 +30,18 @@ namespace MovieDB_Windows_app.Views
                                Encoding.ASCII.GetBytes(passwordTextBox.Text))
                 }
             );
-            if(login.StatusCode == System.Net.HttpStatusCode.OK)
+            loginButton.Text += " .";
+            if (login.StatusCode == System.Net.HttpStatusCode.OK)
             {
+                loginButton.Text += " .";
                 var c = await login.Content.ReadAsStringAsync();
                 if (c != null)
                 {
+                    loginButton.Text += " .";
                     var user = JsonConvert.DeserializeObject<User.Info>(c);
                     if (user.unique_id != null)
                     {
+                        loginButton.Text += " .";
                         Main m = new Main(user);
                         this.Hide();
                         m.Show();
@@ -55,6 +60,11 @@ namespace MovieDB_Windows_app.Views
                     MessageBox.Show("Username or password is incorrect!");
                 }
             }
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
