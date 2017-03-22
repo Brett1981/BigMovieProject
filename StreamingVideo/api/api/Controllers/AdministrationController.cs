@@ -47,22 +47,31 @@ namespace api.Controllers
         public void Delete(int id)
         {
         }
-        //GET api/administration/refresh
-        [HttpGet,ActionName("Refresh")]
-        public async Task<IHttpActionResult> Refresh()
+
+        //POST api/administration/refresh
+        [HttpPost,ActionName("Refresh")]
+        public async Task<IHttpActionResult> Refresh(Auth.User data)
         {
-            await Task.Delay(0);
-            Resources.Database.ForceMovieList();
-            await History.Set("api", new History_API()
+            if(data != null && data.unique_id != null )
             {
-                api_action = "Administration -> Refresh movie list",
-                api_datetime = DateTime.Now,
-                api_type = "Refresh movie list"
-            });
-            return Ok(Resources.Database.AllMovies); 
+                var user = await Resources.Database.FindUser(data.unique_id);
+                if(user != null && user.unique_id == data.unique_id)
+                {
+                    Resources.Database.ForceMovieList();
+                    await History.Set("api", new History_API()
+                    {
+                        api_action = "Administration -> Refresh movie list requested from user " + user.username,
+                        api_datetime = DateTime.Now,
+                        api_type = "Refresh movie list"
+                    });
+                    return Ok(Resources.Database.AllMovies);
+                }
+            }
+            return Unauthorized();
 
         }
-        //GET api/administration/login
+
+        //POST api/administration/login
         [HttpPost,ActionName("Auth")]
         public async Task<IHttpActionResult> Auth([FromBody] Auth.Login data)
         {
@@ -76,7 +85,7 @@ namespace api.Controllers
                     await db.SaveChangesAsync();
                     await History.Set("api", new History_API()
                     {
-                        api_action = "Administration -> Admin loged on",
+                        api_action = "Administration -> User  '" + user.username + "' loged on",
                         api_datetime = DateTime.Now,
                         api_type = "Admin log on"
                     });
@@ -86,9 +95,10 @@ namespace api.Controllers
             }
             return NotFound();
         }
+
         //POST api/administration/SetMovieStatus
-        [HttpPost, ActionName("SetMovieStatus")]
-        public async Task<IHttpActionResult> SetMovieStatus([FromBody] Auth.AuthMovieEdit data)
+        [HttpPost, ActionName("ChangeMovieStatus")]
+        public async Task<IHttpActionResult> ChangeMovieStatus([FromBody] Auth.AuthMovieEdit data)
         {
             if(data != null)
             {

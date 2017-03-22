@@ -24,6 +24,7 @@ namespace MovieDB_Windows_app.Views
             InitializeComponent();
             movie = data;
             movieButton = mbutton;
+            this.Text += "-> " + movie.Movie_Info.title;
             foreach (Control cont in this.Controls)
             {
                 if (cont.Name.Contains("TextBox") || cont.Name.Contains("CheckedBox") || cont.Name.Contains("Image"))

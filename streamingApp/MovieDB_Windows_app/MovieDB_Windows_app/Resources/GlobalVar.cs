@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MovieDB_Windows_app.API;
 
 namespace MovieDB_Windows_app.Resources
 {
@@ -74,31 +75,45 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static List<User.Info> _globalUserInfo;
-        public static List<User.Info> GlobalUserInfo
+        static List<User.Info> _globalUsersInfo;
+        public static List<User.Info> GlobalUsersInfo
         {
             get
             {
-                return _globalUserInfo;
+                return _globalUsersInfo;
             }
             set
             {
-                _globalUserInfo = value;
+                _globalUsersInfo = value;
             }
         }
 
-        static User.Info _globalCurrentUser;
-        public static User.Info GlobalCurrentUser
+        static User.Info _globalCurrentUserInfo;
+        public static User.Info GlobalCurrentUserInfo
         {
             get
             {
-                return _globalCurrentUser;
+                return _globalCurrentUserInfo;
             }
             set
             {
-                _globalCurrentUser = value;
+                _globalCurrentUserInfo = value;
             }
         }
+
+        static Auth.User _globalAuthUser;
+        public static Auth.User GlobalAuthUser
+        {
+            get
+            {
+                return _globalAuthUser;
+            }
+            set
+            {
+                _globalAuthUser = value;
+            }
+        }
+
 
     }
 }

@@ -99,38 +99,41 @@ namespace MovieDB_Windows_app
                 return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + "/api/video/getmovie/" + guid));
             }
 
-            /// <summary>
-            /// Force refresh on API and returns new movie list
-            /// </summary>
-            /// <returns>List<Movie.Data></returns>
-            public static async Task<List<Movie.Data>> Refresh()
-            {
-                return JsonConvert.DeserializeObject<List<Movie.Data>>(await client.GetStringAsync(conAddress + "/api/administration/refresh"));
-            }
+            
             
             /// <summary>
             /// Administration API
             /// </summary>
             /// <param name="content"></param>
             /// <returns></returns>
-            private static async Task<HttpResponseMessage> SetMovieStatus(StringContent content )
+            private static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content )
             {
-                return await client.PostAsync(conAddress + "/api/administration/setmoviestatus", content);
+                return await client.PostAsync(conAddress + "/api/administration/changemoviestatus", content);
             }
 
             private static async Task<HttpResponseMessage> Auth(StringContent content)
             {
                 return await client.PostAsync(conAddress + "/api/administration/auth", content);
-            } 
+            }
 
-            //Enable/disable movie API
+            private static async Task<HttpResponseMessage> Refresh(StringContent content)
+            {
+                return await client.PostAsync(conAddress + "/api/administration/refresh", content);
+            }
+
+            /// <summary>
+            /// Enable or disable movie
+            /// </summary>
+            /// <param name="movie">Movie.Data</param>
+            /// <param name="user">User.Info</param>
+            /// <returns>HttpResponseMessage</returns>
             public static async Task<HttpResponseMessage> ChangeMovieStatus(Movie.Data movie,User.Info user = null)
             {
                 if(user == null)
                 {
-                    user = GlobalVar.GlobalCurrentUser;
+                    user = GlobalVar.GlobalCurrentUserInfo;
                 }
-                return await SetMovieStatus(
+                return await ChangeMovieStatus(
                     CreateHttpContent<AuthMovieEdit>(
                         new AuthMovieEdit()
                         {
@@ -140,9 +143,36 @@ namespace MovieDB_Windows_app
                     ));
             }
 
+            /// <summary>
+            /// Login user and retrieve auth user parameters
+            /// </summary>
+            /// <param name="data">Auth.Login</param>
+            /// <returns>HttpResponseMessage</returns>
             public static async Task<HttpResponseMessage> Login(Auth.Login data)
             {
                 return await Auth(CreateHttpContent<Auth.Login>(data));
+            }
+
+            /// <summary>
+            /// Refresh movies and retrieve new list
+            /// </summary>
+            /// <param name="data">Auth.User</param>
+            /// <returns>List<Movie.Data></returns>
+            public static async Task<List<Movie.Data>> RefreshData(Auth.User data)
+            {
+                 var response = await Refresh(
+                        CreateHttpContent<Auth.User>(data)
+                    );
+                List<Movie.Data> m = new List<Movie.Data>();
+                try
+                {
+                    m = JsonConvert.DeserializeObject<List<Movie.Data>>(await response.Content.ReadAsStringAsync());
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                return m;
             }
 
             /// <summary>

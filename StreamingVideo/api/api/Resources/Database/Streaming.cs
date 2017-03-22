@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using api.Controllers;
+using System.Resources;
 
 namespace api.Resources
 {
@@ -21,7 +22,7 @@ namespace api.Resources
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             string path = "";
-
+            //foreach(var mDir in api.Properties.Resources.D)
             foreach(var mDir in VideoController.movieDir)
             {
                 if(Directory.Exists(mDir + @"\"+ movie.folder)) { path = mDir + @"\" + movie.folder; break; }

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using MovieDB_Windows_app.Resources;
 using System.IO;
 using System.Diagnostics;
+using static MovieDB_Windows_app.API;
 
 namespace MovieDB_Windows_app
 {
@@ -42,8 +43,16 @@ namespace MovieDB_Windows_app
                 Properties.Settings.Default.ImagePath = dir + @"Data\Images";
             }
             Properties.Settings.Default.Save();
-            GlobalVar.GlobalCurrentUser = u;
-            userLogedIn.Text = u.username;
+            if(u != null)
+            {
+                GlobalVar.GlobalCurrentUserInfo = u;
+                GlobalVar.GlobalAuthUser = new Auth.User()
+                {
+                    username = u.username,
+                    unique_id = u.unique_id
+                };
+                userLogedIn.Text = u.username;
+            }
             rightClickMovieContextMenu.ItemClicked += RightClickMovieContextMenu_ItemClicked;
         }
 
@@ -51,15 +60,19 @@ namespace MovieDB_Windows_app
         {
            await SetMovieList();
         }
-        public async Task SetMovieList(List<Movie.Data> list = null)
+        public async Task SetMovieList(List<Movie.Data> list = null , bool force = false)
         {
-            if(list == null)
+            if (list == null)
                 GlobalVar.GlobalMovieData = await api.GetMovieData();
+            else if (force) //force new movie list
+                GlobalVar.GlobalMovieData = await api.GetMovieData(true);
+            else
+                GlobalVar.GlobalMovieData = list;
 
             if (GlobalVar.GlobalMovieData == null || GlobalVar.GlobalMovieData.Count < 0) MessageBox.Show("No connection could be made to the server!");
             else
             {
-                GlobalVar.GlobalUserInfo = await api.GetUsersData();
+                GlobalVar.GlobalUsersInfo = await api.GetUsersData();
                 DisplayMovieData(GlobalVar.GlobalMovieData);
             }
         }
@@ -96,19 +109,17 @@ namespace MovieDB_Windows_app
 
         private async Task<Image> GetImage(string image)
         {
-            var path = Properties.Settings.Default.ImagePath;
-            image = image.Substring(1, image.Length - 1);
-            if(File.Exists(path + "\\" +image))
+            var path = Properties.Settings.Default.ImagePath + image.Substring(1, image.Length - 1);
+            if(File.Exists(path))
             {
-                var i = Image.FromFile(path + "\\" + image);
+                var i = Image.FromFile(path);
                 if (i == null) return null; 
                 return i;
             }
             var x = await API.Downloader.ImageDownload("https://image.tmdb.org/t/p/w160/" + image);
             try
             {
-                x.Save(path + "\\" + image, System.Drawing.Imaging.ImageFormat.Jpeg);
-
+                x.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             catch(Exception ex)
             {
@@ -176,7 +187,11 @@ namespace MovieDB_Windows_app
                             var r = await API.Communication.ChangeMovieStatus(m);
                             var x = await r.Content.ReadAsStringAsync();
                             if (x.Contains("disabled") || x.Contains("enabled"))
-                                await SetMovieList(await API.Communication.Refresh());
+                            {
+                                var a = await API.Communication.RefreshData(GlobalVar.GlobalAuthUser);
+                                //await SetMovieList();
+                            }
+                                
                         }
                             
 
@@ -215,7 +230,7 @@ namespace MovieDB_Windows_app
                     foreach(var item in search)
                     {
                         searchList.Add(GlobalVar.GlobalMovieButtonList
-                            .Where(x => x.Text == item.Movie_Info.id.ToString())
+                            .Where(x => (Movie.Data)x.Tag == item)
                             .First());
                     }
                     if(searchList.Count > 0)
@@ -244,7 +259,7 @@ namespace MovieDB_Windows_app
         /// <param name="e"></param>
         private async void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await SetMovieList(await API.Communication.Refresh());
+            await SetMovieList(await API.Communication.RefreshData(GlobalVar.GlobalAuthUser));
         }
 
         //clean temp folder
@@ -260,10 +275,16 @@ namespace MovieDB_Windows_app
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             flowLayoutPanel1.Controls.Clear();
-            GlobalVar.GlobalCurrentUser = null;
+            GlobalVar.GlobalCurrentUserInfo = null;
             GlobalVar.GlobalMovieButtonList = null;
             GlobalVar.GlobalMovieData = null;
             Application.Exit();
+        }
+
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Views.Users u = new Views.Users();
+            u.Show();
         }
     }
 }

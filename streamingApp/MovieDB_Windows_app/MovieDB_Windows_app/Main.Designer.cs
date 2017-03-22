@@ -36,8 +36,8 @@
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.userLogedIn = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +45,6 @@
             this.programToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshListToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.moviesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanTempFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.searchTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -81,9 +80,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripProgressBar1,
             this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2,
             this.userLogedIn,
-            this.toolStripStatusLabel3});
+            this.toolStripStatusLabel3,
+            this.toolStripStatusLabel2});
             this.statusStrip1.Location = new System.Drawing.Point(0, 460);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(963, 22);
@@ -106,6 +105,11 @@
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
             // 
+            // userLogedIn
+            // 
+            this.userLogedIn.Name = "userLogedIn";
+            this.userLogedIn.Size = new System.Drawing.Size(0, 17);
+            // 
             // toolStripStatusLabel3
             // 
             this.toolStripStatusLabel3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -113,11 +117,6 @@
             this.toolStripStatusLabel3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(60, 17);
             this.toolStripStatusLabel3.Text = "Welcome:";
-            // 
-            // userLogedIn
-            // 
-            this.userLogedIn.Name = "userLogedIn";
-            this.userLogedIn.Size = new System.Drawing.Size(0, 17);
             // 
             // menuStrip1
             // 
@@ -165,30 +164,23 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.refreshToolStripMenuItem.Text = "Refresh data";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // usersToolStripMenuItem
             // 
-            this.usersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshListToolStripMenuItem1});
             this.usersToolStripMenuItem.Name = "usersToolStripMenuItem";
-            this.usersToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.usersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.usersToolStripMenuItem.Text = "Users";
-            // 
-            // refreshListToolStripMenuItem1
-            // 
-            this.refreshListToolStripMenuItem1.Name = "refreshListToolStripMenuItem1";
-            this.refreshListToolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
-            this.refreshListToolStripMenuItem1.Text = "Refresh list";
+            this.usersToolStripMenuItem.Click += new System.EventHandler(this.usersToolStripMenuItem_Click);
             // 
             // moviesToolStripMenuItem
             // 
             this.moviesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cleanTempFilesToolStripMenuItem});
             this.moviesToolStripMenuItem.Name = "moviesToolStripMenuItem";
-            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.moviesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.moviesToolStripMenuItem.Text = "Movies";
             // 
             // cleanTempFilesToolStripMenuItem
@@ -242,7 +234,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Main";
-            this.Text = "MovieDatabase";
+            this.Text = "BigMovieDatabase";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
@@ -269,7 +261,6 @@
         private System.Windows.Forms.ToolStripMenuItem programToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem refreshListToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem moviesToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox searchTextBox;
         private System.Windows.Forms.ToolStripMenuItem cleanTempFilesToolStripMenuItem;

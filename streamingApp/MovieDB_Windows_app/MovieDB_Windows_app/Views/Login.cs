@@ -30,23 +30,14 @@ namespace MovieDB_Windows_app.Views
                                Encoding.ASCII.GetBytes(passwordTextBox.Text))
                 }
             );
-            loginButton.Text += " .";
-            if (login.StatusCode == System.Net.HttpStatusCode.OK)
+            if (login != null && login.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                loginButton.Text += " .";
-                var c = await login.Content.ReadAsStringAsync();
-                if (c != null)
+                var user = JsonConvert.DeserializeObject<User.Info>(await login.Content.ReadAsStringAsync());
+                if (user.unique_id != null)
                 {
-                    loginButton.Text += " .";
-                    var user = JsonConvert.DeserializeObject<User.Info>(c);
-                    if (user.unique_id != null)
-                    {
-                        loginButton.Text += " .";
-                        Main m = new Main(user);
-                        this.Hide();
-                        m.Show();
-                    }
-                   
+                    Main m = new Main(user);
+                    this.Hide();
+                    m.Show();
                 }
             }
             else

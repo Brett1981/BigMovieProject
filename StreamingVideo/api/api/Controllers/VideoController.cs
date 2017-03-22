@@ -10,13 +10,9 @@ using api.Models;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Net.Http.Formatting;
 using System.Data.Entity.Core.Objects;
 using Newtonsoft.Json;
 using System.Web.Http.Cors;
-using System.Web.Http.Description;
-using System.Text;
-using api.Resources.Enum;
 
 namespace api.Controllers
 {
@@ -25,6 +21,7 @@ namespace api.Controllers
     {
         public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
+        
         //GET: api/videoplay/value
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
@@ -55,7 +52,7 @@ namespace api.Controllers
                     if (movie != null && movie.enabled)
                     {
                         Debug.WriteLine("Movie " + value + " is being served.");
-
+                        
                         //streaming content to client
                         return Streaming.StreamingContent(movie, base.Request.Headers.Range);
                     }

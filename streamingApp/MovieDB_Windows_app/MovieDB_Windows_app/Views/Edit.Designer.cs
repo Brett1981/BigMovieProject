@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Edit));
             this.posterImage = new System.Windows.Forms.PictureBox();
             this.Backdrop_path = new System.Windows.Forms.Label();
             this.backdrop_pathTextBox = new System.Windows.Forms.TextBox();
@@ -440,6 +441,7 @@
             this.Controls.Add(this.backdrop_pathTextBox);
             this.Controls.Add(this.Backdrop_path);
             this.Controls.Add(this.posterImage);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(836, 461);
             this.MinimumSize = new System.Drawing.Size(836, 461);
