@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using api.Resources;
 using System.Threading;
 using System.Diagnostics;
-
+using Newtonsoft.Json;
+using api.Resources.Global;
 [assembly: OwinStartup(typeof(api.Startup))]
 
 namespace api
@@ -17,7 +18,16 @@ namespace api
         public async void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            await DatabaseMovieCheck();
+            var disks = JsonConvert.DeserializeObject<List<CustomClasses.Disks>>(api.Properties.Settings.Default.Disks);
+            if(disks != null)
+            {
+                MovieGlobal.GlobalMovieDisksList = disks;
+                await DatabaseMovieCheck();
+            }
+            else
+            {
+                Debug.WriteLine("No movie folder specified");
+            }
         }
 
         public async Task DatabaseMovieCheck()
@@ -26,7 +36,7 @@ namespace api
             await Task.Delay(0);
             try
             {
-                t1 = new Thread(async () => await Database.CheckDB())
+                t1 = new Thread(async () => await Database.Movie.CheckDB())
                 {
                     Priority = ThreadPriority.Normal
                 };

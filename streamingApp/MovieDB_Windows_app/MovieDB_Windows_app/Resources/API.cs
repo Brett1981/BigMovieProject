@@ -50,26 +50,16 @@ namespace MovieDB_Windows_app
             }
         }
 
-        public async Task<List<User.Info>> GetUsersData()
+        public async Task<Communication.AuthUserInit> GetUsersData()
         {
             try
             {
-
-                var response = await Communication.GetAllUsers();
-                if (response != String.Empty)
-                {
-                    return JsonConvert.DeserializeObject<List<User.Info>>(response);
-                }
-                else
-                {
-
-                    return new List<User.Info>();
-                }
+                return await Communication.RetrieveUsersData(GlobalVar.GlobalAuthUser);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return new List<User.Info>();
+                return new Communication.AuthUserInit();
             }
         }
 
@@ -87,11 +77,6 @@ namespace MovieDB_Windows_app
             public static async Task<string> GetAllMovies()
             {
                 return await client.GetStringAsync(conAddress + "/api/video/allmovies");
-            }
-
-            public static async Task<string> GetAllUsers()
-            {
-                return await client.GetStringAsync(conAddress + "/api/user/getusers");
             }
 
             public static async Task<Movie.Data> GetMovie(string guid)
@@ -121,6 +106,11 @@ namespace MovieDB_Windows_app
                 return await client.PostAsync(conAddress + "/api/administration/refresh", content);
             }
 
+            private static async Task<HttpResponseMessage> Init(StringContent content)
+            {
+                return await client.PostAsync(conAddress + "/api/administration/init", content);
+            }
+
             /// <summary>
             /// Enable or disable movie
             /// </summary>
@@ -137,8 +127,8 @@ namespace MovieDB_Windows_app
                     CreateHttpContent<AuthMovieEdit>(
                         new AuthMovieEdit()
                         {
-                            User = user,
-                            Movie = movie
+                            user = user,
+                            movie = movie
                         }
                     ));
             }
@@ -175,13 +165,32 @@ namespace MovieDB_Windows_app
                 return m;
             }
 
+            public static async Task<AuthUserInit> RetrieveUsersData(Auth.User data)
+            {
+                var response = await Init(CreateHttpContent<Auth.User>(data));
+                AuthUserInit uinit = new AuthUserInit();
+                try
+                {
+                    uinit = JsonConvert.DeserializeObject<AuthUserInit>(await response.Content.ReadAsStringAsync());
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                return uinit;
+            }
             /// <summary>
-            /// Custom auth class for communication with API for movie edit
+            /// Custom auth class for communication with API for movie and users data
             /// </summary>
             public class AuthMovieEdit
             {
-                public User.Info User { get; set; }
-                public Movie.Data Movie { get; set; }
+                public User.Info user { get; set; }
+                public Movie.Data movie { get; set; }
+            }
+            public class AuthUserInit
+            {
+                public List<User.Groups> groups { get; set; }
+                public List<User.Info> users { get; set; }
             }
         }
 

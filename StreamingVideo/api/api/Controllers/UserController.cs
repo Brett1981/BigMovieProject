@@ -84,7 +84,7 @@ namespace api.Controllers
                     }
                     if (data.birthday != null) { try { user.birthday = Convert.ToDateTime(data.birthday); } catch { user.birthday = DateTime.Now; } }
                     if (data.display_name != null) { user.display_name = data.display_name; }
-                    user.unique_id = api.Resources.Database.CreateGuid(data.username).ToString();
+                    user.unique_id = api.Resources.Database.Movie.CreateGuid(data.username).ToString();
                     user.profile_created = DateTime.Now;
                     user.groupId = db.User_Groups.Where(x => x.type == "user").Select(x => x.Id).First();
                     db.User_Info.Add(user);
@@ -155,7 +155,7 @@ namespace api.Controllers
             try
             {
                 string status = "BadRequest";
-                if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.ChangeUserPicture(data); }
+                if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.User.ChangeUserPicture(data); }
                 switch (status){
 
                     case "OK": {
@@ -236,7 +236,7 @@ namespace api.Controllers
                     user_movie = "",
                     user_type = "RetrieveUserProfilePicture"
                 });
-                return Ok(Resources.Database.GetUserImage(user.profile_image));
+                return Ok(Resources.Database.User.GetUserImage(user.profile_image));
             }
             return NotFound();
         }

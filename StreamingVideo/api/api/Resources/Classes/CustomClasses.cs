@@ -46,7 +46,7 @@ namespace api.Resources
         /// <summary>
         /// Used to parse JSON to objects
         /// </summary>
-        public class DataAPI
+        public class APIData
         {
             public List<results> results { get; set; }
         }
@@ -68,6 +68,21 @@ namespace api.Resources
             public Session_Guest sessionGuest { get; set; }
             public Session_Play sessionPlay { get; set; }
 
+        }
+
+        public class Disks{
+            public int id { get; set; }
+            public string name { get; set; }
+            public string value { get; set; }
+        }
+
+        /// <summary>
+        /// Administration all users and groups object
+        /// </summary>
+        public class APIUsers
+        {
+            public List<User_Groups> groups { get; set; }
+            public List<User_Info> users { get; set; }
         }
     }
 }

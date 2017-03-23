@@ -454,3 +454,5 @@ C:\BigMovieProject\StreamingVideo\api\api\bin\System.Web.Http.Owin.xml
 C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.csprojResolveAssemblyReference.cache
 C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.dll
 C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.pdb
+C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.Properties.Resources.resources
+C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.csproj.GenerateResource.Cache

@@ -21,43 +21,16 @@ namespace api.Controllers
     {
         private MDBSQLEntities db = new MDBSQLEntities();
 
-        // GET: api/Administration
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Administration/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Administration
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/Administration/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Administration/5
-        public void Delete(int id)
-        {
-        }
-
         //POST api/administration/refresh
         [HttpPost,ActionName("Refresh")]
         public async Task<IHttpActionResult> Refresh(Auth.User data)
         {
             if(data != null && data.unique_id != null )
             {
-                var user = await Resources.Database.FindUser(data.unique_id);
+                var user = await Resources.Database.User.FindUser(data.unique_id);
                 if(user != null && user.unique_id == data.unique_id)
                 {
-                    Resources.Database.ForceMovieList();
+                    Resources.Database.Movie.ForceMovieList();
                     await History.Set("api", new History_API()
                     {
                         api_action = "Administration -> Refresh movie list requested from user " + user.username,
@@ -96,7 +69,7 @@ namespace api.Controllers
             return NotFound();
         }
 
-        //POST api/administration/SetMovieStatus
+        //POST api/administration/ChangeMovieStatus
         [HttpPost, ActionName("ChangeMovieStatus")]
         public async Task<IHttpActionResult> ChangeMovieStatus([FromBody] Auth.AuthMovieEdit data)
         {
@@ -105,13 +78,13 @@ namespace api.Controllers
                 //x[2] is users guid 
                 if (data.Movie != null && data.User != null && data.User.unique_id != null)
                 {
-                    var u = await Resources.Database.FindUser(data.User.unique_id);
+                    var u = await Resources.Database.User.FindUser(data.User.unique_id);
                     if (u != null && u.User_Groups.access.Contains("w:true"))
                     {
                         Movie_Data movie;
                         if (data.Movie.enabled == true)
                         {
-                            movie = await Resources.Database.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Enable);
+                            movie = await Resources.Database.Movie.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Enable);
                             if (movie != null && movie.enabled == true)
                             {
                                 await History.Set("api", new History_API()
@@ -125,7 +98,7 @@ namespace api.Controllers
                         }
                         else if (data.Movie.enabled == false) 
                         {
-                            movie = await Resources.Database.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Disable);
+                            movie = await Resources.Database.Movie.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Disable);
                             if (movie != null && movie.enabled == false)
                             {
                                 await History.Set("api", new History_API()
@@ -142,6 +115,21 @@ namespace api.Controllers
                     return Unauthorized();
                 }
                 return BadRequest();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost,ActionName("Init")]
+        public async Task<IHttpActionResult> Init(Auth.User data)
+        {
+            if(data != null && data.unique_id != null)
+            {
+                var u = await Resources.Database.User.FindUser(data.unique_id);
+                if(u == null)
+                {
+                    return Unauthorized();
+                }
+                return Ok(await Resources.Database.User.UserInit());
             }
             return BadRequest();
         }

@@ -15,7 +15,7 @@ namespace api.Resources
         private static Uri movieSearchURL = new Uri("http://api.themoviedb.org/3/search/movie");
         //private static string GenreURL = "http://api.themoviedb.org/3/genre/movie/list?api_key=";
         public static int countAPICalls = 0;
-        public static async Task<Movie_Info> getMovieInfo(Match data, int id)
+        public static async Task<Movie_Info> GetMovieInfo(Match data, int id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace api.Resources
                             {
                                 countAPICalls++;
 
-                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.DataAPI>(await response.Content.ReadAsStringAsync());
+                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.APIData>(await response.Content.ReadAsStringAsync());
                                 if (jsonData == null) { return new Movie_Info(); }
 
                                 var apiResult = new CustomClasses.results();

@@ -309,11 +309,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Resources\Auth\Auth.cs" />
     <Compile Include="Resources\Classes\CustomClasses.cs" />
     <Compile Include="Resources\Database\Database.cs" />
     <Compile Include="Resources\Functions\Functions.cs" />
+    <Compile Include="Resources\Global\MovieGlobal.cs" />
     <Compile Include="Resources\Not done or empty\DataProcessing.cs" />
     <Compile Include="Resources\Enum\MovieEnum.cs" />
     <Compile Include="Resources\Database\History.cs" />
@@ -390,6 +396,10 @@
       <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\MovieDB.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

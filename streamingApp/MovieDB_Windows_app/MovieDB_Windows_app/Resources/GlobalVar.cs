@@ -75,8 +75,8 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static List<User.Info> _globalUsersInfo;
-        public static List<User.Info> GlobalUsersInfo
+        static Communication.AuthUserInit _globalUsersInfo;
+        public static Communication.AuthUserInit GlobalUsersInfo
         {
             get
             {

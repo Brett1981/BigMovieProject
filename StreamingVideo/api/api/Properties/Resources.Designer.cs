@@ -59,23 +59,5 @@ namespace api.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to D:\Torrent2\Movies.
-        /// </summary>
-        internal static string D {
-            get {
-                return ResourceManager.GetString("D", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to K:\uTorrent\Movies.
-        /// </summary>
-        internal static string K {
-            get {
-                return ResourceManager.GetString("K", resourceCulture);
-            }
-        }
     }
 }

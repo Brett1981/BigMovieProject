@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Http;
 using api.Controllers;
 using System.Resources;
+using api.Resources.Global;
 
 namespace api.Resources
 {
@@ -22,10 +23,9 @@ namespace api.Resources
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             string path = "";
-            //foreach(var mDir in api.Properties.Resources.D)
-            foreach(var mDir in VideoController.movieDir)
+            foreach(var mDir in MovieGlobal.GlobalMovieDisksList)
             {
-                if(Directory.Exists(mDir + @"\"+ movie.folder)) { path = mDir + @"\" + movie.folder; break; }
+                if(Directory.Exists(mDir.value + @"\"+ movie.folder)) { path = mDir.value + @"\" + movie.folder; break; }
                 if(path != "") { break;}
             }
             FileInfo fileInfo = new FileInfo(Path.Combine(path, movie.name + "." + movie.ext));

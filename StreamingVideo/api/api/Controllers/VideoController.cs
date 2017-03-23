@@ -19,7 +19,7 @@ namespace api.Controllers
     [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
     public class VideoController : ApiController
     {
-        public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
+        //public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
         
         //GET: api/videoplay/value
@@ -29,7 +29,7 @@ namespace api.Controllers
             try
             {
                 //get user id and movie id from session in database
-                var s = await Database.GetBySession(value);
+                var s = await Database.User.GetBySession(value);
 
                 Session_Play sp = new Session_Play();
                 Session_Guest sg = new Session_Guest();
@@ -48,7 +48,7 @@ namespace api.Controllers
                 {
                     Debug.WriteLine("User requesting to watch movie: " + value);
                     //Getting movie from DB
-                    var movie = await Database.Get(movieId);
+                    var movie = await Database.Movie.GetMovie(movieId,true);
                     if (movie != null && movie.enabled)
                     {
                         Debug.WriteLine("Movie " + value + " is being served.");
@@ -79,21 +79,21 @@ namespace api.Controllers
         [HttpGet,ActionName("GetMovie")]
         public async  Task<IHttpActionResult> GetMovie([FromUri]string value)
         {
-            return Ok(await Database.GetMovie(value));
+            return Ok(await Database.Movie.GetMovie(value));
         }
 
         //GET: api/video/moviebyid
         [HttpGet, ActionName("GetMovieById")]
         public async Task<IHttpActionResult> GetMovieById([FromUri]string value)
         {
-            return Ok(await Database.Get(value));
+            return Ok(await Database.Movie.Get(value));
         }
 
         //POST: api/video/getmovie (object)
         [HttpPost,ActionName("GetMovie")]
         public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
         {
-            var movie = await Database.GetMovie(data);
+            var movie = await Database.Movie.GetMovie(data);
             if(movie == null)
             {
                 Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
@@ -115,7 +115,7 @@ namespace api.Controllers
                     user_movie = movie.guid,
                     user_type = "AuthGuest Content"
                 });
-                a.sessionGuest = (Session_Guest)await Database.CreateSession<Session_Guest>(data);
+                a.sessionGuest = (Session_Guest)await Database.User.CreateSession<Session_Guest>(data);
                 
             }
             else
@@ -130,7 +130,7 @@ namespace api.Controllers
                     user_movie = movie.guid,
                     user_type = "AuthContent"
                 });
-                a.sessionPlay = (Session_Play)await Database.CreateSession<Session_Play>(data);
+                a.sessionPlay = (Session_Play)await Database.User.CreateSession<Session_Play>(data);
             }
             return Ok(a);
 
@@ -142,6 +142,7 @@ namespace api.Controllers
         [HttpGet,ActionName("Subs")]
         public async Task<IHttpActionResult> Subs([FromUri]string value)
         {
+            await Task.Delay(0);
             return Ok();
         }
 
@@ -150,7 +151,7 @@ namespace api.Controllers
         public IHttpActionResult Genre([FromUri]string value)
         {
             if(value == "scifi") { value = "Science Fiction"; } //website has scifi short for science fiction
-            var g = Database.GetByGenre(value);
+            var g = Database.Movie.GetByGenre(value);
             if(g.Count == 0)
             {
                 return NotFound();
@@ -162,20 +163,20 @@ namespace api.Controllers
         [HttpGet,ActionName("Top10")]
         public async Task<IHttpActionResult> Top10()
         {
-            return Ok(await Database.GetTop10());
+            return Ok(await Database.Movie.GetTop10());
         }
 
         //GET: api/video/Last10
         [HttpGet, ActionName("Last10")]
         public async Task<IHttpActionResult> Last10()
         {
-            return Ok(await Database.GetLast10());
+            return Ok(await Database.Movie.GetLast10());
         }
         //POST: api/video/session
         [HttpPost,ActionName("GetSession")]
         public async Task<IHttpActionResult> GetSession([FromBody] DatabaseUserModels data)
         {
-            var s = await Database.GetSession(data);
+            var s = await Database.User.GetSession(data);
             if(s.session_id == "" || s == null)
             {
                 return NotFound();

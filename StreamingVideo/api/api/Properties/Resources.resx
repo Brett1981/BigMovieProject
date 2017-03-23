@@ -117,12 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="D" xml:space="preserve">
-    <value>D:\Torrent2\Movies</value>
-    <comment>disk</comment>
-  </data>
-  <data name="K" xml:space="preserve">
-    <value>K:\uTorrent\Movies</value>
-    <comment>disk</comment>
-  </data>
 </root>
