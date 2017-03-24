@@ -23,19 +23,6 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static List<Movie.Data> _globalMovieData;
-        public static List<Movie.Data> GlobalMovieData
-        {
-            get
-            {
-                return _globalMovieData;
-            }
-            set
-            {
-                _globalMovieData = value;
-            }
-        }
-
         static string _globalMovieid;
         public static string GlobalMovieId
         {
@@ -75,16 +62,16 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-        static Communication.AuthUserInit _globalUsersInfo;
-        public static Communication.AuthUserInit GlobalUsersInfo
+        static APIObjects.Data _globalData;
+        public static APIObjects.Data GlobalData
         {
             get
             {
-                return _globalUsersInfo;
+                return _globalData;
             }
             set
             {
-                _globalUsersInfo = value;
+                _globalData = value;
             }
         }
 

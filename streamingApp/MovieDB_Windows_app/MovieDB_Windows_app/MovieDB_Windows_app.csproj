@@ -164,6 +164,9 @@
     <EmbeddedResource Include="Views\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Users.resx">
+      <DependentUpon>Users.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\ViewMovie.resx">
       <DependentUpon>ViewMovie.cs</DependentUpon>
     </EmbeddedResource>

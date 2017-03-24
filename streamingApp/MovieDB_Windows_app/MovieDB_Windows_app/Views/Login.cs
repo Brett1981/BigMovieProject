@@ -21,6 +21,7 @@ namespace MovieDB_Windows_app.Views
 
         private async void button1_Click(object sender, EventArgs e)
         {
+            var prevButtonText = loginButton.Text;
             loginButton.Enabled = false;
             loginButton.Text = "Wait";
             var login = await API.Communication.Login(new API.Auth.Login()
@@ -45,11 +46,14 @@ namespace MovieDB_Windows_app.Views
                 if(login.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     MessageBox.Show("Incorect user credentials!");
+                    
                 }
                 else if(login.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     MessageBox.Show("Username or password is incorrect!");
                 }
+                loginButton.Text = prevButtonText;
+                loginButton.Enabled = true;
             }
         }
 

@@ -99,8 +99,10 @@ namespace api.Controllers
                 Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
                 return NotFound();
             }
-            CustomClasses.MovieSession a = new CustomClasses.MovieSession();
-            a.movieData = movie;
+            CustomClasses.MovieSession a = new CustomClasses.MovieSession()
+            {
+                movieData = movie
+            };
             if (data.user_id.Length < 20)
             {
                 //user is a guest

@@ -46,10 +46,10 @@ namespace api.Resources
                             {
                                 countAPICalls++;
 
-                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.APIData>(await response.Content.ReadAsStringAsync());
+                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.Random.APIResults>(await response.Content.ReadAsStringAsync());
                                 if (jsonData == null) { return new Movie_Info(); }
 
-                                var apiResult = new CustomClasses.results();
+                                var apiResult = new CustomClasses.Random.results();
 
                                 for (int i = 0; i < jsonData.results.Count; i++)
                                 {
@@ -58,7 +58,7 @@ namespace api.Resources
                                     {
                                         if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
                                         {
-                                            apiResult = new CustomClasses.results()
+                                            apiResult = new CustomClasses.Random.results()
                                             {
                                                 id = jsonData.results[i].id,
                                                 title = jsonData.results[i].title,
@@ -136,7 +136,7 @@ namespace api.Resources
             };
             
         }
-        private static string ListToString (List<CustomClasses.values> data)
+        private static string ListToString (List<CustomClasses.Random.values> data)
         {
             string x = "";
             for(int i = 0; i < data.Count; i++)

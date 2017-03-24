@@ -29,39 +29,12 @@ namespace api.Resources
             public string title { get; set; }
             public string vote_average { get; set; }
             public string vote_count { get; set; }
-            public List<values> genres { get; set; }
-            public List<values> production_countries { get; set; }
-            public List<values> production_companies { get; set; }
-            public List<values> spoken_languages { get; set; }
+            public List<CustomClasses.Random.values> genres { get; set; }
+            public List<CustomClasses.Random.values> production_countries { get; set; }
+            public List<CustomClasses.Random.values> production_companies { get; set; }
+            public List<CustomClasses.Random.values> spoken_languages { get; set; }
         }
-        /// <summary>
-        /// Part of MovieInfoJSON class
-        /// </summary>
-        public class values
-        {
-            public int id { get; set; }
-            public string name { get; set; }
-        }
-
-        /// <summary>
-        /// Used to parse JSON to objects
-        /// </summary>
-        public class APIData
-        {
-            public List<results> results { get; set; }
-        }
-        /// <summary>
-        /// Part of DataAPI
-        /// </summary>
-        public class results
-        {
-            public int id { get; set; }
-            public string title { get; set; }
-            public string release_date { get; set; }
-            public List<int> genre_ids { get; set; }
-            public string poster_path { get; set; }
-        }
-
+        
         public class MovieSession
         {
             public Movie_Data movieData { get; set; }
@@ -70,19 +43,70 @@ namespace api.Resources
 
         }
 
-        public class Disks{
-            public int id { get; set; }
-            public string name { get; set; }
-            public string value { get; set; }
-        }
-
-        /// <summary>
-        /// Administration all users and groups object
-        /// </summary>
-        public class APIUsers
+        public class API
         {
-            public List<User_Groups> groups { get; set; }
-            public List<User_Info> users { get; set; }
+            /// <summary>
+            /// Administration all data 
+            /// </summary>
+            public class Data
+            {
+                public Users users { get; set; }
+                public List<Disks> disks { get; set; }
+                public List<Movie_Data> movies { get; set; }
+            }
+
+            /// <summary>
+            /// Administration all users and groups object
+            /// </summary>
+            public class Users
+            {
+                public List<User_Groups> groups { get; set; }
+                public List<User_Info> users { get; set; }
+            }
+
+            
+            /// <summary>
+            /// Disks init object
+            /// </summary>
+            public class Disks
+            {
+                public int id { get; set; }
+                public string name { get; set; }
+                public string value { get; set; }
+            }
+        }
+        
+        
+
+        public class Random
+        {
+            /// <summary>
+            /// Part of MovieInfoJSON class
+            /// </summary>
+            public class values
+            {
+                public int id { get; set; }
+                public string name { get; set; }
+            }
+
+            /// <summary>
+            /// Used to parse JSON list to objects
+            /// </summary>
+            public class APIResults
+            {
+                public List<results> results { get; set; }
+            }
+            /// <summary>
+            /// Part of DataAPI
+            /// </summary>
+            public class results
+            {
+                public int id { get; set; }
+                public string title { get; set; }
+                public string release_date { get; set; }
+                public List<int> genre_ids { get; set; }
+                public string poster_path { get; set; }
+            }
         }
     }
 }

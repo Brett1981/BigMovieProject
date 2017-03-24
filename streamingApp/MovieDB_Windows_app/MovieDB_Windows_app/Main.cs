@@ -62,18 +62,21 @@ namespace MovieDB_Windows_app
         }
         public async Task SetMovieList(List<Movie.Data> list = null , bool force = false)
         {
+            if(GlobalVar.GlobalData == null || (GlobalVar.GlobalData.users == null ||
+                GlobalVar.GlobalData.disks == null || 
+                GlobalVar.GlobalData.movies == null) || force)
+            {
+                GlobalVar.GlobalData = await api.InitalizeAppData();
+            }
             if (list == null)
-                GlobalVar.GlobalMovieData = await api.GetMovieData();
-            else if (force) //force new movie list
-                GlobalVar.GlobalMovieData = await api.GetMovieData(true);
+                GlobalVar.GlobalData.movies = GlobalVar.GlobalData.movies;
             else
-                GlobalVar.GlobalMovieData = list;
+                GlobalVar.GlobalData.movies = list;
 
-            if (GlobalVar.GlobalMovieData == null || GlobalVar.GlobalMovieData.Count < 0) MessageBox.Show("No connection could be made to the server!");
+            if (GlobalVar.GlobalData.movies == null || GlobalVar.GlobalData.movies.Count < 0) MessageBox.Show("No connection could be made to the server!");
             else
             {
-                GlobalVar.GlobalUsersInfo = await api.GetUsersData();
-                DisplayMovieData(GlobalVar.GlobalMovieData);
+                DisplayMovieData(GlobalVar.GlobalData.movies);
             }
         }
         private async void DisplayMovieData(List<Movie.Data> data)
@@ -96,10 +99,8 @@ namespace MovieDB_Windows_app
                     Tag     = data[i]
                 };
                 bttn.BackgroundImage = await GetImage(data[i].Movie_Info.poster_path);
-                //bttn.Click += new EventHandler(button_movie_Click);
                 bttn.MouseUp += new MouseEventHandler(button_mouse_Click);
                 bttns.Add(bttn);
-                //bttn.BackgroundImage.Dispose();
                 flowLayoutPanel1.Controls.Add(bttn);
             }
             GlobalVar.GlobalMovieButtonList = new List<Button>(bttns);
@@ -219,7 +220,7 @@ namespace MovieDB_Windows_app
             if (searchTextBox.Text.Length > 0)
             {
                 
-                var search = GlobalVar.GlobalMovieData
+                var search = GlobalVar.GlobalData.movies
                     .Where(x => x.Movie_Info.title.ToLower()
                     .Contains(searchTextBox.Text.ToLower()))
                     .ToList();
@@ -277,7 +278,7 @@ namespace MovieDB_Windows_app
             flowLayoutPanel1.Controls.Clear();
             GlobalVar.GlobalCurrentUserInfo = null;
             GlobalVar.GlobalMovieButtonList = null;
-            GlobalVar.GlobalMovieData = null;
+            GlobalVar.GlobalData = null;
             Application.Exit();
         }
 

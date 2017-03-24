@@ -24,42 +24,17 @@ namespace MovieDB_Windows_app
         }
 
         private static HttpClient client = new HttpClient();
-        private List<Movie.Data> movieData = new List<Movie.Data>();
-        //private jsonGenresClass genresData = new jsonGenresClass();
-        
-        public async Task<List<Movie.Data>> GetMovieData(bool force = false)
-        {
-            try
-            {
-                var responseMovie = await Communication.GetAllMovies();
-                if(responseMovie != Properties.Settings.Default.MovieData || force)
-                {
-                    Properties.Settings.Default.MovieData = responseMovie;
-                    Properties.Settings.Default.Save();
-                    return JsonConvert.DeserializeObject<List<Movie.Data>>(responseMovie);
-                }
-                else
-                {
-                    return JsonConvert.DeserializeObject<List<Movie.Data>>(Properties.Settings.Default.MovieData);
-                }
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                return new List<Movie.Data>();
-            }
-        }
 
-        public async Task<Communication.AuthUserInit> GetUsersData()
+        public async Task<APIObjects.Data> InitalizeAppData()
         {
             try
             {
-                return await Communication.RetrieveUsersData(GlobalVar.GlobalAuthUser);
+                return await Communication.InitApp(GlobalVar.GlobalAuthUser);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
-                return new Communication.AuthUserInit();
+                return new APIObjects.Data();
             }
         }
 
@@ -165,19 +140,19 @@ namespace MovieDB_Windows_app
                 return m;
             }
 
-            public static async Task<AuthUserInit> RetrieveUsersData(Auth.User data)
+            public static async Task<APIObjects.Data> InitApp(Auth.User data)
             {
                 var response = await Init(CreateHttpContent<Auth.User>(data));
-                AuthUserInit uinit = new AuthUserInit();
+                APIObjects.Data init = new APIObjects.Data();
                 try
                 {
-                    uinit = JsonConvert.DeserializeObject<AuthUserInit>(await response.Content.ReadAsStringAsync());
+                    init = JsonConvert.DeserializeObject<APIObjects.Data>(await response.Content.ReadAsStringAsync());
                 }
                 catch(Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
-                return uinit;
+                return init;
             }
             /// <summary>
             /// Custom auth class for communication with API for movie and users data
@@ -186,11 +161,6 @@ namespace MovieDB_Windows_app
             {
                 public User.Info user { get; set; }
                 public Movie.Data movie { get; set; }
-            }
-            public class AuthUserInit
-            {
-                public List<User.Groups> groups { get; set; }
-                public List<User.Info> users { get; set; }
             }
         }
 

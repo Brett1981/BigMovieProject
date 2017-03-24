@@ -770,7 +770,7 @@ namespace api.Resources
                 Guid g2 = new Guid(data.movie_id);
 
                 var result = g1.GetHashCode() ^ g2.GetHashCode() + DateTime.Now.GetHashCode();
-                List<CustomClasses.values> v = new List<CustomClasses.values>();
+                List<CustomClasses.Random.values > v = new List<CustomClasses.Random.values>();
                 if (isGuest)
                 {
                     var s = new Session_Guest()
@@ -830,9 +830,9 @@ namespace api.Resources
             /// Return all User data from database
             /// </summary>
             /// <returns>List</returns>
-            public static async Task<CustomClasses.APIUsers> UserInit()
+            public static async Task<CustomClasses.API.Users> UserInit()
             {
-                return new CustomClasses.APIUsers()
+                return new CustomClasses.API.Users()
                 {
                     groups = await db.User_Groups.Select(x => x).ToListAsync(),
                     users = await db.User_Info.Select(x => x).ToListAsync()

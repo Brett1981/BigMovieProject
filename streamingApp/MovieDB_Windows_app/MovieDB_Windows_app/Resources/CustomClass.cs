@@ -75,7 +75,37 @@ namespace MovieDB_Windows_app.Resources
             public bool status { get; set; }
         }
     }
+    public class APIObjects
+    {
+        /// <summary>
+        /// Administration all data 
+        /// </summary>
+        public class Data
+        {
+            public Users users { get; set; }
+            public List<Disks> disks { get; set; }
+            public List<Movie.Data> movies { get; set; }
+        }
 
+        /// <summary>
+        /// Administration all users and groups object
+        /// </summary>
+        public class Users
+        {
+            public List<User.Groups> groups { get; set; }
+            public List<User.Info> users { get; set; }
+        }
+
+        /// <summary>
+        /// Disks init object
+        /// </summary>
+        public class Disks
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string value { get; set; }
+        }
+    }
     public class values
     {
         public int id { get; set; }

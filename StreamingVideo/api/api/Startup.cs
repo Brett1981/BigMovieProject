@@ -18,7 +18,7 @@ namespace api
         public async void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            var disks = JsonConvert.DeserializeObject<List<CustomClasses.Disks>>(api.Properties.Settings.Default.Disks);
+            var disks = JsonConvert.DeserializeObject<List<CustomClasses.API.Disks>>(api.Properties.Settings.Default.Disks);
             if(disks != null)
             {
                 MovieGlobal.GlobalMovieDisksList = disks;

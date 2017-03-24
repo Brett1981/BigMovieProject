@@ -10,9 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Data.Entity;
 using api.Resources.Auth;
 using api.Resources.Functions;
-using System.Data.Entity;
+using api.Resources.Global;
+
 
 namespace api.Controllers
 {
@@ -52,7 +54,7 @@ namespace api.Controllers
             if(user != null)
             {
                 if (Functions.DecodeBase64toString(user.password) == Functions.DecodeBase64toString(data.password) 
-                    && user.User_Groups.access.Contains("w:true"))
+                    && user.User_Groups.type == "administrator")
                 {
                     user.last_logon = DateTime.Now;
                     await db.SaveChangesAsync();
@@ -129,7 +131,21 @@ namespace api.Controllers
                 {
                     return Unauthorized();
                 }
-                return Ok(await Resources.Database.User.UserInit());
+                else
+                {
+                    if(u.User_Groups.type == "administrator")
+                    {
+                        return Ok(new CustomClasses.API.Data()
+                        {
+                            users = await Resources.Database.User.UserInit(),
+                            disks = MovieGlobal.GlobalMovieDisksList != null ? MovieGlobal.GlobalMovieDisksList : null,
+                            movies = Resources.Database.AllMovies != null ? Resources.Database.AllMovies : new List<Movie_Data>()
+                        });
+                    }
+                    return Unauthorized();
+                }
+                
+                
             }
             return BadRequest();
         }
