@@ -220,7 +220,12 @@ namespace api.Resources
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine("Exception: GetMovie (object) --> " + e.Message);
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "Cannot save movie views ",
+                            api_type = "Exception -> GetMovie (object) --> " + e.Message,
+                            api_datetime = DateTime.Now
+                        });
                     }
                     finally
                     {
@@ -248,7 +253,12 @@ namespace api.Resources
                             }
                             catch (Exception e)
                             {
-                                Debug.WriteLine("Exception: GetMovie (object) --> " + e.Message);
+                                await History.Set("api", new History_API()
+                                {
+                                    api_action = "Cannot save movie views ",
+                                    api_type = "Exception -> GetMovie (object) --> " + e.Message,
+                                    api_datetime = DateTime.Now
+                                });
                             }
                             finally
                             {
@@ -302,9 +312,32 @@ namespace api.Resources
                     bool edited = false;
                     while (true)
                     {
-                        if (createListCount == 0) { Debug.WriteLine("Movie list --> Creating new list."); AllMovies = await db.Movie_Data.Select(x => x).ToListAsync(); createListCount++; edited = true; }
-                        if (DateTime.Now > CreateListTime.AddMinutes(5)) { AllMovies = await db.Movie_Data.Select(x => x).ToListAsync(); createListCount++; CreateListTime = DateTime.Now; edited = true; }
-                        Debug.WriteLine("Movie list --> waiting ...");
+                        if (createListCount == 0)
+                        {
+                            await History.Set("api", new History_API()
+                            {
+                                api_action = "Creating new movie list",
+                                api_type = "Task -> status",
+                                api_datetime = DateTime.Now
+                            });
+                            Debug.WriteLine("Movie list --> Creating new list.");
+                            AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
+                            createListCount++; edited = true;
+                        }
+                        if (DateTime.Now > CreateListTime.AddMinutes(5))
+                        {
+                            AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
+                            createListCount++;
+                            CreateListTime = DateTime.Now;
+                            edited = true;
+                        }
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "Waiting for next movie list cycle ",
+                            api_type = "Task -> waiting",
+                            api_datetime = DateTime.Now
+                        });
+
                         if (edited) { OrganizeListByDate(); }
                         await Task.Delay(new TimeSpan(0, 1, 0));
                         edited = false;
@@ -343,6 +376,7 @@ namespace api.Resources
                         {
                             await DatabaseMovieCheck();
                             await InsertMoviesToDb();
+                            await DatabaseRemoveDeletedFolderFromDb();
                             time = DateTime.Now;
                             Thread t2 = new Thread(async () => await Database.Movie.CreateList())
                             {
@@ -387,7 +421,12 @@ namespace api.Resources
             {
                 try
                 {
-                    Debug.WriteLine("Checking database for new entries!");
+                    await History.Set("api", new History_API()
+                    {
+                        api_action = "Checking database for new entries!",
+                        api_type = "Status check",
+                        api_datetime = DateTime.Now
+                    });
                     movieListToAdd = new List<Tuple<Movie_Data, Match>>();
                     foreach (var childDirs in MovieGlobal.GlobalMovieDisksList)
                     {
@@ -442,13 +481,28 @@ namespace api.Resources
                     }
                     if (movieListToAdd.Count > 0)
                     {
-                        Debug.WriteLine("Movie list contains one or more objects to be added to DB!");
-                        Debug.WriteLine("Adding movies to local DB ...");
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "Movie list contains one or more objects to be added to DB!",
+                            api_type = "Task -> new movies found",
+                            api_datetime = DateTime.Now
+                        });
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "Adding movies to local DB ...",
+                            api_type = "Task -> adding to local db",
+                            api_datetime = DateTime.Now
+                        });
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Exception --> {0} -- {1}", ex.Message);
+                    await History.Set("api", new History_API()
+                    {
+                        api_action = "Exception --> "+ ex.Message ,
+                        api_type = "Exception thrown -> DatabaseMovieCheck",
+                        api_datetime = DateTime.Now
+                    });
                 }
             }
             private static List<Tuple<Movie_Data, Match>> movieListToAdd;
@@ -478,41 +532,82 @@ namespace api.Resources
                                 //databaseMovieCount++;
                                 //temp.Add(mData);
                                 var movie = db.Movie_Data.Where(x => x.name == item.Item1.name).First();
-                                Debug.WriteLine("Movie " + movie.Movie_Info.title + " was added to the database as id " + movie.Id + "!");
+                                await History.Set("api", new History_API()
+                                {
+                                    api_action = "Movie " + movie.Movie_Info.title + " was added to the database as id " + movie.Id + "!",
+                                    api_datetime = DateTime.Now,
+                                    api_type = "Movie added to database",
+                                });
                                 list.Add(movie.Id);
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(db.Database.Log);
-                                Debug.WriteLine("Exception : Inserting movie to Database --> " + ex.Message);
+                                await History.Set("api", new History_API()
+                                {
+                                    api_action = "Exception : Inserting movie to Database --> " + ex.Message,
+                                    api_datetime = DateTime.Now,
+                                    api_type = "Exception thrown InsertMoviesToDb",
+                                });
                             }
                         }
                         else
                         {
-                            Debug.WriteLine("Movie " + item.Item2.Groups["title"].ToString() + " was not added as there was a problem!");
+                            await History.Set("api", new History_API()
+                            {
+                                api_action = "Movie " + item.Item2.Groups["title"].ToString() + " was not added as there was a problem!",
+                                api_datetime = DateTime.Now,
+                                api_type = "Error on movie addition",
+                            });
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("Error -> An error occured : " + ex.Message);
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "Error -> An error occured : " + ex.Message,
+                            api_datetime = DateTime.Now,
+                            api_type = "Error occured on InsertMoviesToDb",
+                        });
                     }
 
                 }
-                Debug.WriteLine("End of import of movies.");
+                await History.Set("api", new History_API()
+                {
+                    api_action = "End of import of movies.",
+                    api_datetime = DateTime.Now,
+                    api_type = "Status -> InsertMoviesToDb",
+                });
+                History_API hapi;
                 if (list.Count == movieListToAdd.Count)
                 {
-                    Debug.WriteLine("Info -> All movies added");
-                    Debug.WriteLine("Movies added " + list.Count);
+                    hapi = new History_API()
+                    {
+                        api_type = "Movie to db status",
+                        api_datetime = DateTime.Now,
+                        api_action = "Info -> All movies added (" + list.Count + " - ADDED)",
+                    };
                 }
                 else if (list.Count < movieListToAdd.Count)
                 {
-                    Debug.WriteLine("Error -> Less movies added than found on local storage!");
-                    Debug.WriteLine("Movies added " + list.Count);
+                    hapi = new History_API()
+                    {
+                        api_type = "Movie to db status",
+                        api_datetime = DateTime.Now,
+                        api_action = "Error -> Less movies added than found on local storage! Movies added " + list.Count,
+                    };
                 }
                 else
                 {
-                    Debug.WriteLine("Error -> Something went wrong with importing data to DB!");
-                    Debug.WriteLine("Movies added " + list.Count);
+                    hapi = new History_API()
+                    {
+                        api_type = "Movie to db status",
+                        api_datetime = DateTime.Now,
+                        api_action = "Error -> Something went wrong with importing data to DB! Movies added " + list.Count,
+                    };
+                }
+                if(hapi != null)
+                {
+                    await History.Set("api", hapi);
                 }
             }
 
@@ -524,6 +619,12 @@ namespace api.Resources
             {
                 try
                 {
+                    await History.Set("api", new History_API()
+                    {
+                        api_type = "Task start -> DatabaseRemoveDeletedFolderFromDb",
+                        api_action = "Starting task -> Remove deleted Movies from Database",
+                        api_datetime = DateTime.Now
+                    });
                     List<Movie_Data> toDelete = new List<Movie_Data>();
                     if (AllMovies.Count > 0)
                     {
@@ -533,16 +634,45 @@ namespace api.Resources
                         }
                         if (toDelete.Count > 0)
                         {
+                            await History.Set("api", new History_API()
+                            {
+                                api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
+                                api_action = "Task action -> Found " + toDelete.Count + " movies to delete",
+                                api_datetime = DateTime.Now
+                            });
                             db.Movie_Data.RemoveRange(toDelete); //removing entries in database
                             await db.SaveChangesAsync();
+                            await History.Set("api", new History_API()
+                            {
+                                api_type = "Task status -> DatabaseRemoveDeletedFolderFromDb",
+                                api_action = "Task status -> removed " + toDelete.Count + " movies with success",
+                                api_datetime = DateTime.Now
+                            });
                             return "Ok";
                         }
+                        await History.Set("api", new History_API()
+                        {
+                            api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
+                            api_action = "Task action -> No movies found for deletion",
+                            api_datetime = DateTime.Now
+                        });
                     }
+                    await History.Set("api", new History_API()
+                    {
+                        api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
+                        api_action = "Task action -> No entries in database ...",
+                        api_datetime = DateTime.Now
+                    });
                     return "No entries in database ...";
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Exception --> {0} -- {1}", ex.Message, ex.InnerException.InnerException);
+                    await History.Set("api", new History_API()
+                    {
+                        api_type = "Exception thrown -> DatabaseRemoveDeletedFolderFromDb",
+                        api_action = "Exception --> "+ ex.Message + " -- "+ ex.InnerException.InnerException,
+                        api_datetime = DateTime.Now
+                    });
                     return ex.Message;
                 }
             }
@@ -693,7 +823,12 @@ namespace api.Resources
                     }
                     catch (HttpException ex)
                     {
-                        Debug.WriteLine("HttpException at ChangeUserPicture --> {0}", ex.Message);
+                        await History.Set("api", new History_API()
+                        {
+                            api_action = "HttpException at ChangeUserPicture -->"+ ex.Message + " | User -> name -" + user.display_name + ", guid - " + user.unique_id,
+                            api_type = "Exception thrown -> ChangeUserPicture",
+                            api_datetime = DateTime.Now
+                        });
                         return "Exception";
                     }
                 }

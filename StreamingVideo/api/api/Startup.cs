@@ -18,15 +18,32 @@ namespace api
         public async void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            await History.Set("api", new History_API()
+            {
+                api_action = "API initializing",
+                api_type = "Task -> API status",
+                api_datetime = DateTime.Now
+            });
             var disks = JsonConvert.DeserializeObject<List<CustomClasses.API.Disks>>(api.Properties.Settings.Default.Disks);
             if(disks != null)
             {
                 MovieGlobal.GlobalMovieDisksList = disks;
                 await DatabaseMovieCheck();
+                await History.Set("api", new History_API()
+                {
+                    api_action = "API started",
+                    api_type = "Task -> API status",
+                    api_datetime = DateTime.Now
+                });
             }
             else
             {
-                Debug.WriteLine("No movie folder specified");
+                await History.Set("api", new History_API()
+                {
+                    api_action = "API -> no movie folder specified",
+                    api_type = "Task -> API error",
+                    api_datetime = DateTime.Now
+                });
             }
         }
 
@@ -44,7 +61,12 @@ namespace api
             }
             catch(Exception ex)
             {
-                Debug.WriteLine("Exception : Startup.cs --> {0}", ex.Message);
+                await History.Set("api", new History_API()
+                {
+                    api_action = "Exception : Startup.cs-- > "+ ex.Message,
+                    api_type = "Task -> API Exception",
+                    api_datetime = DateTime.Now
+                });
             }
             
            

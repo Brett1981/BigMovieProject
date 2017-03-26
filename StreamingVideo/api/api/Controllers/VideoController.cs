@@ -34,25 +34,41 @@ namespace api.Controllers
                 Session_Play sp = new Session_Play();
                 Session_Guest sg = new Session_Guest();
                 string movieId = "";
-
+                Movie_Data movie;
                 if (s is Session_Play)
                 {
                     sp = (Session_Play)s;
                     movieId = sp.movie_id;
+                    movie = await Database.Movie.GetMovie(sp.movie_id, true);
                 }
                 else {
                     sg = (Session_Guest)s;
-                    movieId = sg.movie_id; 
+                    movieId = sg.movie_id;
+                    movie = await Database.Movie.GetMovie(sg.movie_id, true);
                 }
                 if (sp != null || sg != null && movieId != null)
-                {
-                    Debug.WriteLine("User requesting to watch movie: " + value);
+                {   
+                     
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "User requesting to watch movie: " + value,
+                        user_datetime = DateTime.Now,
+                        user_id = sp.user_id,
+                        user_movie = movie.Movie_Info.title,
+                        user_type = "Status -> User Request -> Movie"
+                    });
                     //Getting movie from DB
-                    var movie = await Database.Movie.GetMovie(movieId,true);
                     if (movie != null && movie.enabled)
                     {
-                        Debug.WriteLine("Movie " + value + " is being served.");
-                        
+                        await History.Set("user", new History_User()
+                        {
+                            user_action = "Movie " + value + " is being served.",
+                            user_datetime = DateTime.Now,
+                            user_id = sp.user_id,
+                            user_movie = movie.Movie_Info.title,
+                            user_type = "Status -> Movie -> start send"
+                        });
+
                         //streaming content to client
                         return Streaming.StreamingContent(movie, base.Request.Headers.Range);
                     }
@@ -106,16 +122,14 @@ namespace api.Controllers
             if (data.user_id.Length < 20)
             {
                 //user is a guest
-                Debug.WriteLine("User 'Guest' is authorized to watch movie : " + movie.name);
-
                 Debug.WriteLine("Guest is authorized to watch movie : " + movie.name);
                 await History.Set("user", new History_User()
                 {
-                    user_action = "Guest auth to watch Movie -> " + movie.Movie_Info.title,
+                    user_action = "Guest | Auth to watch Movie -> " + movie.Movie_Info.title,
                     user_datetime = DateTime.Now,
                     user_id = data.user_id,
                     user_movie = movie.guid,
-                    user_type = "AuthGuest Content"
+                    user_type = "Status -> AuthGuest -> View Content"
                 });
                 a.sessionGuest = (Session_Guest)await Database.User.CreateSession<Session_Guest>(data);
                 
@@ -123,16 +137,20 @@ namespace api.Controllers
             else
             {
                 //user is registered
-                Debug.WriteLine("User '" + data.user_id + "' is authorized to watch movie : " + movie.name);
-                await History.Set("user", new History_User()
+                var u = await Database.User.FindUser(data.user_id);
+                if(u != null)
                 {
-                    user_action = "Auth -> " + data.user_id + " : Movie -> " + movie.Movie_Info.title,
-                    user_datetime = DateTime.Now,
-                    user_id = data.user_id,
-                    user_movie = movie.guid,
-                    user_type = "AuthContent"
-                });
-                a.sessionPlay = (Session_Play)await Database.User.CreateSession<Session_Play>(data);
+                    await History.Set("user", new History_User()
+                    {
+                        user_action = "User -> " + u.display_name + " | Auth -> " + data.user_id + " | Movie -> " + movie.Movie_Info.title,
+                        user_datetime = DateTime.Now,
+                        user_id = data.user_id,
+                        user_movie = movie.guid,
+                        user_type = "Status -> AuthRegistered -> View Content"
+                    });
+                    a.sessionPlay = (Session_Play)await Database.User.CreateSession<Session_Play>(data);
+                }
+                
             }
             return Ok(a);
 

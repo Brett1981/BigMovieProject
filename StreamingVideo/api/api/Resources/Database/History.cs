@@ -32,6 +32,7 @@ namespace api.Resources
             try
             {
                 //create a text log of api history
+                Debug.WriteLine("Api -> | Action - " + api.api_action + " | Type - " + api.api_type);
                 db.History_API.Add(api);
                 await db.SaveChangesAsync();
             }
@@ -46,6 +47,10 @@ namespace api.Resources
             try
             {
                 //create a text log of user history
+                var debugLog = "User -> | Action - " + user.user_action + " | Id - " + user.user_id + " | ";
+                if(user.user_movie != null || user.user_movie != "") debugLog += "Movie - " + user.user_movie;
+
+                Debug.WriteLine(debugLog);
                 db.History_User.Add(user);
                 await db.SaveChangesAsync();
             }

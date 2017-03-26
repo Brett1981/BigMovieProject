@@ -7,9 +7,6 @@ namespace api.Resources
 {
     public class CustomClasses
     {
-        /// <summary>
-        /// stringify movie data to json with this class
-        /// </summary>
         public partial class MovieInfoToJSON
         {
             public int id { get; set; }
@@ -34,7 +31,7 @@ namespace api.Resources
             public List<CustomClasses.Random.values> production_companies { get; set; }
             public List<CustomClasses.Random.values> spoken_languages { get; set; }
         }
-        
+
         public class MovieSession
         {
             public Movie_Data movieData { get; set; }
@@ -75,9 +72,7 @@ namespace api.Resources
                 public string value { get; set; }
             }
         }
-        
-        
-
+ 
         public class Random
         {
             /// <summary>
