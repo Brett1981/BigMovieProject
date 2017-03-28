@@ -25,6 +25,12 @@ namespace MovieDB_Windows_app
 
         private static HttpClient client = new HttpClient();
 
+        public class Get
+        {
+
+        }
+
+
         public async Task<APIObjects.Data> InitalizeAppData()
         {
             try
@@ -68,22 +74,27 @@ namespace MovieDB_Windows_app
             /// <returns></returns>
             private static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content )
             {
-                return await client.PostAsync(conAddress + "/api/administration/changemoviestatus", content);
+                return await client.PostAsync($"{conAddress}/api/administration/changemoviestatus", content);
             }
 
             private static async Task<HttpResponseMessage> Auth(StringContent content)
             {
-                return await client.PostAsync(conAddress + "/api/administration/auth", content);
+                return await client.PostAsync($"{conAddress}/api/administration/auth", content);
             }
 
             private static async Task<HttpResponseMessage> Refresh(StringContent content)
             {
-                return await client.PostAsync(conAddress + "/api/administration/refresh", content);
+                return await client.PostAsync($"{conAddress}/api/administration/refresh", content);
             }
 
             private static async Task<HttpResponseMessage> Init(StringContent content)
             {
-                return await client.PostAsync(conAddress + "/api/administration/init", content);
+                return await client.PostAsync($"{conAddress}/api/administration/init", content);
+            }
+
+            private static async Task<HttpResponseMessage> EditMovie(StringContent content)
+            {
+                return await client.PostAsync($"{conAddress}/api/administration/editmovie", content);
             }
 
             /// <summary>
@@ -140,6 +151,11 @@ namespace MovieDB_Windows_app
                 return m;
             }
 
+            /// <summary>
+            /// Initialize the app and retrieve all data from API
+            /// </summary>
+            /// <param name="data">Auth.User</param>
+            /// <returns>APIObjects.Data</returns>
             public static async Task<APIObjects.Data> InitApp(Auth.User data)
             {
                 var response = await Init(CreateHttpContent<Auth.User>(data));
@@ -154,9 +170,22 @@ namespace MovieDB_Windows_app
                 }
                 return init;
             }
+
+            /// <summary>
+            /// Edited movie data send to API 
+            /// </summary>
+            /// <param name="user">Auth.User</param>
+            /// <param name="data">Movie.Data</param>
+            /// <returns>HttpResponseMessage</returns>
+            public static async Task<HttpResponseMessage> EditMovie(Auth.User user, Movie.Data data) 
+            {
+                return await EditMovie(CreateHttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
+            }
+
             /// <summary>
             /// Custom auth class for communication with API for movie and users data
             /// </summary>
+            ///
             public class AuthMovieEdit
             {
                 public User.Info user { get; set; }

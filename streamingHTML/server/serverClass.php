@@ -14,7 +14,7 @@
 class Server {
     //put your code here
     public static $debug = false;
-    public static $serverIp = '31.15.224.24';
+    public static $serverIp = '213.143.88.175';
     public static $serverPort = '53851';
     public static $httpType = 'http';
     private static  $client = null;

@@ -23,7 +23,7 @@ $data['profilePage']    = $data['serverRoot'].'/profile/index.php';
 $img;
 $user;
 $guid_nav;
-$logedIn = false;
+$data['logedIn']        = false;
 if(isset($_SESSION['user']) && !empty($_SESSION['user']) && !empty($_SESSION['user']['unique_id'])){
 
     $user = $_SESSION['user'];
@@ -47,25 +47,26 @@ else{
 
 if(isset($user) && !empty($user)){
     if(isset($user['unique_id']) && !empty($user['unique_id'])){
-        $logedIn = true;
+        $data['logedIn'] = true;
     }
     else{
-        $logedIn = false;
+        $data['logedIn'] = false;
     }
 }
-echo "<div class='navigacija'>";
+
 $eGenres = null;
 if(isset($enableGenres)){
     $eGenres = $enableGenres;
 }
 if(isset($watching) && !empty($watching)){
-    setNavigation($logedIn,$eGenres,$data,$watching );
+    setNavigation($data['logedIn'],$eGenres,$data,$watching );
 }
 else{
-    setNavigation($logedIn,$eGenres,$data );
+    setNavigation($data['logedIn'],$eGenres,$data );
 }
 
 function setNavigation($logedIn,$enableGenres,$data,$watching = null){
+    echo "<div class='navigacija'>";
     $n  = navigation("start");
     $u  = user($logedIn,$data);
     $h  = hamburgerMenu("start");
@@ -79,7 +80,8 @@ function setNavigation($logedIn,$enableGenres,$data,$watching = null){
     $m  = modal();
     $ne  = navigation("end");
     
-    echo $n.$u.$h.$l.$w.$he.$ne.$m.$s."</div>";
+    echo $n.$u.$h.$l.$w.$he.$ne.$m.$s;
+    echo "</div>";
 }
 
 function navigation($d = null){
@@ -103,7 +105,7 @@ function user($logedIn,$data){
     $u = "<div class='user'>";
         if($logedIn){
         
-            if(strpos($_SESSION['user']['profile_image'], 'user_def_icon.png') !== false){
+            if($_SESSION['user']['profile_image'] !== $data['userDefIcon']){
                 $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' ";
             }
             else{

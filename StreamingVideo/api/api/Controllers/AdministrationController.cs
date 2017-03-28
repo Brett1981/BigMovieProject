@@ -29,11 +29,11 @@ namespace api.Controllers
         {
             if(data != null && data.unique_id != null )
             {
-                var user = await Resources.Database.User.FindUser(data.unique_id);
+                var user = await Resources.Database.User.Get.ByGuid(data.unique_id);
                 if(user != null && user.unique_id == data.unique_id)
                 {
-                    Resources.Database.Movie.ForceMovieList();
-                    await History.Set("api", new History_API()
+                    Resources.Database.Movie.Refresh.RefreshAndOrganize();
+                    await History.Create("api", new History_API()
                     {
                         api_action = "Administration -> Refresh movie list requested from user " + user.username,
                         api_datetime = DateTime.Now,
@@ -53,12 +53,12 @@ namespace api.Controllers
             var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
             if(user != null)
             {
-                if (Functions.DecodeBase64toString(user.password) == Functions.DecodeBase64toString(data.password) 
+                if (Functions.Decode.Base64toString(user.password) == Functions.Decode.Base64toString(data.password) 
                     && user.User_Groups.type == "administrator")
                 {
                     user.last_logon = DateTime.Now;
                     await db.SaveChangesAsync();
-                    await History.Set("api", new History_API()
+                    await History.Create("api", new History_API()
                     {
                         api_action = "Administration -> User  '" + user.username + "' loged on",
                         api_datetime = DateTime.Now,
@@ -80,16 +80,16 @@ namespace api.Controllers
                 //x[2] is users guid 
                 if (data.Movie != null && data.User != null && data.User.unique_id != null)
                 {
-                    var u = await Resources.Database.User.FindUser(data.User.unique_id);
+                    var u = await Resources.Database.User.Get.ByGuid(data.User.unique_id);
                     if (u != null && u.User_Groups.access.Contains("w:true"))
                     {
                         Movie_Data movie;
                         if (data.Movie.enabled == true)
                         {
-                            movie = await Resources.Database.Movie.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Enable);
+                            movie = await Resources.Database.Movie.Edit.MovieEnable(data.Movie.guid, MovieStatus.Enable);
                             if (movie != null && movie.enabled == true)
                             {
-                                await History.Set("api", new History_API()
+                                await History.Create("api", new History_API()
                                 {
                                     api_action = "Administration -> Enable "+movie.Movie_Info.title + " movie",
                                     api_datetime = DateTime.Now,
@@ -100,10 +100,10 @@ namespace api.Controllers
                         }
                         else if (data.Movie.enabled == false) 
                         {
-                            movie = await Resources.Database.Movie.ChangeMovieOnlineStatus(data.Movie.guid, MovieStatus.Disable);
+                            movie = await Resources.Database.Movie.Edit.MovieEnable(data.Movie.guid, MovieStatus.Disable);
                             if (movie != null && movie.enabled == false)
                             {
-                                await History.Set("api", new History_API()
+                                await History.Create("api", new History_API()
                                 {
                                     api_action = "Administration -> Disable " + movie.Movie_Info.title + " movie",
                                     api_datetime = DateTime.Now,
@@ -126,7 +126,7 @@ namespace api.Controllers
         {
             if(data != null && data.unique_id != null)
             {
-                var u = await Resources.Database.User.FindUser(data.unique_id);
+                var u = await Resources.Database.User.Get.ByGuid(data.unique_id);
                 if(u == null)
                 {
                     return Unauthorized();
@@ -137,7 +137,7 @@ namespace api.Controllers
                     {
                         return Ok(new CustomClasses.API.Data()
                         {
-                            users = await Resources.Database.User.UserInit(),
+                            users = await Resources.Database.User.Get.AllUsersData(),
                             disks = MovieGlobal.GlobalMovieDisksList != null ? MovieGlobal.GlobalMovieDisksList : null,
                             movies = Resources.Database.AllMovies != null ? Resources.Database.AllMovies : new List<Movie_Data>()
                         });
@@ -146,6 +146,47 @@ namespace api.Controllers
                 }
                 
                 
+            }
+            return BadRequest();
+        }
+
+        [HttpPost, ActionName("EditMovie")]
+        public async Task<IHttpActionResult> EditMovie(CustomClasses.API.Edit data)
+        {
+            if(data != null)
+            {
+                if(data.auth != null && data.auth.unique_id.Length > 0 && data.auth.username.Length > 0)
+                {
+                    var u = await Resources.Database.User.Get.ByGuid(data.auth.unique_id);
+                    if( u != null 
+                        && u.User_Groups.type == "administrator" 
+                        && u.unique_id == data.auth.unique_id 
+                        && data.auth.username == u.username
+                        )
+                    {
+                        if(data.movie.guid.Length > 0)
+                        {
+                            var m = await Resources.Database.Movie.Get.ByGuidAndChangeCounter(data.movie.guid,false);
+                            if(m != null)
+                            {
+                                var mdb = await db.Movie_Data.Where(x => x.guid == m.guid).FirstOrDefaultAsync();
+                                if(mdb != null && mdb != data.movie)
+                                {
+                                    mdb.Movie_Info = data.movie.Movie_Info;
+                                    await db.SaveChangesAsync();
+                                    var mdbEdited = await db.Movie_Data.Where(x => x.guid == m.guid).FirstOrDefaultAsync();
+                                    if(mdbEdited == data.movie)
+                                    {
+                                        return Ok("Movie Edited");
+                                    }
+                                    return Ok("Movie not edited");
+                                }
+                            }
+                        }
+                        return BadRequest("Movie id is not set");
+                    }
+                }
+                return Unauthorized();
             }
             return BadRequest();
         }

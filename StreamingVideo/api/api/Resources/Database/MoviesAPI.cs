@@ -15,136 +15,151 @@ namespace api.Resources
         private static Uri movieSearchURL = new Uri("http://api.themoviedb.org/3/search/movie");
         //private static string GenreURL = "http://api.themoviedb.org/3/genre/movie/list?api_key=";
         public static int countAPICalls = 0;
-        public static async Task<Movie_Info> GetMovieInfo(Match data, int id)
+
+        public static class Get
         {
-            try
+            public static async Task<Movie_Info> MovieInfo(Match data, int id)
             {
-                DateTime date  = new DateTime(int.Parse(data.Groups["year"].Value), 1, 1);
-                //var movie = data.Split('|');
-                 
-                //string Searcheditem = "";
-                HttpClient client = new HttpClient();
-                
-                //Building api url with parameters - apikey + item to search for
-                Uri searchMovieAPI;
-                var apikey = ConfigurationManager.AppSettings["APIkey"];
-
-                if(apikey == null) { throw new Exception("API key was null or not defined! Check your Web.config to include value with key!"); }
-
-                if (apikey != null && apikey.Length != 0)
+                try
                 {
-                    searchMovieAPI = new Uri(movieSearchURL, "?api_key="+apikey+"&query=" + data.Groups["title"].Value.Replace('.', ' '));
-                    try
+                    DateTime date = new DateTime(int.Parse(data.Groups["year"].Value), 1, 1);
+                    //var movie = data.Split('|');
+
+                    //string Searcheditem = "";
+                    HttpClient client = new HttpClient();
+
+                    //Building api url with parameters - apikey + item to search for
+                    Uri searchMovieAPI;
+                    var apikey = ConfigurationManager.AppSettings["APIkey"];
+
+                    if (apikey == null) { throw new Exception("API key was null or not defined! Check your Web.config to include value with key!"); }
+
+                    if (apikey != null && apikey.Length != 0)
                     {
-                        //GlobalVar.GlobalApiCall.Counter++;
-                        if(countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
-                        HttpResponseMessage response;
+                        searchMovieAPI = new Uri(movieSearchURL, "?api_key=" + apikey + "&query=" + data.Groups["title"].Value.Replace('.', ' '));
                         try
                         {
-                            response  = await client.GetAsync(searchMovieAPI,HttpCompletionOption.ResponseContentRead);
-                            if (response.IsSuccessStatusCode)
+                            //GlobalVar.GlobalApiCall.Counter++;
+                            if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
+                            HttpResponseMessage response;
+                            try
                             {
-                                countAPICalls++;
-
-                                var jsonData = JsonConvert.DeserializeObject<CustomClasses.Random.APIResults>(await response.Content.ReadAsStringAsync());
-                                if (jsonData == null) { return new Movie_Info(); }
-
-                                var apiResult = new CustomClasses.Random.results();
-
-                                for (int i = 0; i < jsonData.results.Count; i++)
+                                response = await client.GetAsync(searchMovieAPI, HttpCompletionOption.ResponseContentRead);
+                                if (response.IsSuccessStatusCode)
                                 {
-                                    DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
-                                    if (date.Year != 1 && date != null)
+                                    countAPICalls++;
+
+                                    var jsonData = JsonConvert.DeserializeObject<CustomClasses.Random.APIResults>(await response.Content.ReadAsStringAsync());
+                                    if (jsonData == null) { return new Movie_Info(); }
+
+                                    var apiResult = new CustomClasses.Random.results();
+
+                                    for (int i = 0; i < jsonData.results.Count; i++)
                                     {
-                                        if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
+                                        DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
+                                        if (date.Year != 1 && date != null)
                                         {
-                                            apiResult = new CustomClasses.Random.results()
+                                            if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
                                             {
-                                                id = jsonData.results[i].id,
-                                                title = jsonData.results[i].title,
-                                                genre_ids = jsonData.results[i].genre_ids,
-                                                poster_path = jsonData.results[i].poster_path
-                                            };
-                                            break;
+                                                apiResult = new CustomClasses.Random.results()
+                                                {
+                                                    id = jsonData.results[i].id,
+                                                    title = jsonData.results[i].title,
+                                                    genre_ids = jsonData.results[i].genre_ids,
+                                                    poster_path = jsonData.results[i].poster_path
+                                                };
+                                                break;
+                                            }
                                         }
                                     }
-                                }
-                                if (apiResult == null) { return new Movie_Info(); }
+                                    if (apiResult == null) { return new Movie_Info(); }
 
-                                //GlobalVar.GlobalApiCall.Counter++;
-                                if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
-                                string info = "";
-                                if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
-                                else { return new Movie_Info(); }
-                                countAPICalls++;
-                                return CreateMovieInfo(JsonConvert.DeserializeObject<CustomClasses.MovieInfoToJSON>(info), id);
+                                    //GlobalVar.GlobalApiCall.Counter++;
+                                    if (countAPICalls > 30) { await Task.Delay(5000); countAPICalls = 0; }
+                                    string info = "";
+                                    if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
+                                    else { return new Movie_Info(); }
+                                    countAPICalls++;
+                                    return Create.MovieInfo(JsonConvert.DeserializeObject<CustomClasses.MovieInfoToJSON>(info), id);
+                                }
+                                else
+                                {
+                                    return new Movie_Info();
+                                }
                             }
-                            else
+                            catch (Exception ex)
                             {
+                                Debug.WriteLine("Exception at getMovieInfo --> " + ex.Message);
                                 return new Movie_Info();
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception e)
                         {
-                            Debug.WriteLine("Exception at getMovieInfo --> " + ex.Message);
-                            return new Movie_Info();
+                            Debug.WriteLine(e.ToString() + " | " + e.Message);
                         }
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Debug.WriteLine(e.ToString() + " | " + e.Message);
-                    }
-                }
-                else
-                {
-                    return new Movie_Info();
+                        return new Movie_Info();
 
+                    }
+                    return new Movie_Info();
                 }
-                return new Movie_Info();
-            }
-            catch(Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                return new Movie_Info();
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                    return new Movie_Info();
+                }
             }
         }
-        private static Movie_Info CreateMovieInfo(CustomClasses.MovieInfoToJSON data, int id)
+
+        public static class Create
         {
-            return  new Movie_Info()
+            public static Movie_Info MovieInfo(CustomClasses.MovieInfoToJSON data, int id)
             {
-                id = data.id,
-                adult = data.adult,
-                backdrop_path = data.backdrop_path,
-                budget = data.budget,
-                homepage = data.homepage,
-                imdb_id = data.imdb_id,
-                original_title = data.original_title,
-                overview = data.overview,
-                popularity = data.popularity,
-                poster_path = data.poster_path,
-                release_date = Convert.ToDateTime(data.release_date),
-                revenue = data.revenue,
-                status = data.status,
-                tagline = data.tagline,
-                title = data.title,
-                vote_average = data.vote_average,
-                vote_count = data.vote_count,
-                genres = ListToString(data.genres),
-                production_companies = ListToString(data.production_companies),
-                production_countries = ListToString(data.production_countries),
-                spoken_languages = ListToString(data.spoken_languages)
-            };
-            
-        }
-        private static string ListToString (List<CustomClasses.Random.values> data)
-        {
-            string x = "";
-            for(int i = 0; i < data.Count; i++)
-            {
-                x += data[i].id + ":" +  data[i].name ;
-                if(data.Count - 1 != i ) { x += "|"; }
+                return new Movie_Info()
+                {
+                    id = data.id,
+                    adult = data.adult,
+                    backdrop_path = data.backdrop_path,
+                    budget = data.budget,
+                    homepage = data.homepage,
+                    imdb_id = data.imdb_id,
+                    original_title = data.original_title,
+                    overview = data.overview,
+                    popularity = data.popularity,
+                    poster_path = data.poster_path,
+                    release_date = Convert.ToDateTime(data.release_date),
+                    revenue = data.revenue,
+                    status = data.status,
+                    tagline = data.tagline,
+                    title = data.title,
+                    vote_average = data.vote_average,
+                    vote_count = data.vote_count,
+                    genres = Functions.ListToString(data.genres),
+                    production_companies = Functions.ListToString(data.production_companies),
+                    production_countries = Functions.ListToString(data.production_countries),
+                    spoken_languages = Functions.ListToString(data.spoken_languages)
+                };
+
             }
-            return x += "";
         }
+
+        public static class Functions
+        {
+            public static string ListToString(List<CustomClasses.Random.values> data)
+            {
+                string x = "";
+                for (int i = 0; i < data.Count; i++)
+                {
+                    x += data[i].id + ":" + data[i].name;
+                    if (data.Count - 1 != i) { x += "|"; }
+                }
+                return x += "";
+            }
+        }
+        
+        
+        
     }
 }

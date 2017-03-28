@@ -138,11 +138,10 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
                     <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w600'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
                     <?php  $guid = $play->movieData->guid;
                             if($play->movieData->ext == "mp4"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."' type='video/mp4'/>";
+                                echo "<source src='{$client}/api/video/play/".$session."' type='video/mp4'/>";
                             }elseif($play->ext == "webm"){
-                                echo "<source src='http://31.15.224.24:53851/api/video/play/".$session."'  type='video/webm'>";
+                                echo "<source src='{$client}/api/video/play/".$session."'  type='video/webm'>";
                             }
-                            /*echo "<track kind='captions' src='http://31.15.224.24:8080/assets/subtitles/Angry.Birds.2016.720p.BluRay.x264-[YTS.AG].vtt' srclang='en' label='English' />";*/
                          ?>
                         <p class="vjs-no-js">
                           To view this video please enable JavaScript, and consider upgrading to a web browser that

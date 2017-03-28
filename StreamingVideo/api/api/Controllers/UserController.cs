@@ -42,7 +42,7 @@ namespace api.Controllers
             {
                 if(user.username == data.username && user.password == data.password) {
                     user.last_logon = DateTime.Now; db.SaveChanges();
-                    await History.Set("user", new History_User()
+                    await History.Create("user", new History_User()
                     {
                         user_action = "Login authorization -> " + user.unique_id,
                         user_datetime = DateTime.Now,
@@ -53,7 +53,7 @@ namespace api.Controllers
                     return Ok(new DatabaseUserModels() { user_id = user.unique_id });
                 }
                 else {
-                    await History.Set("user", new History_User()
+                    await History.Create("user", new History_User()
                     {
                         user_action = "Login authorization -> " + user.unique_id,
                         user_datetime = DateTime.Now,
@@ -84,12 +84,12 @@ namespace api.Controllers
                     }
                     if (data.birthday != null) { try { user.birthday = Convert.ToDateTime(data.birthday); } catch { user.birthday = DateTime.Now; } }
                     if (data.display_name != null) { user.display_name = data.display_name; }
-                    user.unique_id = api.Resources.Database.Movie.CreateGuid(data.username).ToString();
+                    user.unique_id = api.Resources.Database.Movie.Create.Guid(data.username).ToString();
                     user.profile_created = DateTime.Now;
                     user.groupId = db.User_Groups.Where(x => x.type == "user").Select(x => x.Id).First();
                     db.User_Info.Add(user);
                     await db.SaveChangesAsync();
-                    await History.Set("user", new History_User()
+                    await History.Create("user", new History_User()
                     {
                         user_action = "User create -> " + user.unique_id,
                         user_datetime = DateTime.Now,
@@ -100,7 +100,7 @@ namespace api.Controllers
                     return Ok(db.User_Info.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
                 }
             }
-            await History.Set("user", new History_User()
+            await History.Create("user", new History_User()
             {
                 user_action = "User create -> " + user.unique_id,
                 user_datetime = DateTime.Now,
@@ -118,7 +118,7 @@ namespace api.Controllers
             User_Info user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if (user == null)
             {
-                await History.Set("user", new History_User()
+                await History.Create("user", new History_User()
                 {
                     user_action = "User search -> " + value,
                     user_datetime = DateTime.Now,
@@ -128,7 +128,7 @@ namespace api.Controllers
                 });
                 return NotFound();
             }
-            await History.Set("user", new History_User()
+            await History.Create("user", new History_User()
             {
                 user_action = "User search -> " + value,
                 user_datetime = DateTime.Now,
@@ -155,11 +155,11 @@ namespace api.Controllers
             try
             {
                 string status = "BadRequest";
-                if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.User.ChangeUserPicture(data); }
+                if (data != null && (data.image_url != null || data.unique_id != null)) {status = await Resources.Database.User.Edit.UserPicture(data); }
                 switch (status){
 
                     case "OK": {
-                            await History.Set("user", new History_User()
+                            await History.Create("user", new History_User()
                             {
                                 user_action = "User changed profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -170,7 +170,7 @@ namespace api.Controllers
                             return Ok();
                         } 
                     case "NotAuthorized": {
-                            await History.Set("user", new History_User()
+                            await History.Create("user", new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -181,7 +181,7 @@ namespace api.Controllers
                             return Unauthorized();
                         } 
                     case "Exception": {
-                            await History.Set("user", new History_User()
+                            await History.Create("user", new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -192,7 +192,7 @@ namespace api.Controllers
                             return BadRequest();
                         }
                     case "BadRequest": {
-                            await History.Set("user", new History_User()
+                            await History.Create("user", new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -203,7 +203,7 @@ namespace api.Controllers
                             return BadRequest();
                         }
                 }
-                await History.Set("user", new History_User()
+                await History.Create("user", new History_User()
                 {
                     user_action = "User change profile picture : " + data.unique_id,
                     user_datetime = DateTime.Now,
@@ -215,7 +215,7 @@ namespace api.Controllers
             }
             catch(Exception ex)
             {
-                await History.Set("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception"});
+                await History.Create("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception"});
                 Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0}", ex.Message);
                 return BadRequest();
             }
@@ -228,7 +228,7 @@ namespace api.Controllers
             var user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
             if(user != null)
             {
-                await History.Set("user", new History_User()
+                await History.Create("user", new History_User()
                 {
                     user_action = "User get profile picture : " + value,
                     user_datetime = DateTime.Now,
@@ -236,7 +236,7 @@ namespace api.Controllers
                     user_movie = "",
                     user_type = "RetrieveUserProfilePicture"
                 });
-                return Ok(Resources.Database.User.GetUserImage(user.profile_image));
+                return Ok(Resources.Database.User.Get.UserImage(user.profile_image));
             }
             return NotFound();
         }

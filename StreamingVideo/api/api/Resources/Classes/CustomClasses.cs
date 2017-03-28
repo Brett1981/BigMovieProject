@@ -71,6 +71,17 @@ namespace api.Resources
                 public string name { get; set; }
                 public string value { get; set; }
             }
+
+            /// <summary>
+            /// Movie/user edit object
+            /// </summary>
+            public class Edit
+            {
+                public Movie_Data movie { get; set; }
+                public User_Info user { get; set; }
+                public User_Groups groups { get; set; }
+                public Auth.Auth.User auth { get; set; }
+            }
         }
  
         public class Random

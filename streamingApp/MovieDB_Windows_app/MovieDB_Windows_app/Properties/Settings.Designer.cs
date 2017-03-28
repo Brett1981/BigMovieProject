@@ -12,7 +12,7 @@ namespace MovieDB_Windows_app.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.0.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -49,7 +49,7 @@ namespace MovieDB_Windows_app.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("31.15.224.24")]
+        [global::System.Configuration.DefaultSettingValueAttribute("213.143.88.175")]
         public string APIip {
             get {
                 return ((string)(this["APIip"]));
@@ -115,7 +115,7 @@ namespace MovieDB_Windows_app.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("31.15.224.24")]
+        [global::System.Configuration.DefaultSettingValueAttribute("213.143.88.175")]
         public string WEBip {
             get {
                 return ((string)(this["WEBip"]));

@@ -21,7 +21,10 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
     $data = array('user' => null, 'history' => null);
     if(!empty($_SESSION['user']['unique_id'])){ $user_id = $_SESSION['user']['unique_id']; }
     elseif(!empty($_GET['user'])){ $user_id = $_GET['user']; }
-    else{ header('location ../index.php'); }
+    else{ 
+        //header('location ../index.php'); 
+        }
+    
     $data['user'] = Server::getUser($user_id);
     $data['history'] = Server::getUserHistory($user_id);
 }

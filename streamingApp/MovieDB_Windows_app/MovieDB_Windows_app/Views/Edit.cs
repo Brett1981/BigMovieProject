@@ -19,6 +19,7 @@ namespace MovieDB_Windows_app.Views
         private static Button movieButton = new Button();
         private static API api = new API();
         private bool Edited = false;
+        private List<string> NotEditabled = new List<string>() { "poster", "views" };
         public Edit(Movie.Data data,Button mbutton)
         {
             InitializeComponent();
@@ -74,23 +75,114 @@ namespace MovieDB_Windows_app.Views
 
             }
         }
-        private void SetObject(string item,string type,Control c)
+
+        private void SetObject(string item, string type, Control c)
         {
             if (c is TextBox || c is CheckBox)
             {
                 string p = "";
-                if(type == "movie")
-                    p = GetMoviePropertie(item).ToString();
-                else 
-                    p = GetMovieInfoPropertie(item).ToString();
+                p = (type == "movie") ? GetMoviePropertie(item).ToString() : GetMovieInfoPropertie(item).ToString();
                 if (c is CheckBox)
                     ((CheckBox)c).Checked = (p.ToLower() == "true") ? true : false;
                 else
                     c.Text = p;
 
             }
-            
+
         }
+
+        private void GetObjectToMovieInfo(string item)
+        {
+            var sitem = item.Split(new string[] { "TextBox", "CheckedBox", "Image" }, StringSplitOptions.None);
+
+            if (sitem != null && !NotEditabled.Contains(sitem[0]))
+            {
+                var prop = movie.GetType().GetProperty(sitem[0]);
+
+                if (prop == null)
+                {
+                    //property is maybe in movie info
+                    var propinfo = movie.Movie_Info.GetType().GetProperty(sitem[0]);
+                    if (propinfo != null)
+                    {
+                        SetMovieObject(item, sitem[0],propinfo,movie.Movie_Info);
+                    }
+                }
+                else
+                {
+                    //property is in movie data
+                    SetMovieObject(item, sitem[0],prop,movie);
+                }
+            }
+        }
+
+        private void SetMovieObject(string item,string sitem,PropertyInfo prop,object target)
+        {
+            var c = Controls.Find(item, true).First();
+            if(c is CheckBox)
+            {
+                SetPropertyValue(target, sitem, ((CheckBox)c).Checked, c);
+            }
+            else
+            {
+                SetPropertyValue(target, sitem, c.Text, c);
+            }
+        }
+
+        private void SetPropertyValue(object target, string propertyName, object propertyValue, Control c )
+        {
+            try
+            {
+                bool isMovie = true;
+                PropertyInfo oProp = null;
+                if (target is Movie.Data) 
+                {
+                    oProp = target.GetType().GetProperty(propertyName);
+                }
+                else if(target is Movie.Info)
+                {
+                    isMovie = false;
+                    oProp = ((Movie.Info)target).GetType().GetProperty(propertyName);
+                }
+                
+
+                if(oProp != null)
+                {
+                    Type tProp = oProp.PropertyType;
+                    //Nullable properties have to be treated differently, since we 
+                    //  use their underlying property to set the value in the object
+                    if (tProp.IsGenericType
+                        && tProp.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+                    {
+                        //if it's null, just set the value from the reserved word null, and return
+                        if (propertyValue is CheckBox && ((CheckBox)propertyValue) == null)
+                        {
+                            oProp.SetValue(target, null, null);
+                            return;
+                        }
+
+                        //Get the underlying type property instead of the nullable generic
+                        tProp = new NullableConverter(oProp.PropertyType).UnderlyingType;
+                    }
+
+                    //use the converter to get the correct value
+                    
+                    if (isMovie)
+                    {
+                        oProp.SetValue(target, Convert.ChangeType(propertyValue, tProp), null);
+                    }
+                    else
+                    {
+                        oProp.SetValue(((Movie.Info)target), Convert.ChangeType(propertyValue, tProp), null);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occured!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private object GetMoviePropertie(string item)
         {
             Type myType = movie.GetType();
@@ -145,6 +237,26 @@ namespace MovieDB_Windows_app.Views
                 this.DialogResult = DialogResult.OK;
             }
             else this.DialogResult = DialogResult.Cancel;
+        }
+
+        private async void saveButton_Click(object sender, EventArgs e)
+        {
+            foreach (Control cont in this.Controls)
+            {
+                if (cont.Name.Contains("TextBox") || cont.Name.Contains("CheckedBox") || cont.Name.Contains("Image"))
+                {
+                    GetObjectToMovieInfo(cont.Name);
+                }
+            }
+            try
+            {
+                var response = await API.Communication.EditMovie(GlobalVar.GlobalAuthUser, movie);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occured!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MovieDB_Windows_app.API;
 
 namespace MovieDB_Windows_app.Resources
 {
@@ -104,6 +105,17 @@ namespace MovieDB_Windows_app.Resources
             public int id { get; set; }
             public string name { get; set; }
             public string value { get; set; }
+        }
+
+        /// <summary>
+        /// Movie/user edit object
+        /// </summary>
+        public class Edit
+        {
+            public Movie.Data movie { get; set; }
+            public User.Info user { get; set; }
+            public User.Groups groups { get; set; }
+            public Auth.User auth { get; set; }
         }
     }
     public class values

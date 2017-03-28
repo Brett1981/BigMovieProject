@@ -43,15 +43,10 @@ namespace MovieDB_Windows_app.Views
             }
             else
             {
-                if(login.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    MessageBox.Show("Incorect user credentials!");
-                    
-                }
-                else if(login.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
+                if(login.StatusCode == System.Net.HttpStatusCode.Unauthorized 
+                    || login.StatusCode == System.Net.HttpStatusCode.NotFound)
                     MessageBox.Show("Username or password is incorrect!");
-                }
+                
                 loginButton.Text = prevButtonText;
                 loginButton.Enabled = true;
             }

@@ -14,12 +14,12 @@ namespace api.Controllers
     public class DatabaseController : ApiController
     {
         [HttpGet,ActionName("Get")]
-        public IHttpActionResult Get([FromUri] string value)
+        public async Task<IHttpActionResult> Get([FromUri] string value)
         {
             if(value.ToLower() == "api"){
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new ObjectContent<List<History_API>>(History.GetAPI(value),
+                    Content = new ObjectContent<List<History_API>>(await History.Get.API(value),
                     new System.Net.Http.Formatting.XmlMediaTypeFormatter
                     {
                         UseXmlSerializer = true
@@ -29,7 +29,7 @@ namespace api.Controllers
             else if(value.ToLower() == "user") {
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new ObjectContent<List<History_User>>(History.GetUsers(value),
+                    Content = new ObjectContent<List<History_User>>(await History.Get.Users(value),
                     new System.Net.Http.Formatting.XmlMediaTypeFormatter
                     {
                         UseXmlSerializer = true
@@ -40,18 +40,18 @@ namespace api.Controllers
         }
 
         [HttpPost,ActionName("PostGet")]
-        public IHttpActionResult PostGet([FromBody] string data)
+        public async Task<IHttpActionResult> PostGet([FromBody] string data)
         {
-            if (data.ToLower() == "api") { return Ok(History.Get<List<History_API>>(data).ToList()); }
-            else if (data.ToLower() == "user") { return Ok(History.Get<List<History_User>>(data).ToList()); }
+            if (data.ToLower() == "api") { return Ok(await History.Return<List<History_API>>(data)); }
+            else if (data.ToLower() == "user") { return Ok(await History.Return<List<History_User>>(data)); }
             else { return NotFound(); }
         }
 
         [HttpPost,ActionName("Set")]
         public async Task<IHttpActionResult> Set([FromUri] string value,[FromBody] object data)
         {
-            if(value.ToLower() == "api") { var s = await History.Set(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
-            else if(value.ToLower() == "user") { var s = await History.Set(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
+            if(value.ToLower() == "api") { var s = await History.Create(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
+            else if(value.ToLower() == "user") { var s = await History.Create(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
             else { return BadRequest(); }
         }
     }

@@ -16,7 +16,8 @@ namespace api.Resources
 {
     public class Streaming
     {
-        public static HttpResponseMessage StreamingContent(Movie_Data movie, RangeHeaderValue header)
+
+        public static HttpResponseMessage Content(Movie_Data movie, RangeHeaderValue header)
         {
             // This can prevent some unnecessary accesses. 
             // These kind of file names won't be existing at all. 

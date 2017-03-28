@@ -22,7 +22,7 @@ namespace api.Controllers
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         public async Task<ActionResult> Edit(string guid)
         {
-            return View(await Database.Movie.Get(guid));
+            return View(await Database.Movie.Get.ByGuid(guid));
         }
         // POST: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
         [HttpPost]
@@ -31,7 +31,7 @@ namespace api.Controllers
             try
             {
                 // TODO: Add update logic here
-                return View(await Database.Movie.Edit(guid, collection));
+                return View(await Database.Movie.Edit.Form(guid, collection));
             }
             catch
             {
@@ -41,7 +41,7 @@ namespace api.Controllers
         // GET: Movies/Details/5
         public async Task<ActionResult> Details(string guid)
         {
-            return View(await Database.Movie.Get(guid));
+            return View(await Database.Movie.Get.ByGuid(guid));
         }
 
 
@@ -50,8 +50,7 @@ namespace api.Controllers
         {
             try
             {
-                await Database.Movie.Remove(await Database.Movie.Get(guid));
-                Database.Movie.ForceMovieList();
+                await Database.Movie.Remove.ByModel(await Database.Movie.Get.ByGuid(guid));
                 return RedirectToAction("Index");
             }
             catch
