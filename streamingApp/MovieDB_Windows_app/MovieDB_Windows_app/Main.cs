@@ -66,7 +66,7 @@ namespace MovieDB_Windows_app
                 GlobalVar.GlobalData.disks == null || 
                 GlobalVar.GlobalData.movies == null) || force)
             {
-                GlobalVar.GlobalData = await api.InitalizeAppData();
+                GlobalVar.GlobalData = await api.InitAppData();
             }
             if (list == null)
                 GlobalVar.GlobalData.movies = GlobalVar.GlobalData.movies;
@@ -185,11 +185,11 @@ namespace MovieDB_Windows_app
                         }
                         if (MessageBox.Show(desc, m.Movie_Info.title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
                         {
-                            var r = await API.Communication.ChangeMovieStatus(m);
+                            var r = await API.Communication.Set.MovieStatus(m);
                             var x = await r.Content.ReadAsStringAsync();
                             if (x.Contains("disabled") || x.Contains("enabled"))
                             {
-                                var a = await API.Communication.RefreshData(GlobalVar.GlobalAuthUser);
+                                var a = await API.Communication.Get.RefreshData(GlobalVar.GlobalAuthUser);
                                 //await SetMovieList();
                             }
                                 
@@ -260,7 +260,7 @@ namespace MovieDB_Windows_app
         /// <param name="e"></param>
         private async void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            await SetMovieList(await API.Communication.RefreshData(GlobalVar.GlobalAuthUser));
+            await SetMovieList(await API.Communication.Get.RefreshData(GlobalVar.GlobalAuthUser));
         }
 
         //clean temp folder

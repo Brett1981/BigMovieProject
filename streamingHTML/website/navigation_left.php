@@ -104,9 +104,8 @@ function navigation($d = null){
 function user($logedIn,$data){
     $u = "<div class='user'>";
         if($logedIn){
-        
-            if($_SESSION['user']['profile_image'] !== $data['userDefIcon']){
-                $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' ";
+            if(isset($_SESSION['user']['profile_image']['Result']) && $_SESSION['user']['profile_image']['Result'] !== $data['userDefIcon']){
+                $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']['Result']}' ";
             }
             else{
                 $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='{$_SESSION['user']['profile_image']}' ";

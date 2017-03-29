@@ -19,6 +19,7 @@ namespace api.Resources
                 {
                     //create a text log of api history
                     Debug.WriteLine("Api -> | Action - " + api.api_action + " | Type - " + api.api_type);
+
                     db.History_API.Add(api);
                     await db.SaveChangesAsync();
                 }

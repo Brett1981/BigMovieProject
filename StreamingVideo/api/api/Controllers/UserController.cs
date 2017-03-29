@@ -215,8 +215,7 @@ namespace api.Controllers
             }
             catch(Exception ex)
             {
-                await History.Create("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception"});
-                Debug.WriteLine("Exception in UserController --> ChangeProfilePicture : {0}", ex.Message);
+                await History.Create("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception in UserController --> ChangeProfilePicture" });
                 return BadRequest();
             }
             
@@ -236,7 +235,7 @@ namespace api.Controllers
                     user_movie = "",
                     user_type = "RetrieveUserProfilePicture"
                 });
-                return Ok(Resources.Database.User.Get.UserImage(user.profile_image));
+                return Ok(Resources.Database.User.Get.ProfileImage(user.profile_image));
             }
             return NotFound();
         }

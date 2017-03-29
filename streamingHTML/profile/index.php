@@ -52,8 +52,8 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
 
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
                     //echo strlen($_SESSION['user_img']);
-                    if(strlen($_SESSION['user']['profile_image']) > 100){
-                        $profile .= "<img alt='{$data['user']['display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']}' />";
+                    if(isset($_SESSION['user']['profile_image']['Result']) && strlen($_SESSION['user']['profile_image']['Result']) > 100){
+                        $profile .= "<img alt='{$data['user']['display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']['Result']}' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='{$_SESSION['user']['profile_image']}' style='width:100px;'/>";

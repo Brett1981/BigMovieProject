@@ -58,11 +58,14 @@ namespace api.Resources
                 if (_movies != null) { return _movies; }
                 else
                 {
-                    try { Movie.Refresh.RefreshAndOrganize(); }
-                    catch (Exception e) { Debug.WriteLine("Exc -> ForceMovieList | " + e.Message); }
+                    try {  Movie.Refresh.RefreshAndOrganize(); }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception caught on AllMovies() -> " + ex.Message);
+                    }
                     finally
                     {
-                        if (_movies == null || _movies.Count == 0) { _movies = new List<Movie_Data>(); }
+                        if (_movies == null || _movies.Count == 0) { _movies = null; }
                     }
                     return _movies;
                 }
@@ -98,7 +101,6 @@ namespace api.Resources
                                     api_type = "Task -> status",
                                     api_datetime = DateTime.Now
                                 });
-                                Debug.WriteLine("Movie list --> Creating new list.");
                                 AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
                                 createListCount++; edited = true;
                             }
@@ -109,21 +111,29 @@ namespace api.Resources
                                 CreateListTime = DateTime.Now;
                                 edited = true;
                             }
-                            await History.Create("api", new History_API()
-                            {
-                                api_action = "Waiting for next movie list cycle ",
-                                api_type = "Task -> waiting",
-                                api_datetime = DateTime.Now
-                            });
 
-                            if (edited) { Organize.ByDate(); }
-                            await Task.Delay(new TimeSpan(0, 1, 0));
+                            if (edited)
+                            {
+                                Organize.ByDate();
+                                await History.Create("api", new History_API()
+                                {
+                                    api_action = "Waiting for next movie list cycle ",
+                                    api_type = "Task -> waiting",
+                                    api_datetime = DateTime.Now
+                                });
+                            }
+                            await Task.Delay(new TimeSpan(0, 5, 0));
                             edited = false;
                         }
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine(e.Message);
+                        await History.Create("api", new History_API()
+                        {
+                            api_action = "Exception thrown at -> Movie.Create.List() | Error -> "+ e.Message,
+                            api_type = "Task -> Error | Exception caught -> Movie.Create.List()",
+                            api_datetime = DateTime.Now
+                        });
                     }
                 }
 
@@ -239,7 +249,12 @@ namespace api.Resources
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine(e.Message);
+                        await History.Create("api", new History_API()
+                        {
+                            api_action = "Exception was thrown with error " +e.Message,
+                            api_type = "Exception caught on -> Movie.Get.ByGuid()",
+                            api_datetime = DateTime.Now,
+                        });
                         return new Movie_Data();
                     }
                 }
@@ -268,7 +283,12 @@ namespace api.Resources
                             }
                             catch (Exception e)
                             {
-                                Debug.WriteLine("Exception: GetMovie(string) --> " + e.Message);
+                                await History.Create("api", new History_API()
+                                {
+                                    api_action = "Exception was thrown with error " + e.Message,
+                                    api_type = "Exception caught on -> Movie.Get.ByGuidAndChangeCounter()",
+                                    api_datetime = DateTime.Now,
+                                });
                             }
                             finally
                             {
@@ -296,7 +316,15 @@ namespace api.Resources
                     var user = await db.User_Info.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
                     if (user != null)
                     {
-                        Debug.WriteLine("User " + user.username + " with : guid '" + user.unique_id + "' is trying to view content :" + data.movie_id);
+
+                        await History.Create("user", new History_User()
+                        {
+                            user_action = "User | Requesting content-> " + data.movie_id + 
+                            " | Username -> "+ user.username +", UserId-> " + user.unique_id,
+                            user_datetime = DateTime.Now,
+                            user_movie = "",
+                            user_type = "User  Requesting content from Movie.Get.ByModel()"
+                        });
                         var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
                         if (movie.views == null) { movie.views = 1; }
                         else { movie.views += 1; }
@@ -452,7 +480,12 @@ namespace api.Resources
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine(ex.Message);
+                        await History.Create("api", new History_API()
+                        {
+                            api_action = "Exception caught",
+                            api_type = "Exception -> Movie.Remove.ByModel() --> " + ex.Message,
+                            api_datetime = DateTime.Now
+                        });
                         return -1;
                     }
 
@@ -534,7 +567,15 @@ namespace api.Resources
                 {
                     if (AllMovies.Count > 0)
                     {
-                        AllMovies.Sort((x, y) => y.Movie_Info.release_date.Value.CompareTo(x.Movie_Info.release_date.Value));
+                        try
+                        {
+                            AllMovies.Sort((x, y) => y.Movie_Info.release_date.Value.CompareTo(x.Movie_Info.release_date.Value));
+                        }
+                        catch(Exception ex)
+                        {
+                            Debug.WriteLine("Exception at Movie.Organize.ByDate() -> Message: " + ex.Message);
+                        }
+                        
                     }
 
                 }
@@ -595,14 +636,24 @@ namespace api.Resources
                             {
                                 await Task.Delay(new TimeSpan(0, 0, 0));
                             }
-                            Debug.WriteLine("Done checking / creating , waiting 1 minute/s.");
-                            await Task.Delay(new TimeSpan(0, 30, 0));
+                            await History.Create("api", new History_API()
+                            {
+                                api_action = "Done checking / creating , waiting 1 minute/s. | DatabaseThread()",
+                                api_type = "Task -> status " ,
+                                api_datetime = DateTime.Now
+                            });
+                            await Task.Delay(new TimeSpan(0, 1, 0));
                             checkDbCount++;
                         }
                     }
                     catch (InvalidOperationException e)
                     {
-                        Debug.WriteLine(e.Message);
+                        await History.Create("api", new History_API()
+                        {
+                            api_action = "Exception caught | Message " + e.Message,
+                            api_type = "Exception -> DatabaseThread()",
+                            api_datetime = DateTime.Now
+                        });
                     }
                 }
 
@@ -827,7 +878,7 @@ namespace api.Resources
                 /// </summary>
                 /// <param name="path"></param>
                 /// <returns></returns>
-                public static byte[] UserImage(string path)
+                public static async Task<byte[]> ProfileImage(string path)
                 {
                     var imgdir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"images\users\", path);
                     if (File.Exists(imgdir))
@@ -842,7 +893,12 @@ namespace api.Resources
                         }
                         catch (Exception ex)
                         {
-                            Debug.WriteLine("Exception at GetUserImage --> " + ex.Message);
+                            await History.Create("api", new History_API()
+                            {
+                                api_action = "Exception caught | Message " + ex.Message,
+                                api_type = "Exception -> User.Get.ProfileImage()",
+                                api_datetime = DateTime.Now
+                            });
                             return null;
                         }
                     }

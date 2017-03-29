@@ -135,7 +135,7 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
         <div class="main">
                 <div>
                     <?php if(isset($play)){ ?>
-                    <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w600'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
+                    <video id="my-video" class="video-js"  poster="<?php if(isset($play)){ echo 'https://image.tmdb.org/t/p/w1920'.$play->movieData->Movie_Info->backdrop_path; } ?>" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}'>
                     <?php  $guid = $play->movieData->guid;
                             if($play->movieData->ext == "mp4"){
                                 echo "<source src='{$client}/api/video/play/".$session."' type='video/mp4'/>";

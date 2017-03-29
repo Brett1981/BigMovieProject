@@ -213,8 +213,8 @@ namespace MovieDB_Windows_app.Views
             if (MessageBox.Show(desc, temp.Movie_Info.title, MessageBoxButtons.YesNoCancel) == DialogResult.Yes)
             {
                 temp.enabled = !enabledCheckedBox.Checked;
-                Debug.WriteLine(await API.Communication.ChangeMovieStatus(temp));
-                var m = await API.Communication.GetMovie(temp.guid);
+                Debug.WriteLine(await API.Communication.Set.MovieStatus(temp));
+                var m = await API.Communication.Get.MovieByGuid(temp.guid);
 
                 if (m.enabled == temp.enabled)
                 {
@@ -250,7 +250,7 @@ namespace MovieDB_Windows_app.Views
             }
             try
             {
-                var response = await API.Communication.EditMovie(GlobalVar.GlobalAuthUser, movie);
+                var response = await API.Communication.Edit.Movie(GlobalVar.GlobalAuthUser, movie);
             }
             catch(Exception ex)
             {

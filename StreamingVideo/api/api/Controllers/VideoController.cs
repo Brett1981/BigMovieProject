@@ -70,7 +70,7 @@ namespace api.Controllers
                         });
 
                         //streaming content to client
-                        return Streaming.Content(movie, base.Request.Headers.Range);
+                        return await Streaming.Content(movie, base.Request.Headers.Range);
                     }
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
@@ -78,7 +78,13 @@ namespace api.Controllers
             }
             catch(System.Web.HttpException ex)
             {
-                Debug.WriteLine(ex);
+                await History.Create("api", new History_API()
+                {
+                    api_action = "Exception caught on Play() -> " + ex.Message,
+                    api_datetime = DateTime.Now,
+                    api_type = "Exception thrown -> Play"
+                });
+                    
                 throw new HttpResponseException(HttpStatusCode.Conflict);
             }
             
@@ -112,7 +118,6 @@ namespace api.Controllers
             var movie = await Database.Movie.Get.ByModel(data);
             if(movie == null)
             {
-                Debug.WriteLine("Content '" + data.movie_id + "' does not exits");
                 return NotFound();
             }
             CustomClasses.MovieSession a = new CustomClasses.MovieSession()
@@ -122,7 +127,6 @@ namespace api.Controllers
             if (data.user_id.Length < 20)
             {
                 //user is a guest
-                Debug.WriteLine("Guest is authorized to watch movie : " + movie.name);
                 await History.Create("user", new History_User()
                 {
                     user_action = "Guest | Auth to watch Movie -> " + movie.Movie_Info.title,

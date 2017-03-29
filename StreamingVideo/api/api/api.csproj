@@ -323,7 +323,6 @@
     <Compile Include="Resources\Not done or empty\DataProcessing.cs" />
     <Compile Include="Resources\Enum\MovieEnum.cs" />
     <Compile Include="Resources\Database\History.cs" />
-    <Compile Include="Resources\Not done or empty\Library1.cs" />
     <Compile Include="Resources\Database\MoviesAPI.cs" />
     <Compile Include="Resources\Database\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

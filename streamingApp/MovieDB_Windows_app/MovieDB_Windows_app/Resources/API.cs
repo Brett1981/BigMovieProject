@@ -10,11 +10,14 @@ using System.Net.Http;
 using MovieDB_Windows_app.Resources;
 using System.Drawing;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace MovieDB_Windows_app
 {
     public class API
     {
+        private static HttpClient client = new HttpClient() { Timeout = new TimeSpan(0,1,0)};
+
         private static string conAddress
         {
             get
@@ -23,19 +26,13 @@ namespace MovieDB_Windows_app
             }
         }
 
-        private static HttpClient client = new HttpClient();
+        
 
-        public class Get
-        {
-
-        }
-
-
-        public async Task<APIObjects.Data> InitalizeAppData()
+        public async Task<APIObjects.Data> InitAppData()
         {
             try
             {
-                return await Communication.InitApp(GlobalVar.GlobalAuthUser);
+                return await Communication.Get.InitApp(GlobalVar.GlobalAuthUser);
             }
             catch (Exception e)
             {
@@ -44,144 +41,190 @@ namespace MovieDB_Windows_app
             }
         }
 
+
+        
+
         public class Communication
         {
-            private static StringContent CreateHttpContent<T>(object data )
+
+            public class Get
             {
-                return new StringContent(
-                        JsonConvert.SerializeObject(data),
-                        Encoding.UTF8,
-                        "application/json");
+                //Get API
+                public static async Task<string> AllMovies()
+                {
+                    try
+                    {
+                        return await client.GetStringAsync(conAddress + "/api/video/allmovies");
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
+                    
+                }
+
+                public static async Task<Movie.Data> MovieByGuid(string guid)
+                {
+                    try
+                    {
+                        return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + "/api/video/getmovie/" + guid));
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
+                    
+                }
+
+                /// <summary>
+                /// Login user and retrieve auth user parameters
+                /// </summary>
+                /// <param name="data">Auth.Login</param>
+                /// <returns>HttpResponseMessage</returns>
+                public static async Task<HttpResponseMessage> Login(Auth.Login data)
+                {
+                    try
+                    {
+                        return await Administration.Auth(Create.HttpContent<Auth.Login>(data));
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
+                    
+                }
+
+                /// <summary>
+                /// Refresh movies and retrieve new list
+                /// </summary>
+                /// <param name="data">Auth.User</param>
+                /// <returns>List<Movie.Data></returns>
+                public static async Task<List<Movie.Data>> RefreshData(Auth.User data)
+                {
+                    var response = await Administration.Refresh(
+                           Create.HttpContent<Auth.User>(data)
+                       );
+                    List<Movie.Data> m = new List<Movie.Data>();
+                    try
+                    {
+                        m = JsonConvert.DeserializeObject<List<Movie.Data>>(await response.Content.ReadAsStringAsync());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    return m;
+                }
+
+                /// <summary>
+                /// Initialize the app and retrieve all data from API
+                /// </summary>
+                /// <param name="data">Auth.User</param>
+                /// <returns>APIObjects.Data</returns>
+                public static async Task<APIObjects.Data> InitApp(Auth.User data)
+                {
+                    var response = await Administration.Init(Create.HttpContent<Auth.User>(data));
+                    APIObjects.Data init = new APIObjects.Data();
+                    try
+                    {
+                        init = JsonConvert.DeserializeObject<APIObjects.Data>(await response.Content.ReadAsStringAsync());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "An error occured",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    }
+                    return init;
+                }
+
             }
 
-            //Get API
-            public static async Task<string> GetAllMovies()
+            public class Administration
             {
-                return await client.GetStringAsync(conAddress + "/api/video/allmovies");
-            }
+                /// <summary>
+                /// Administration API
+                /// </summary>
+                /// <param name="content"></param>
+                /// <returns></returns>
+                internal static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/administration/changemoviestatus", content);
+                }
 
-            public static async Task<Movie.Data> GetMovie(string guid)
-            {
-                return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + "/api/video/getmovie/" + guid));
-            }
+                internal static async Task<HttpResponseMessage> Auth(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/administration/auth", content);
+                }
 
+                internal static async Task<HttpResponseMessage> Refresh(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/administration/refresh", content);
+                }
+
+                internal static async Task<HttpResponseMessage> Init(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/administration/init", content);
+                }
+
+                internal static async Task<HttpResponseMessage> EditMovie(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/administration/editmovie", content);
+                }
+            }
             
+            public class Create
+            {
+                public static StringContent HttpContent<T>(object data)
+                {
+                    return new StringContent(
+                            JsonConvert.SerializeObject(data),
+                            Encoding.UTF8,
+                            "application/json");
+                }
+            }
             
-            /// <summary>
-            /// Administration API
-            /// </summary>
-            /// <param name="content"></param>
-            /// <returns></returns>
-            private static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content )
+            public class Set
             {
-                return await client.PostAsync($"{conAddress}/api/administration/changemoviestatus", content);
-            }
-
-            private static async Task<HttpResponseMessage> Auth(StringContent content)
-            {
-                return await client.PostAsync($"{conAddress}/api/administration/auth", content);
-            }
-
-            private static async Task<HttpResponseMessage> Refresh(StringContent content)
-            {
-                return await client.PostAsync($"{conAddress}/api/administration/refresh", content);
-            }
-
-            private static async Task<HttpResponseMessage> Init(StringContent content)
-            {
-                return await client.PostAsync($"{conAddress}/api/administration/init", content);
-            }
-
-            private static async Task<HttpResponseMessage> EditMovie(StringContent content)
-            {
-                return await client.PostAsync($"{conAddress}/api/administration/editmovie", content);
-            }
-
-            /// <summary>
-            /// Enable or disable movie
-            /// </summary>
-            /// <param name="movie">Movie.Data</param>
-            /// <param name="user">User.Info</param>
-            /// <returns>HttpResponseMessage</returns>
-            public static async Task<HttpResponseMessage> ChangeMovieStatus(Movie.Data movie,User.Info user = null)
-            {
-                if(user == null)
+                /// <summary>
+                /// Enable or disable movie
+                /// </summary>
+                /// <param name="movie">Movie.Data</param>
+                /// <param name="user">User.Info</param>
+                /// <returns>HttpResponseMessage</returns>
+                public static async Task<HttpResponseMessage> MovieStatus(Movie.Data movie, User.Info user = null)
                 {
-                    user = GlobalVar.GlobalCurrentUserInfo;
+                    if (user == null)
+                    {
+                        user = GlobalVar.GlobalCurrentUserInfo;
+                    }
+                    return await Administration.ChangeMovieStatus(
+                        Create.HttpContent<AuthMovieEdit>(
+                            new AuthMovieEdit()
+                            {
+                                user = user,
+                                movie = movie
+                            }
+                        ));
                 }
-                return await ChangeMovieStatus(
-                    CreateHttpContent<AuthMovieEdit>(
-                        new AuthMovieEdit()
-                        {
-                            user = user,
-                            movie = movie
-                        }
-                    ));
             }
 
-            /// <summary>
-            /// Login user and retrieve auth user parameters
-            /// </summary>
-            /// <param name="data">Auth.Login</param>
-            /// <returns>HttpResponseMessage</returns>
-            public static async Task<HttpResponseMessage> Login(Auth.Login data)
+            public class Edit
             {
-                return await Auth(CreateHttpContent<Auth.Login>(data));
-            }
-
-            /// <summary>
-            /// Refresh movies and retrieve new list
-            /// </summary>
-            /// <param name="data">Auth.User</param>
-            /// <returns>List<Movie.Data></returns>
-            public static async Task<List<Movie.Data>> RefreshData(Auth.User data)
-            {
-                 var response = await Refresh(
-                        CreateHttpContent<Auth.User>(data)
-                    );
-                List<Movie.Data> m = new List<Movie.Data>();
-                try
+                /// <summary>
+                /// Edited movie data send to API 
+                /// </summary>
+                /// <param name="user">Auth.User</param>
+                /// <param name="data">Movie.Data</param>
+                /// <returns>HttpResponseMessage</returns>
+                public static async Task<HttpResponseMessage> Movie(Auth.User user, Movie.Data data)
                 {
-                    m = JsonConvert.DeserializeObject<List<Movie.Data>>(await response.Content.ReadAsStringAsync());
+                    return await Administration.EditMovie(Create.HttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
                 }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-                return m;
-            }
 
-            /// <summary>
-            /// Initialize the app and retrieve all data from API
-            /// </summary>
-            /// <param name="data">Auth.User</param>
-            /// <returns>APIObjects.Data</returns>
-            public static async Task<APIObjects.Data> InitApp(Auth.User data)
-            {
-                var response = await Init(CreateHttpContent<Auth.User>(data));
-                APIObjects.Data init = new APIObjects.Data();
-                try
-                {
-                    init = JsonConvert.DeserializeObject<APIObjects.Data>(await response.Content.ReadAsStringAsync());
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-                return init;
             }
-
-            /// <summary>
-            /// Edited movie data send to API 
-            /// </summary>
-            /// <param name="user">Auth.User</param>
-            /// <param name="data">Movie.Data</param>
-            /// <returns>HttpResponseMessage</returns>
-            public static async Task<HttpResponseMessage> EditMovie(Auth.User user, Movie.Data data) 
-            {
-                return await EditMovie(CreateHttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
-            }
-
+            
             /// <summary>
             /// Custom auth class for communication with API for movie and users data
             /// </summary>

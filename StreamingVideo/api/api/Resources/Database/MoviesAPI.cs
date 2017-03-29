@@ -32,7 +32,16 @@ namespace api.Resources
                     Uri searchMovieAPI;
                     var apikey = ConfigurationManager.AppSettings["APIkey"];
 
-                    if (apikey == null) { throw new Exception("API key was null or not defined! Check your Web.config to include value with key!"); }
+                    if (apikey == null)
+                    {
+                        await History.Create("api", new History_API()
+                        {
+                            api_action = "API key was null or not defined! Check your Web.config to include value with key!",
+                            api_type = "Exception -> MoviesAPI.Get.MovieInfo() -> No API Key",
+                            api_datetime = DateTime.Now
+                        });
+                        throw new Exception("API key was null or not defined! Check your Web.config to include value with key!");
+                    }
 
                     if (apikey != null && apikey.Length != 0)
                     {
@@ -89,13 +98,24 @@ namespace api.Resources
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("Exception at getMovieInfo --> " + ex.Message);
+                                await History.Create("api", new History_API()
+                                {
+                                    api_action = "Exception caught - first | Message " + ex.Message ,
+                                    api_type = "Exception -> MoviesAPI.Get.MovieInfo()",
+                                    api_datetime = DateTime.Now
+                                });
                                 return new Movie_Info();
                             }
                         }
                         catch (Exception e)
                         {
-                            Debug.WriteLine(e.ToString() + " | " + e.Message);
+                            await History.Create("api", new History_API()
+                            {
+                                api_action = "Exception caught - second | Message " + e.Message,
+                                api_type = "Exception -> MoviesAPI.Get.MovieInfo()",
+                                api_datetime = DateTime.Now
+                            });
+                            
                         }
                     }
                     else
@@ -107,7 +127,12 @@ namespace api.Resources
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    await History.Create("api", new History_API()
+                    {
+                        api_action = "Exception caught - third | Message " + e.Message,
+                        api_type = "Exception -> MoviesAPI.Get.MovieInfo()",
+                        api_datetime = DateTime.Now
+                    });
                     return new Movie_Info();
                 }
             }
