@@ -617,7 +617,7 @@ namespace api.Resources
                                 };
                                 t2.Start();
                             }
-                            else if (!projectDebug && checkDbCount > 0) //&& DateTime.Now > time.AddMinutes(10)
+                            else if (!projectDebug && checkDbCount > 0 && DateTime.Now > time.AddMinutes(10))
                             {
                                 await DirectoriesForNewMovies();
                                 await Insert.MoviesToDatabase();
@@ -638,11 +638,11 @@ namespace api.Resources
                             }
                             await History.Create("api", new History_API()
                             {
-                                api_action = "Done checking / creating , waiting 1 minute/s. | DatabaseThread()",
+                                api_action = "Completed Task -> check/create/remove movies. | DatabaseThread()",
                                 api_type = "Task -> status " ,
                                 api_datetime = DateTime.Now
                             });
-                            await Task.Delay(new TimeSpan(0, 1, 0));
+                            await Task.Delay(new TimeSpan(0, 10, 0));
                             checkDbCount++;
                         }
                     }

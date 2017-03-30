@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using MovieDB_Windows_app.Resources;
+using static MovieDB_Windows_app.API;
 
 namespace MovieDB_Windows_app.Views
 {

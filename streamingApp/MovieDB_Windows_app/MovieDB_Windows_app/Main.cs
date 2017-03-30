@@ -18,7 +18,7 @@ namespace MovieDB_Windows_app
     {
         public static Movie.Data movie_click_data { get; set; }
         public bool isPersistantStoragePrimary = false;
-        API api = new API();
+        public API api = new API();
 
         public Main(User.Info u = null)
         {
