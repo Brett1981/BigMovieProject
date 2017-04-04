@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Web;
 
@@ -36,6 +37,25 @@ namespace api.Resources.Functions
                 return Convert.ToBase64String(
                     Encoding.ASCII.GetBytes(b64)
                     );
+            }
+        }
+
+        public class PropertyCheck
+        {
+            public static bool IsAnyNullOrEmpty(object myObject)
+            {
+                foreach (PropertyInfo pi in myObject.GetType().GetProperties())
+                {
+                    if (pi.PropertyType == typeof(string))
+                    {
+                        string value = (string)pi.GetValue(myObject);
+                        if (string.IsNullOrEmpty(value))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         }
         

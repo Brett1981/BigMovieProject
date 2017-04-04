@@ -147,7 +147,7 @@ namespace MovieDB_Windows_app
                 /// Administration API
                 /// </summary>
                 /// <param name="content"></param>
-                /// <returns></returns>
+                /// <returns>HttpResponseMessage</returns>
                 internal static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content)
                 {
                     return await client.PostAsync($"{conAddress}/api/administration/changemoviestatus", content);
@@ -168,9 +168,9 @@ namespace MovieDB_Windows_app
                     return await client.PostAsync($"{conAddress}/api/administration/init", content);
                 }
 
-                internal static async Task<HttpResponseMessage> EditMovie(StringContent content)
+                internal static async Task<HttpResponseMessage> Edit(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/administration/editmovie", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/edit", content);
                 }
             }
             
@@ -220,7 +220,7 @@ namespace MovieDB_Windows_app
                 /// <returns>HttpResponseMessage</returns>
                 public static async Task<HttpResponseMessage> Movie(Auth.User user, Movie.Data data)
                 {
-                    return await Administration.EditMovie(Create.HttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
+                    return await Administration.Edit(Create.HttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
                 }
 
             }

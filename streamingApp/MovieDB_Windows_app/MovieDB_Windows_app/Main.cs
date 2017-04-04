@@ -68,7 +68,7 @@ namespace MovieDB_Windows_app
             {
                 GlobalVar.GlobalData = await api.InitAppData();
             }
-            if (list == null)
+            if (list == null && GlobalVar.GlobalData.movies != null)
                 GlobalVar.GlobalData.movies = GlobalVar.GlobalData.movies;
             else
                 GlobalVar.GlobalData.movies = list;
@@ -88,7 +88,7 @@ namespace MovieDB_Windows_app
             for (int i = 0; i < data.Count();i++)
             {
                 toolStripProgressBar1.Value++;
-                toolStripStatusLabel2.Text = "Retrieving movie data... " + i +" of "+ toolStripProgressBar1.Maximum;
+                StatusLabel.Text = "Retrieving movie data... " + i +" of "+ toolStripProgressBar1.Maximum;
                 
                 Button bttn = new Button() {
                     Height  = 240,
@@ -104,19 +104,16 @@ namespace MovieDB_Windows_app
                 flowLayoutPanel1.Controls.Add(bttn);
             }
             GlobalVar.GlobalMovieButtonList = new List<Button>(bttns);
-            toolStripStatusLabel2.Text = "Completed";
+            StatusLabel.Text = "Completed";
             bttns.Clear();
         }
 
         private async Task<Image> GetImage(string image)
         {
             var path = Properties.Settings.Default.ImagePath + image.Substring(1, image.Length - 1);
-            if(File.Exists(path))
-            {
-                var i = Image.FromFile(path);
-                if (i == null) return null; 
-                return i;
-            }
+
+            if(File.Exists(path)) return Image.FromFile(path) ?? null; 
+
             var x = await API.Downloader.ImageDownload("https://image.tmdb.org/t/p/w160/" + image);
             try
             {
@@ -286,6 +283,12 @@ namespace MovieDB_Windows_app
         {
             Views.Users u = new Views.Users();
             u.Show();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Views.Settings s = new Views.Settings();
+            s.Show();
         }
     }
 }

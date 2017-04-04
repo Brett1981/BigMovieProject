@@ -10,7 +10,7 @@ using System.Web;
 using System.Web.Http;
 using api.Controllers;
 using System.Resources;
-using api.Resources.Global;
+using api.Resources;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Net.Mime;
@@ -27,7 +27,7 @@ namespace api.Resources
             if (movie == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             string path = "";
-            foreach(var mDir in MovieGlobal.GlobalMovieDisksList)
+            foreach(var mDir in Global.Global.GlobalMovieDisksList)
             {
                 if(Directory.Exists(mDir.value + @"\"+ movie.folder)) { path = mDir.value + @"\" + movie.folder; break; }
                 if(path != "") { break;}

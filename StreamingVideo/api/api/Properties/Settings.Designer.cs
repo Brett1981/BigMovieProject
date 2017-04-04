@@ -22,16 +22,5 @@ namespace api.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[\r\n       {\r\n\t\t\"id\": 0,\r\n\t\t\"name\": \"D\",\r\n\t\t\"value\": \"D:\\\\Torrent2\\\\Movies\"\r\n\t}, \r" +
-            "\n        {\r\n\t\t\"id\": 1,\r\n\t\t\"name\": \"K\",\r\n\t\t\"value\": \"K:\\\\uTorrent\\\\Movies\"\r\n\t}\r\n]" +
-            "")]
-        public string Disks {
-            get {
-                return ((string)(this["Disks"]));
-            }
-        }
     }
 }

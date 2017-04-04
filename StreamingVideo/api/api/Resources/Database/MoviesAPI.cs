@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace api.Resources
 {
@@ -30,7 +31,7 @@ namespace api.Resources
 
                     //Building api url with parameters - apikey + item to search for
                     Uri searchMovieAPI;
-                    var apikey = ConfigurationManager.AppSettings["APIkey"];
+                    var apikey = Global.Global.GlobalServerSettings.Where(x => x.name == "APIKey").First().value;
 
                     if (apikey == null)
                     {
@@ -183,8 +184,5 @@ namespace api.Resources
                 return x += "";
             }
         }
-        
-        
-        
     }
 }

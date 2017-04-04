@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="MDBSQLModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="API_Settings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="History_API">
           <Key>
             <PropertyRef Name="Id" />
@@ -137,6 +147,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MDBSQLModelStoreContainer">
+          <EntitySet Name="API_Settings" EntityType="Self.API_Settings" Schema="dbo" Table="API.Settings" store:Type="Tables" />
           <EntitySet Name="History_API" EntityType="Self.History_API" Schema="dbo" Table="History.API" store:Type="Tables" />
           <EntitySet Name="History_User" EntityType="Self.History_User" Schema="dbo" Table="History.User" store:Type="Tables" />
           <EntitySet Name="Movie_Data" EntityType="Self.Movie_Data" Schema="dbo" Table="Movie.Data" store:Type="Tables" />
@@ -299,6 +310,7 @@
             <End Role="User_Info" EntitySet="User_Info" />
           </AssociationSet>
           <EntitySet Name="Session_Guest" EntityType="MDBSQLModel.Session_Guest" />
+          <EntitySet Name="API_Settings" EntityType="MDBSQLModel.API_Settings" />
         </EntityContainer>
         <EntityType Name="Session_Guest">
           <Key>
@@ -308,6 +320,16 @@
           <Property Name="movie_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="session_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="session_date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="API_Settings">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -426,6 +448,17 @@
                 <ScalarProperty Name="session_date" ColumnName="session_date" />
                 <ScalarProperty Name="session_id" ColumnName="session_id" />
                 <ScalarProperty Name="movie_id" ColumnName="movie_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="API_Settings">
+            <EntityTypeMapping TypeName="MDBSQLModel.API_Settings">
+              <MappingFragment StoreEntitySet="API_Settings">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

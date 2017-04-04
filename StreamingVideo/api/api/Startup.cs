@@ -24,10 +24,12 @@ namespace api
                 api_type = "Task -> API status",
                 api_datetime = DateTime.Now
             });
-            var disks = JsonConvert.DeserializeObject<List<CustomClasses.API.Disks>>(api.Properties.Settings.Default.Disks);
-            if(disks != null)
+            var disks = await Settings.Get.ToObject(Settings.Type.Disks);
+            var settings = await Settings.Get.ToObject(Settings.Type.Settings);
+            if(disks != null && settings != null)
             {
-                MovieGlobal.GlobalMovieDisksList = disks;
+                Global.GlobalMovieDisksList = disks;
+                Global.GlobalServerSettings = settings;
                 await DatabaseMovieCheck();
                 await History.Create("api", new History_API()
                 {
@@ -38,12 +40,24 @@ namespace api
             }
             else
             {
-                await History.Create("api", new History_API()
+                string[] txtError = new string[2];
+                
+                if(settings.Where(x => x.name == "APIKey").First().value == null || settings.Where(x => x.name == "APIKey").First().value == "")
+                    txtError[0] += "no API key specified ";
+
+                if (disks.Count == 0 ||disks == null)
+                    txtError[1] = " no movie folder specified";
+
+                if (txtError != null )
                 {
-                    api_action = "API -> no movie folder specified",
-                    api_type = "Task -> API error",
-                    api_datetime = DateTime.Now
-                });
+                    await History.Create("api", new History_API()
+                    {
+                        api_action = "API-> " + String.Join(" | ",txtError) + " !",
+                        api_type = "Task -> API error",
+                        api_datetime = DateTime.Now
+                    });
+                }
+                
             }
         }
 

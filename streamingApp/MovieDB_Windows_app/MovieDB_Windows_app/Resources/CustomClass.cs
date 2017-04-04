@@ -84,8 +84,9 @@ namespace MovieDB_Windows_app.Resources
         public class Data
         {
             public Users users { get; set; }
-            public List<Disks> disks { get; set; }
+            public List<Settings> disks { get; set; }
             public List<Movie.Data> movies { get; set; }
+            public List<Settings> settings { get; set; }
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace MovieDB_Windows_app.Resources
         /// <summary>
         /// Disks init object
         /// </summary>
-        public class Disks
+        public class Settings
         {
             public int id { get; set; }
             public string name { get; set; }
@@ -112,6 +113,7 @@ namespace MovieDB_Windows_app.Resources
         /// </summary>
         public class Edit
         {
+            public Data api { get; set; }
             public Movie.Data movie { get; set; }
             public User.Info user { get; set; }
             public User.Groups groups { get; set; }

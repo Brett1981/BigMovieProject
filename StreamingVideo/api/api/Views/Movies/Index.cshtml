@@ -1,4 +1,4 @@
-﻿@model IEnumerable<api.MovieData>
+﻿@model IEnumerable<api.Movie_Data>
 @{ 
     ViewBag.Title = "MovieIndexPage";
 }
@@ -8,22 +8,22 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.MovieInfo.backdrop_path)
+            @Html.DisplayNameFor(model => model.Movie_Info.backdrop_path)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.movie_name)
+            @Html.DisplayNameFor(model => model.name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.movie_ext)
+            @Html.DisplayNameFor(model => model.ext)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.movie_guid)
+            @Html.DisplayNameFor(model => model.guid)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.movie_folder)
+            @Html.DisplayNameFor(model => model.folder)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.movie_views)
+            @Html.DisplayNameFor(model => model.views)
         </th>
         <th></th>
     </tr>
@@ -31,29 +31,29 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.MovieInfo.poster_path)" alt="poster" width="120" />
+            <img src="https://image.tmdb.org/t/p/w300/@Html.DisplayFor(modelItem=>item.Movie_Info.poster_path)" alt="poster" width="120" />
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.movie_name)
+            @Html.DisplayFor(modelItem => item.name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.movie_ext)
+            @Html.DisplayFor(modelItem => item.ext)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.movie_guid)
+            @Html.DisplayFor(modelItem => item.guid)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.movie_folder)
+            @Html.DisplayFor(modelItem => item.folder)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.movie_views)
+            @Html.DisplayFor(modelItem => item.views)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { guid = item.movie_guid })
+            @Html.ActionLink("Edit", "Edit", new { guid = item.guid })
             <br />
-            @Html.ActionLink("Details", "Details", new { guid = item.movie_guid })
+            @Html.ActionLink("Details", "Details", new { guid = item.guid })
             <br />
-            @Html.ActionLink("Delete", "Delete", new { guid = item.movie_guid })
+            @Html.ActionLink("Delete", "Delete", new { guid = item.guid })
         </td>
     </tr>
 }

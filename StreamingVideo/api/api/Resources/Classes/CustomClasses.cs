@@ -48,8 +48,9 @@ namespace api.Resources
             public class Data
             {
                 public Users users { get; set; }
-                public List<Disks> disks { get; set; }
+                public List<Settings> disks { get; set; }
                 public List<Movie_Data> movies { get; set; }
+                public List<Settings> settings { get; set; }
             }
 
             /// <summary>
@@ -65,7 +66,7 @@ namespace api.Resources
             /// <summary>
             /// Disks init object
             /// </summary>
-            public class Disks
+            public class Settings
             {
                 public int id { get; set; }
                 public string name { get; set; }
@@ -73,13 +74,14 @@ namespace api.Resources
             }
 
             /// <summary>
-            /// Movie/user edit object
+            /// Movie/user/api edit object
             /// </summary>
             public class Edit
             {
                 public Movie_Data movie { get; set; }
                 public User_Info user { get; set; }
                 public User_Groups groups { get; set; }
+                public Data api { get; set; }
                 public Auth.Auth.User auth { get; set; }
             }
         }

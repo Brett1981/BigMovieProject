@@ -222,6 +222,25 @@ namespace api.Resources
                     return null;
                 }
 
+                public static async Task<bool> Movie(Movie_Data movie)
+                {
+                    if (movie.guid.Length > 0)
+                    {
+                        var m = await Get.ByGuidAndChangeCounter(movie.guid, false);
+                        if (m != null && m != movie)
+                        {
+                            db.Movie_Data.Remove(m);
+                            if (!Functions.Functions.PropertyCheck.IsAnyNullOrEmpty(movie))
+                            {
+                                db.Movie_Data.Add(movie);
+                                await db.SaveChangesAsync();
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+                    return false;
+                }
             }
 
             public static class Get
@@ -672,7 +691,8 @@ namespace api.Resources
                             api_datetime = DateTime.Now
                         });
                         movieListToAdd = new List<Tuple<Movie_Data, Match>>();
-                        foreach (var childDirs in MovieGlobal.GlobalMovieDisksList)
+
+                        foreach (var childDirs in Global.Global.GlobalMovieDisksList)
                         {
                             var dirs = Directory.GetDirectories(childDirs.value);
                             //var dbCount = db.MovieDatas.Count();
@@ -880,7 +900,10 @@ namespace api.Resources
                 /// <returns></returns>
                 public static async Task<byte[]> ProfileImage(string path)
                 {
-                    var imgdir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"images\users\", path);
+                    var imgdir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
+                                 Global.Global.GlobalServerSettings.Where(x => x.name == "ServerProfileImageDir").First().value.Replace('/', '\\'), 
+                                 path.Replace('/', '\\'));
+                    //var imgdir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"images\users\", path);
                     if (File.Exists(imgdir))
                     {
                         try
@@ -1082,6 +1105,41 @@ namespace api.Resources
                         }
                     }
                     return "NotAuthorized";
+                }
+
+                /// <summary>
+                /// Edit user data in database and save it
+                /// </summary>
+                /// <param name="user">User_Info</param>
+                /// <returns>bool</returns>
+                public static async Task<bool> Data(User_Info user)
+                {
+                    var u = await Get.ByGuid(user.unique_id);
+                    if(u != null && u.username == user.username)
+                    {
+                        if(user.User_Groups != null)
+                        {
+                            try
+                            {
+                                db.User_Info.Remove(u);
+                                db.User_Info.Add(user);
+                                await db.SaveChangesAsync();
+                                return true;
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                await History.Create("api", new History_API()
+                                {
+                                    api_action = "Exception caught on User.Edit.Data -> " + ex.Message,
+                                    api_type = "Exception -> User.Edit.Data",
+                                    api_datetime = DateTime.Now
+                                });
+                                return false;
+                            }
+                        }
+                        
+                    }
+                    return false;
                 }
             }
         }

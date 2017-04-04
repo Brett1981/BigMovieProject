@@ -14,7 +14,7 @@ using System.Data.Entity;
 using api.Resources.Auth;
 using api.Resources.Functions;
 using api.Resources.Global;
-
+using api.Properties;
 
 namespace api.Controllers
 {
@@ -138,8 +138,9 @@ namespace api.Controllers
                         return Ok(new CustomClasses.API.Data()
                         {
                             users = await Resources.Database.User.Get.AllUsersData(),
-                            disks = MovieGlobal.GlobalMovieDisksList != null ? MovieGlobal.GlobalMovieDisksList : null,
-                            movies = Resources.Database.AllMovies != null ? Resources.Database.AllMovies : new List<Movie_Data>()
+                            disks = Global.GlobalMovieDisksList ?? null,
+                            movies = Resources.Database.AllMovies ?? new List<Movie_Data>(),
+                            settings = Global.GlobalServerSettings ?? null
                         });
                     }
                     return Unauthorized();
@@ -150,8 +151,8 @@ namespace api.Controllers
             return BadRequest();
         }
 
-        [HttpPost, ActionName("EditMovie")]
-        public async Task<IHttpActionResult> EditMovie(CustomClasses.API.Edit data)
+        [HttpPost, ActionName("Edit")]
+        public async Task<IHttpActionResult> Edit(CustomClasses.API.Edit data)
         {
             if(data != null)
             {
@@ -164,26 +165,38 @@ namespace api.Controllers
                         && data.auth.username == u.username
                         )
                     {
-                        if(data.movie.guid.Length > 0)
+                        List<object> tasks = new List<object>();
+                        if(data.api.disks != null || data.api.settings != null)
                         {
-                            var m = await Resources.Database.Movie.Get.ByGuidAndChangeCounter(data.movie.guid,false);
-                            if(m != null)
-                            {
-                                var mdb = await db.Movie_Data.Where(x => x.guid == m.guid).FirstOrDefaultAsync();
-                                if(mdb != null && mdb != data.movie)
-                                {
-                                    mdb.Movie_Info = data.movie.Movie_Info;
-                                    await db.SaveChangesAsync();
-                                    var mdbEdited = await db.Movie_Data.Where(x => x.guid == m.guid).FirstOrDefaultAsync();
-                                    if(mdbEdited == data.movie)
-                                    {
-                                        return Ok("Movie Edited");
-                                    }
-                                    return Ok("Movie not edited");
-                                }
+                            //Edit settings
+                            if(await Resources.Settings.Edit.All(data.api)){
+                                Global.GlobalMovieDisksList = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Disks);
+                                Global.GlobalServerSettings = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Settings);
+                                tasks.Add(data.api);
                             }
                         }
-                        return BadRequest("Movie id is not set");
+                        if(data.movie != null)
+                        {
+                            //edit movie
+                            if(await Resources.Database.Movie.Edit.Movie(data.movie)){
+                                tasks.Add(data.movie);
+                            }
+                        }
+                        if(data.user != null)
+                        {
+                            //edit user data
+                            if(await Resources.Database.User.Edit.Data(data.user)){
+                                tasks.Add(data.user);
+                            }
+                        }
+
+
+                        if(tasks.Count > 0)
+                        {
+                            return Ok(tasks);
+                        }
+                        return BadRequest();
+
                     }
                 }
                 return Unauthorized();

@@ -47,7 +47,10 @@ class Navigation{
             }
             else{
                 $this->user['profile_image'] = Server::getUserProfilePicture($data['userGuid']);
-                $_SESSION['user']['profileImage'] = $this->user->userImage;
+                if(isset($this->user['profile_image']) && !empty($this->user['profile_image'])){
+                    $_SESSION['user']['profileImage'] = $this->user['profile_image'];
+                }
+                
             }
             return $this->user;
         }

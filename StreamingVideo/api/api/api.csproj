@@ -19,9 +19,9 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44306</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -228,6 +228,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API_Settings.cs">
+      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -317,9 +320,10 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Resources\Auth\Auth.cs" />
     <Compile Include="Resources\Classes\CustomClasses.cs" />
+    <Compile Include="Resources\Database\Settings.cs" />
     <Compile Include="Resources\Database\Database.cs" />
     <Compile Include="Resources\Functions\Functions.cs" />
-    <Compile Include="Resources\Global\MovieGlobal.cs" />
+    <Compile Include="Resources\Global\Global.cs" />
     <Compile Include="Resources\Not done or empty\DataProcessing.cs" />
     <Compile Include="Resources\Enum\MovieEnum.cs" />
     <Compile Include="Resources\Database\History.cs" />
@@ -332,6 +336,7 @@
     <Compile Include="Session_Play.cs">
       <DependentUpon>MDBSQLEntities.tt</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="User_Groups.cs">
       <DependentUpon>MDBSQLEntities.tt</DependentUpon>
@@ -448,7 +453,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

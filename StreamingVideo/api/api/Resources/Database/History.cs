@@ -17,6 +17,7 @@ namespace api.Resources
             {
                 try
                 {
+                    if (api.api_datetime == null) api.api_datetime = DateTime.Now;
                     //create a text log of api history
                     Debug.WriteLine("Api -> | Action - " + api.api_action + " | Type - " + api.api_type);
 
@@ -34,6 +35,7 @@ namespace api.Resources
             {
                 try
                 {
+                    if (user.user_datetime == null) user.user_datetime = DateTime.Now;
                     //create a text log of user history
                     var debugLog = "User -> | Action - " + user.user_action + " | Id - " + user.user_id + " | ";
                     if (user.user_movie != null || user.user_movie != "") debugLog += "Movie - " + user.user_movie;
