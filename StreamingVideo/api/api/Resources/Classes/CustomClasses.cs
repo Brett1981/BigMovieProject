@@ -51,6 +51,7 @@ namespace api.Resources
                 public List<Settings> disks { get; set; }
                 public List<Movie_Data> movies { get; set; }
                 public List<Settings> settings { get; set; }
+                public List<History_API> apiHistory { get; set; }
             }
 
             /// <summary>

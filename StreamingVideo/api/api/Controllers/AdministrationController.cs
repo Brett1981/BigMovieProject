@@ -140,7 +140,8 @@ namespace api.Controllers
                             users = await Resources.Database.User.Get.AllUsersData(),
                             disks = Global.GlobalMovieDisksList ?? null,
                             movies = Resources.Database.AllMovies ?? new List<Movie_Data>(),
-                            settings = Global.GlobalServerSettings ?? null
+                            settings = Global.GlobalServerSettings ?? null,
+                            apiHistory = await History.Get.API()
                         });
                     }
                     return Unauthorized();

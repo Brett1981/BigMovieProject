@@ -165,6 +165,7 @@ namespace MovieDB_Windows_app
 
                 internal static async Task<HttpResponseMessage> Init(StringContent content)
                 {
+                    Debug.WriteLine("Timeout is set to " + client.Timeout);
                     return await client.PostAsync($"{conAddress}/api/administration/init", content);
                 }
 

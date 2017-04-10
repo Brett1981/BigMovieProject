@@ -19,7 +19,7 @@ namespace api.Controllers
             if(value.ToLower() == "api"){
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new ObjectContent<List<History_API>>(await History.Get.API(value),
+                    Content = new ObjectContent<List<History_API>>(await History.Get.API(),
                     new System.Net.Http.Formatting.XmlMediaTypeFormatter
                     {
                         UseXmlSerializer = true
@@ -29,7 +29,7 @@ namespace api.Controllers
             else if(value.ToLower() == "user") {
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new ObjectContent<List<History_User>>(await History.Get.Users(value),
+                    Content = new ObjectContent<List<History_User>>(await History.Get.Users(),
                     new System.Net.Http.Formatting.XmlMediaTypeFormatter
                     {
                         UseXmlSerializer = true

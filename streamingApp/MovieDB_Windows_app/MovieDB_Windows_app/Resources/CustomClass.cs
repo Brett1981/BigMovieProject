@@ -76,6 +76,7 @@ namespace MovieDB_Windows_app.Resources
             public bool status { get; set; }
         }
     }
+
     public class APIObjects
     {
         /// <summary>
@@ -87,6 +88,7 @@ namespace MovieDB_Windows_app.Resources
             public List<Settings> disks { get; set; }
             public List<Movie.Data> movies { get; set; }
             public List<Settings> settings { get; set; }
+            public List<History.API> apiHistory { get; set; }
         }
 
         /// <summary>
@@ -120,9 +122,31 @@ namespace MovieDB_Windows_app.Resources
             public Auth.User auth { get; set; }
         }
     }
+
     public class values
     {
         public int id { get; set; }
         public string name { get; set; }
+    }
+
+    public class History
+    {
+        public class API
+        {
+            public int Id { get; set; }
+            public Nullable<System.DateTime> api_datetime { get; set; }
+            public string api_action { get; set; }
+            public string api_type { get; set; }
+        }
+
+        public class User
+        {
+            public int Id { get; set; }
+            public string user_id { get; set; }
+            public string user_action { get; set; }
+            public string user_type { get; set; }
+            public string user_movie { get; set; }
+            public Nullable<System.DateTime> user_datetime { get; set; }
+        }
     }
 }

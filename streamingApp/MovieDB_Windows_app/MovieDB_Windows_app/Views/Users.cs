@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MovieDB_Windows_app.Resources;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace MovieDB_Windows_app.Views
 {
@@ -16,6 +17,10 @@ namespace MovieDB_Windows_app.Views
     {
         private APIObjects.Users UsersData = new APIObjects.Users();
         private string[] ignoreUserItem = new string[] { "User_Group", "groupId" };
+        private List<DataGridViewRow> UserDataGridRows = new List<DataGridViewRow>();
+
+        private Dictionary<string, User.Groups> groupDict;
+
         public Users()
         {
             InitializeComponent();
@@ -37,105 +42,118 @@ namespace MovieDB_Windows_app.Views
                                 dataGridView1.Columns.Add(p.Name, p.Name);
                             }
                             else {
+                                
                                 if(p.Name == ignoreUserItem[0])
                                 {
-                                    DataGridViewComboBoxColumn select = new DataGridViewComboBoxColumn()
+                                    
+                                    DataGridViewComboBoxColumn group = new DataGridViewComboBoxColumn()
                                     {
                                         HeaderText = "Select Group",
                                         Name = "Access"
                                     };
+
+                                    groupDict = new Dictionary<string, User.Groups>();
+                                    
                                     foreach (var g in UsersData.groups)
                                     {
-                                        select.Items.Add(g.type);
+                                        groupDict.Add(g.type, g);
                                     }
-                                    dataGridView1.Columns.Add(select);
+                                    group.DataSource = new BindingSource(groupDict,null);
+                                    group.ValueMember = "Value";
+                                    group.DisplayMember = "Key";
+                                    dataGridView1.Columns.Add(group);
                                 }
                             }
-                            DataGridViewButtonColumn bttn = new DataGridViewButtonColumn()
-                            {
-                                HeaderText = "Save",
-                                Name = "Save",
-                            };
-                            dataGridView1.Columns.Add(bttn);
-                            dataGridView1.CellClick += DataGridView1_CellClick;
-                            SetUserToView(item);
+                            
+                            
                         }
-                        
+                        DataGridViewButtonColumn bttn = new DataGridViewButtonColumn()
+                        {
+                            HeaderText = "Save",
+                            Name = "Save",
+                            Text = "Update"
+                        };
+                        dataGridView1.Columns.Add(bttn);
+                        dataGridView1.CellClick += DataGridView1_CellClick;
                     }
-                    else
-                    {
-                        SetUserToView(item);
-                    }
+                    SetDataGridUserRow(item);
                 }
+            }
+            this.Width = dataGridView1.Width+300;
+        }
+
+        private void SetDataGridUserRow(User.Info user)
+        {
+            int currentRow = dataGridView1.Rows.Count;
+            if(user != null)
+            {
+                dataGridView1.Rows.Add(
+                    user.Id.ToString(),
+                    user.unique_id,
+                    user.username,
+                    user.password,
+                    user.profile_image.ToString(),
+                    user.display_name.ToString(),
+                    user.profile_created.ToString(),
+                    user.last_logon.ToString(),
+                    user.birthday.ToString(),
+                    user.email.ToString()
+                );
+                dataGridView1.Rows[currentRow]
+                    .Cells["Access"]
+                    .Value = FindUserGroup(
+                        user, 
+                        currentRow
+                        );
             }
         }
 
-        private  void SetUserToView(User.Info user)
+        private User.Groups FindUserGroup(User.Info user,int row)
         {
-            if(user != null)
+            if(row >= 0)
             {
-                dataGridView1.Rows.Add(user);
-                /*DataGridViewRow row = new DataGridViewRow();
-                //row.Cells["Id"].Value               = user.Id.ToString();
-                row.Cells["unique_Id"].Value        = user.unique_id;
-                row.Cells["username"].Value         = user.username;
-                row.Cells["password"].Value         = user.password;
-                row.Cells["profile_image"].Value    = user.profile_image.ToString();
-                row.Cells["display_name"].Value     = user.display_name.ToString();
-                row.Cells["profile_create"].Value   = user.profile_created.ToString();
-                row.Cells["last_logon"].Value       = user.last_logon.ToString();
-                row.Cells["birthday"].Value         = user.birthday.ToString();
-                row.Cells["email"].Value            = user.Id.ToString();
-                row.Cells["Id"].Value               = user.Id.ToString();
-                dataGridView1.Rows.Add(row);*/
+                var x = (((DataGridViewComboBoxCell)dataGridView1.Rows[row].Cells["Access"])
+                   .Items
+                   .Cast<KeyValuePair<string, User.Groups>>()
+                   .ToList());
+
+                return x.Where(y => y.Value.Id == user.groupId)
+                    .FirstOrDefault()
+                    .Value;
             }
+            return null;
+            
         }
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            throw new NotImplementedException();
+            var column = dataGridView1.Columns[e.ColumnIndex].HeaderText;
+            var item = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+            switch (column.ToLower())
+            {
+                case "display_name": ResetStatusLabel();
+                    //implementacija za spreminjanje display nama
+                    break;
+                case "password": ResetStatusLabel();
+                    //implementacija za spremembo gesla
+                    break;
+                case "select group":
+                    //implementacija spremembe groupe uporabniku
+                    ;
+                    break;
+                default: dataGridStatusLabel.Text = "Caution: ";
+                    dataGridDescriptionLabel.Text = "The selected item cannot be edited for security reasons!";
+                        ;break;
+            }
+            Debug.WriteLine("Not implemented cellclick");
         }
+
+        private void ResetStatusLabel()
+        {
+            dataGridDescriptionLabel.Text = "";
+            dataGridStatusLabel.Text = "";
+        }
+
     }
 }
-
-
-/*
- DataGridViewColumn[] dataGridObjects = new DataGridViewColumn[item.GetType().GetProperties().Count() - 2 + 2];
-                        int countItems = 0;
-                        foreach(var p in item.GetType().GetProperties())
-                        {
-                            if (!Array.Exists(ignoreUserItem, element => element.Equals(p.Name)))
-                            {
-                                dataGridObjects[countItems++] = new DataGridViewColumn()
-                                {
-                                    Name = p.Name,
-                                    HeaderText = p.Name
-                                };
-                            }
-                            else {
-                                if(p.Name == ignoreUserItem[0])
-                                {
-                                    DataGridViewComboBoxColumn cmb = new DataGridViewComboBoxColumn()
-                                    {
-                                        HeaderText = "Select Group",
-                                        Name = "Access"
-                                    };
-                                    foreach (var g in UsersData.groups)
-                                    {
-                                        cmb.Items.Add(g.type);
-                                    }
-                                    dataGridObjects[countItems++] = cmb;
-                                }
-                            }
-                        }
-
-                        dataGridObjects[countItems++] = new DataGridViewButtonColumn()
-                        {
-                            HeaderText = "Save",
-                            Name = "Save",
-                        };
-                        dataGridView1.Columns.AddRange(dataGridObjects);
-                        dataGridView1.CellClick += DataGridView1_CellClick;
-                        SetUserToView(item);
-
-    */

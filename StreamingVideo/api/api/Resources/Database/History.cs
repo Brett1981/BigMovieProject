@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,17 +53,17 @@ namespace api.Resources
         }
         public static class Get
         {
-            public static async Task<List<History_API>> API(string table, string[] par = null)
+            public static async Task<List<History_API>> API(bool last100 = true)
             {
                 try
                 {
-                    if (par == null)
+                    if (last100)
                     {
-                        return db.History_API.ToList();
+                        return await db.History_API.OrderByDescending(x => x.api_datetime).Take(100).ToListAsync();
                     }
                     else
                     {
-                        return new List<History_API>();
+                        return await db.History_API.ToListAsync();
                     }
                 }
                 catch (Exception ex)
@@ -76,17 +77,21 @@ namespace api.Resources
                 }
             }
 
-            public static async Task<List<History_User>> Users(string table, string[] par = null)
+            public static async Task<List<History_User>> Users(bool last100 = false, string userId = null)
             {
                 try
                 {
-                    if (par == null)
+                    if (last100 && userId == null)
                     {
-                        return db.History_User.ToList();
+                        return await db.History_User.OrderByDescending(x => x.user_datetime).Take(100).ToListAsync();
+                    }
+                    else if(!last100 && userId != null)
+                    {
+                        return await db.History_User.Where(x => x.user_id == userId).ToListAsync();
                     }
                     else
                     {
-                        return new List<History_User>();
+                        return await db.History_User.ToListAsync();
                     }
                 }
                 catch (Exception ex)

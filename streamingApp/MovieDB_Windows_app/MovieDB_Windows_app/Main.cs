@@ -58,8 +58,10 @@ namespace MovieDB_Windows_app
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-           await SetMovieList();
+            await SetMovieList();
+            SetAPIHistoryDataGrid();
         }
+
         public async Task SetMovieList(List<Movie.Data> list = null , bool force = false)
         {
             if(GlobalVar.GlobalData == null || (GlobalVar.GlobalData.users == null ||
@@ -67,6 +69,8 @@ namespace MovieDB_Windows_app
                 GlobalVar.GlobalData.movies == null) || force)
             {
                 GlobalVar.GlobalData = await api.InitAppData();
+                
+                
             }
             if (list == null && GlobalVar.GlobalData.movies != null)
                 GlobalVar.GlobalData.movies = GlobalVar.GlobalData.movies;
@@ -79,6 +83,12 @@ namespace MovieDB_Windows_app
                 DisplayMovieData(GlobalVar.GlobalData.movies);
             }
         }
+        public void SetAPIHistoryDataGrid()
+        {
+            if (GlobalVar.GlobalData.apiHistory != null)
+                dataGridView1.DataSource = GlobalVar.GlobalData.apiHistory;
+        }
+
         private async void DisplayMovieData(List<Movie.Data> data)
         {
             if (flowLayoutPanel1.Controls.Count > 0) flowLayoutPanel1.Controls.Clear();
@@ -107,6 +117,8 @@ namespace MovieDB_Windows_app
             StatusLabel.Text = "Completed";
             bttns.Clear();
         }
+
+        
 
         private async Task<Image> GetImage(string image)
         {
