@@ -18,7 +18,7 @@ namespace api
         public async void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            await History.Create("api", new History_API()
+            await History.Create(History.Type.API, new History_API()
             {
                 api_action = "API initializing",
                 api_type = "Task -> API status",
@@ -31,7 +31,7 @@ namespace api
                 Global.GlobalMovieDisksList = disks;
                 Global.GlobalServerSettings = settings;
                 await DatabaseMovieCheck();
-                await History.Create("api", new History_API()
+                await History.Create(History.Type.API, new History_API()
                 {
                     api_action = "API started",
                     api_type = "Task -> API status",
@@ -50,7 +50,7 @@ namespace api
 
                 if (txtError != null )
                 {
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "API-> " + String.Join(" | ",txtError) + " !",
                         api_type = "Task -> API error",
@@ -75,7 +75,7 @@ namespace api
             }
             catch(Exception ex)
             {
-                await History.Create("api", new History_API()
+                await History.Create(History.Type.API, new History_API()
                 {
                     api_action = "Exception : Startup.cs-- > "+ ex.Message,
                     api_type = "Task -> API Exception",

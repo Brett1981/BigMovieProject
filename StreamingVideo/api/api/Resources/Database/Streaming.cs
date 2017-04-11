@@ -79,7 +79,7 @@ namespace api.Resources
                 response.StatusCode = HttpStatusCode.OK;
                 response.Content = await Contains.RangeHeader();
                 response.Content.Headers.ContentLength = totalLength;
-                await History.Create("api", new History_API()
+                await History.Create(History.Type.API, new History_API()
                 {
                     api_action = "Movie " + movie.Movie_Info.title + " served successfully.",
                     api_type = "Task -> Streaming movie ",
@@ -101,7 +101,7 @@ namespace api.Resources
                 response.Content = new StreamContent(Stream.Null);  // No content for this status.
                 response.Content.Headers.ContentRange = new ContentRangeHeaderValue(totalLength);
                 response.Content.Headers.ContentType = Get.MimeNameFromExt(MovieFileInfo.Extension);
-                await History.Create("api", new History_API()
+                await History.Create(History.Type.API, new History_API()
                 {
                     api_action = "Movie " + movie.Movie_Info.title + " served successfully.",
                     api_type = "Task -> Streaming movie ",
@@ -119,7 +119,7 @@ namespace api.Resources
 
             response.Content.Headers.ContentLength = end - start + 1;
             response.Content.Headers.ContentRange = contentRange;
-            await History.Create("api", new History_API()
+            await History.Create(History.Type.API, new History_API()
             {
                 api_action = "Movie " + movie.Movie_Info.title + " served successfully.",
                 api_type = "Task -> Streaming movie ",
@@ -205,7 +205,7 @@ namespace api.Resources
                     }
                     catch (Exception ex)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception caught | Message " + ex.Message,
                             api_type = "Exception -> MediaLibrary.CreatePartialContent()",
@@ -236,7 +236,7 @@ namespace api.Resources
                     }
                     catch(Exception ex)
                     {
-                        await History.Create("api", new History_API() {
+                        await History.Create(History.Type.API, new History_API() {
                             api_action = "Exception error -> " +ex.Message,
                             api_type = "Exception on Streaming.Create.PartialContent"
                         });
@@ -269,7 +269,7 @@ namespace api.Resources
                         }
                         catch (Exception e)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Exception caught | Message " + e.Message,
                                 api_type = "Exception -> MoviesAPI.Get.MovieInfo()",

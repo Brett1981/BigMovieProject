@@ -25,7 +25,8 @@ namespace MovieDB_Windows_app.Views
             var prevButtonText = loginButton.Text;
             loginButton.Enabled = false;
             loginButton.Text = "Wait";
-            var login = await API.Communication.Get.Login(new API.Auth.Login()
+            GlobalVar.client = new API();
+            var login = await Communication.Get.Login(new API.Auth.Login()
                 {
                     username = usernameTextBox.Text,
                     password = Convert.ToBase64String(

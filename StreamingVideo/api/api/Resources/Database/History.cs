@@ -11,7 +11,12 @@ namespace api.Resources
 
     public  class History
     {
-        private static MDBSQLEntities db = new MDBSQLEntities();
+        private static MovieDatabaseEntities db = new MovieDatabaseEntities ();
+        public enum Type
+        {
+            User,
+            API
+        }
         public static class Set 
         {
             public static async Task API(History_API api)
@@ -106,15 +111,15 @@ namespace api.Resources
                 }
             }
         }
-        public static async Task<bool> Create(string table, object data)
+        public static async Task<bool> Create(Type table, object data)
         {
-            switch (table.ToLower())
+            switch (table)
             {
-                case "api": {
+                case Type.API: {
                         await Set.API((History_API)data);
                         return true;
                     };
-                case "user": {
+                case Type.User: {
                         await Set.User((History_User)data);
                         return true;
                     };
@@ -130,18 +135,18 @@ namespace api.Resources
         /// <param name="table">Specify which table to read from</param>
         /// <param name="par">Specify additional parramaters ex: datetime > 10.10.2016</param>
         /// <returns></returns>
-        public static async Task<List<T>> Return<T>(string table, string[] par = null) 
+        public static async Task<List<T>> Return<T>(Type table, string[] par = null) 
         {
             try
             {
                 if(par == null)
                 {
-                    switch (table.ToLower())
+                    switch (table)
                     {
-                        case "api": {
+                        case Type.API: {
                                 var a = db.History_API.ToList();
                                 return a as List<T>; };
-                        case "user": {
+                        case Type.User: {
                                 var u = db.History_User.ToList();
                                 return u as List<T>; };
                     }

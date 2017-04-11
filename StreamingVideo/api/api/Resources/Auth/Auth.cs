@@ -25,7 +25,10 @@ namespace api.Resources.Auth
             public Nullable<System.DateTime> profile_created { get; set; }
             public Nullable<System.DateTime> birthday { get; set; }
             public string email { get; set; }
+
         }
+
+       
 
         public class AuthMovieEdit
         {

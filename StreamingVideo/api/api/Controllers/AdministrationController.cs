@@ -21,9 +21,8 @@ namespace api.Controllers
     [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
     public class AdministrationController : ApiController
     {
-        private MDBSQLEntities db = new MDBSQLEntities();
 
-        //POST api/administration/refresh
+        //POST api/Administration/refresh
         [HttpPost,ActionName("Refresh")]
         public async Task<IHttpActionResult> Refresh(Auth.User data)
         {
@@ -33,7 +32,7 @@ namespace api.Controllers
                 if(user != null && user.unique_id == data.unique_id)
                 {
                     Resources.Database.Movie.Refresh.RefreshAndOrganize();
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Administration -> Refresh movie list requested from user " + user.username,
                         api_datetime = DateTime.Now,
@@ -46,19 +45,18 @@ namespace api.Controllers
 
         }
 
-        //POST api/administration/login
+        //POST api/Administration/login
         [HttpPost,ActionName("Auth")]
         public async Task<IHttpActionResult> Auth([FromBody] Auth.Login data)
         {
-            var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByUsername(data.username);
             if(user != null)
             {
                 if (Functions.Decode.Base64toString(user.password) == Functions.Decode.Base64toString(data.password) 
                     && user.User_Groups.type == "administrator")
                 {
-                    user.last_logon = DateTime.Now;
-                    await db.SaveChangesAsync();
-                    await History.Create("api", new History_API()
+                    await Resources.Database.User.Set.LastLogon(user);
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Administration -> User  '" + user.username + "' loged on",
                         api_datetime = DateTime.Now,
@@ -71,7 +69,7 @@ namespace api.Controllers
             return NotFound();
         }
 
-        //POST api/administration/ChangeMovieStatus
+        //POST api/Administration/ChangeMovieStatus
         [HttpPost, ActionName("ChangeMovieStatus")]
         public async Task<IHttpActionResult> ChangeMovieStatus([FromBody] Auth.AuthMovieEdit data)
         {
@@ -89,7 +87,7 @@ namespace api.Controllers
                             movie = await Resources.Database.Movie.Edit.MovieEnable(data.Movie.guid, MovieStatus.Enable);
                             if (movie != null && movie.enabled == true)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Administration -> Enable "+movie.Movie_Info.title + " movie",
                                     api_datetime = DateTime.Now,
@@ -103,7 +101,7 @@ namespace api.Controllers
                             movie = await Resources.Database.Movie.Edit.MovieEnable(data.Movie.guid, MovieStatus.Disable);
                             if (movie != null && movie.enabled == false)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Administration -> Disable " + movie.Movie_Info.title + " movie",
                                     api_datetime = DateTime.Now,
@@ -121,6 +119,7 @@ namespace api.Controllers
             return BadRequest();
         }
 
+        //POST: api/Administration/Init
         [HttpPost,ActionName("Init")]
         public async Task<IHttpActionResult> Init(Auth.User data)
         {
@@ -152,6 +151,7 @@ namespace api.Controllers
             return BadRequest();
         }
 
+        //POST: api/Administration/Edit
         [HttpPost, ActionName("Edit")]
         public async Task<IHttpActionResult> Edit(CustomClasses.API.Edit data)
         {
@@ -203,6 +203,48 @@ namespace api.Controllers
                 return Unauthorized();
             }
             return BadRequest();
+        }
+
+        //POST: api/Administration/GetAllUsers
+        [HttpPost, ActionName("GetAllUsers")]
+        public async Task<IHttpActionResult> GetAllUsers(Auth.User data)
+        {
+            if (data != null && data.unique_id != null)
+            {
+                var user = await Resources.Database.User.Get.ByGuid(data.unique_id);
+                if (user != null && user.username == data.username)
+                {
+                    await History.Create(History.Type.API, new History_API()
+                    {
+                        api_action = "Administration -> Requesting user list from DB, user: " + user.username,
+                        api_datetime = DateTime.Now,
+                        api_type = "Request new user list"
+                    });
+                    return Ok(await Resources.Database.User.Get.AllUsersData());
+                }
+            }
+            return Unauthorized();
+        }
+
+        //POST api/Administration/NewUser
+        [HttpPost,ActionName("NewUser")]
+        public async Task<IHttpActionResult> NewUser(CustomClasses.API.Edit data)
+        {
+            var user = await Resources.Database.User.Get.ByUsername(data.user.username);
+            if (user == null)
+            {
+                if (data.user.password != null && data.user.email != null && data.groups.Id > 0)
+                {
+                    return Ok(await Resources.Database.User.Create.New(data.user, data.groups));
+                }
+                return BadRequest("not enough paramaters were set to create a user");
+            }
+            await History.Create(History.Type.API, new History_API()
+            {
+                api_action = "User was not created",
+                api_type = "Error creating new user"
+            });
+            return Unauthorized();
         }
     }
 }

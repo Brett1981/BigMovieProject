@@ -17,7 +17,7 @@ namespace api.Resources
             Disks,
             Settings
         }
-        private static MDBSQLEntities db = new MDBSQLEntities();
+        private static MovieDatabaseEntities db = new MovieDatabaseEntities();
 
         public static class Get
         {
@@ -93,7 +93,7 @@ namespace api.Resources
                     }
                     catch(Exception ex)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception caught on APISettings.Set.ToDatabase -> "+ex.Message,
                             api_type = "Task -> Exception thrown"
@@ -114,7 +114,7 @@ namespace api.Resources
                 var disks = JsonConvert.DeserializeObject<List<CustomClasses.API.Settings>>(Properties.Resources.ResourceManager.GetString("Disks"));
                 if (data.disks != disks)
                 {
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Task -> new settings submited for API -> Checking new movie directory validation ...",
                         api_type = "Task -> Checking new movie directory location",
@@ -125,7 +125,7 @@ namespace api.Resources
                     {
                         if (!Directory.Exists(disk.value))
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Task-> location does not exist, " + disk.value,
                                 api_type = "Task -> Checking directory destination failed",
@@ -134,7 +134,7 @@ namespace api.Resources
                             return false;
                         }
                     }
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Task -> Completed movie directory check",
                         api_type = "Task -> Completed",
@@ -147,7 +147,7 @@ namespace api.Resources
                 if (data.settings != settings)
                 {
                     //settings are edited
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Task -> checking new submited settings",
                         api_type = "Task -> Checking submited settings",
@@ -157,7 +157,7 @@ namespace api.Resources
                     {
                         if (s.value == "")
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Task -> Settings " + s.name + " -> value is empty",
                                 api_type = "Task -> Setting string is null",
@@ -167,7 +167,7 @@ namespace api.Resources
                         }
 
                     }
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Task -> Settings are valid",
                         api_type = "Task -> Completed",

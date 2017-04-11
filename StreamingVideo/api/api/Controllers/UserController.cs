@@ -24,25 +24,18 @@ namespace api.Controllers
     public class UserController : ApiController
     {
         
-        private MDBSQLEntities db = new MDBSQLEntities();
-        
-        // GET: api/Users
-        [HttpGet,ActionName("GetUsers")]
-        public IQueryable<User_Info> GetUsers()
-        {
-            return db.User_Info;
-        }
+        private MovieDatabaseEntities db = new MovieDatabaseEntities();
 
         //POST: api/Users/Login
         [HttpPost,ActionName("Login")]
         public async Task<IHttpActionResult> Login([FromBody] Auth.Login data)
         {
-            var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByUsername(data.username);
             if(user != null)
             {
                 if(user.username == data.username && user.password == data.password) {
                     user.last_logon = DateTime.Now; db.SaveChanges();
-                    await History.Create("user", new History_User()
+                    await History.Create(History.Type.User, new History_User()
                     {
                         user_action = "Login authorization -> " + user.unique_id,
                         user_datetime = DateTime.Now,
@@ -53,7 +46,7 @@ namespace api.Controllers
                     return Ok(new DatabaseUserModels() { user_id = user.unique_id });
                 }
                 else {
-                    await History.Create("user", new History_User()
+                    await History.Create(History.Type.User, new History_User()
                     {
                         user_action = "Login authorization -> " + user.unique_id,
                         user_datetime = DateTime.Now,
@@ -71,36 +64,23 @@ namespace api.Controllers
         [HttpPost, ActionName("Create")]
         public async Task<IHttpActionResult> Create([FromBody] Auth.User data)
         {
-            var user = await db.User_Info.Where(x => x.username == data.username).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByUsername(data.username);
             if(user == null)
             {
-                if (data.password != null && data.email != null)
+                if (data.password != null && data.email != null )
                 {
-                    user = new User_Info() { username = data.username, password = data.password, email = data.email };
-                    if (data.image_url != null)
+                    return Ok(await Resources.Database.User.Create.New(new User_Info()
                     {
-                        HttpClient client = new HttpClient();
-                        //user.profile_image = await client.GetByteArrayAsync(data.image_url);
-                    }
-                    if (data.birthday != null) { try { user.birthday = Convert.ToDateTime(data.birthday); } catch { user.birthday = DateTime.Now; } }
-                    if (data.display_name != null) { user.display_name = data.display_name; }
-                    user.unique_id = api.Resources.Database.Movie.Create.Guid(data.username).ToString();
-                    user.profile_created = DateTime.Now;
-                    user.groupId = db.User_Groups.Where(x => x.type == "user").Select(x => x.Id).First();
-                    db.User_Info.Add(user);
-                    await db.SaveChangesAsync();
-                    await History.Create("user", new History_User()
-                    {
-                        user_action = "User create -> " + user.unique_id,
-                        user_datetime = DateTime.Now,
-                        user_id = user.unique_id,
-                        user_movie = "",
-                        user_type = "UserCreationSuccess"
-                    });
-                    return Ok(db.User_Info.Where(x => x.unique_id == user.unique_id).FirstOrDefaultAsync());
+                        username = data.username,
+                        password = data.password,
+                        email = data.email,
+                        birthday = data.birthday,
+                        display_name = data.display_name,
+                    }));
                 }
+                return BadRequest("not enough paramaters were set to create a user");
             }
-            await History.Create("user", new History_User()
+            await History.Create(History.Type.User, new History_User()
             {
                 user_action = "User create -> " + user.unique_id,
                 user_datetime = DateTime.Now,
@@ -111,14 +91,14 @@ namespace api.Controllers
             return Unauthorized();
         }
 
-        // GET: api/Users/5
+        //GET: api/Users/5
         [HttpGet,ActionName("GetUser"),ResponseType(typeof(User_Info))]
         public async Task<IHttpActionResult> GetUser(string value)
         {
-            User_Info user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByGuid(value);
             if (user == null)
             {
-                await History.Create("user", new History_User()
+                await History.Create(History.Type.User, new History_User()
                 {
                     user_action = "User search -> " + value,
                     user_datetime = DateTime.Now,
@@ -128,7 +108,7 @@ namespace api.Controllers
                 });
                 return NotFound();
             }
-            await History.Create("user", new History_User()
+            await History.Create(History.Type.User, new History_User()
             {
                 user_action = "User search -> " + value,
                 user_datetime = DateTime.Now,
@@ -139,16 +119,19 @@ namespace api.Controllers
             return Ok(user);
         }
 
+        //GET: api/Users/Check
         [HttpGet,ActionName("Check")]
         public async Task<IHttpActionResult> Check(string value)
         {
-            var user = await db.User_Info.Where(x => x.username == value).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByUsername(value);
             if(user == null)
             {
                 return Ok(user);
             }
             return Ok(new User_Info());
         }
+
+        //POST: api/Users/ChangeProfilePicture
         [HttpPost,ActionName("ChangeProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody] Auth.User data)
         { 
@@ -159,7 +142,7 @@ namespace api.Controllers
                 switch (status){
 
                     case "OK": {
-                            await History.Create("user", new History_User()
+                            await History.Create(History.Type.User, new History_User()
                             {
                                 user_action = "User changed profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -170,7 +153,7 @@ namespace api.Controllers
                             return Ok();
                         } 
                     case "NotAuthorized": {
-                            await History.Create("user", new History_User()
+                            await History.Create(History.Type.User, new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -181,7 +164,7 @@ namespace api.Controllers
                             return Unauthorized();
                         } 
                     case "Exception": {
-                            await History.Create("user", new History_User()
+                            await History.Create(History.Type.User, new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -192,7 +175,7 @@ namespace api.Controllers
                             return BadRequest();
                         }
                     case "BadRequest": {
-                            await History.Create("user", new History_User()
+                            await History.Create(History.Type.User, new History_User()
                             {
                                 user_action = "User change profile picture -> " + data.unique_id,
                                 user_datetime = DateTime.Now,
@@ -203,7 +186,7 @@ namespace api.Controllers
                             return BadRequest();
                         }
                 }
-                await History.Create("user", new History_User()
+                await History.Create(History.Type.User, new History_User()
                 {
                     user_action = "User change profile picture : " + data.unique_id,
                     user_datetime = DateTime.Now,
@@ -215,19 +198,20 @@ namespace api.Controllers
             }
             catch(Exception ex)
             {
-                await History.Create("api", new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception in UserController --> ChangeProfilePicture" });
+                await History.Create(History.Type.API, new History_API() { api_action = "UserController --> ChangeProfilePicture" + ex.Message, api_datetime = DateTime.Now, api_type = "Exception in UserController --> ChangeProfilePicture" });
                 return BadRequest();
             }
             
         }
 
+        //GET: api/Users/GetProfilePicture
         [HttpGet,ActionName("GetProfilePicture")]
         public async Task<IHttpActionResult> GetProfilePicture([FromUri] string value)
         {
-            var user = await db.User_Info.Where(x => x.unique_id == value).FirstOrDefaultAsync();
+            var user = await Resources.Database.User.Get.ByGuid(value);
             if(user != null)
             {
-                await History.Create("user", new History_User()
+                await History.Create(History.Type.User, new History_User()
                 {
                     user_action = "User get profile picture : " + value,
                     user_datetime = DateTime.Now,
@@ -240,11 +224,13 @@ namespace api.Controllers
             return NotFound();
         }
 
+        //GET: api/Users/GetUserHistory
         [HttpGet,ActionName("GetUserHistory")]
         public async Task<IHttpActionResult> GetUserHistory([FromUri] string value)
         {
-            return Ok(await db.History_User.OrderByDescending(x => x.user_datetime).Where(x => x.user_id == value).Take(20).ToListAsync());
+            return Ok(await Resources.Database.User.Get.UserHistory(value));
         }
+
         // DELETE: api/Users/5
         [ResponseType(typeof(User_Info))]
         public async Task<IHttpActionResult> DeleteUser(int id)

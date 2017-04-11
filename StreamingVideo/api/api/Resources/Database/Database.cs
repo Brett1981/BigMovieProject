@@ -34,7 +34,7 @@ namespace api.Resources
     {
 
         public static Movie_Data movie;
-        private static MDBSQLEntities db = new MDBSQLEntities();
+        private static MovieDatabaseEntities db = new MovieDatabaseEntities();
         private static int createListCount = 0;
         private static int checkDbCount = 0;
 
@@ -95,7 +95,7 @@ namespace api.Resources
                         {
                             if (createListCount == 0)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Creating new movie list",
                                     api_type = "Task -> status",
@@ -115,7 +115,7 @@ namespace api.Resources
                             if (edited)
                             {
                                 Organize.ByDate();
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Waiting for next movie list cycle ",
                                     api_type = "Task -> waiting",
@@ -128,7 +128,7 @@ namespace api.Resources
                     }
                     catch (Exception e)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception thrown at -> Movie.Create.List() | Error -> "+ e.Message,
                             api_type = "Task -> Error | Exception caught -> Movie.Create.List()",
@@ -268,7 +268,7 @@ namespace api.Resources
                     }
                     catch (Exception e)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception was thrown with error " +e.Message,
                             api_type = "Exception caught on -> Movie.Get.ByGuid()",
@@ -302,7 +302,7 @@ namespace api.Resources
                             }
                             catch (Exception e)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Exception was thrown with error " + e.Message,
                                     api_type = "Exception caught on -> Movie.Get.ByGuidAndChangeCounter()",
@@ -336,7 +336,7 @@ namespace api.Resources
                     if (user != null)
                     {
 
-                        await History.Create("user", new History_User()
+                        await History.Create(History.Type.User, new History_User()
                         {
                             user_action = "User | Requesting content-> " + data.movie_id + 
                             " | Username -> "+ user.username +", UserId-> " + user.unique_id,
@@ -353,7 +353,7 @@ namespace api.Resources
                         }
                         catch (Exception e)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Cannot save movie views ",
                                 api_type = "Exception -> GetMovie (object) --> " + e.Message,
@@ -386,7 +386,7 @@ namespace api.Resources
                                 }
                                 catch (Exception e)
                                 {
-                                    await History.Create("api", new History_API()
+                                    await History.Create(History.Type.API, new History_API()
                                     {
                                         api_action = "Cannot save movie views ",
                                         api_type = "Exception -> GetMovie (object) --> " + e.Message,
@@ -499,7 +499,7 @@ namespace api.Resources
                     }
                     catch (Exception ex)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception caught",
                             api_type = "Exception -> Movie.Remove.ByModel() --> " + ex.Message,
@@ -518,7 +518,7 @@ namespace api.Resources
                 {
                     try
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_type = "Task start -> DatabaseRemoveDeletedFolderFromDb",
                             api_action = "Starting task -> Remove deleted Movies from Database",
@@ -533,7 +533,7 @@ namespace api.Resources
                             }
                             if (toDelete.Count > 0)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
                                     api_action = "Task action -> Found " + toDelete.Count + " movies to delete",
@@ -541,7 +541,7 @@ namespace api.Resources
                                 });
                                 db.Movie_Data.RemoveRange(toDelete); //removing entries in database
                                 await db.SaveChangesAsync();
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_type = "Task status -> DatabaseRemoveDeletedFolderFromDb",
                                     api_action = "Task status -> removed " + toDelete.Count + " movies with success",
@@ -549,14 +549,14 @@ namespace api.Resources
                                 });
                                 return "Ok";
                             }
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
                                 api_action = "Task action -> No movies found for deletion",
                                 api_datetime = DateTime.Now
                             });
                         }
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
                             api_action = "Task action -> No entries in database ...",
@@ -566,7 +566,7 @@ namespace api.Resources
                     }
                     catch (Exception ex)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_type = "Exception thrown -> DatabaseRemoveDeletedFolderFromDb",
                             api_action = "Exception --> " + ex.Message + " -- " + ex.InnerException.InnerException,
@@ -655,7 +655,7 @@ namespace api.Resources
                             {
                                 await Task.Delay(new TimeSpan(0, 0, 0));
                             }
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Completed Task -> check/create/remove movies. | DatabaseThread()",
                                 api_type = "Task -> status " ,
@@ -667,7 +667,7 @@ namespace api.Resources
                     }
                     catch (InvalidOperationException e)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception caught | Message " + e.Message,
                             api_type = "Exception -> DatabaseThread()",
@@ -684,7 +684,7 @@ namespace api.Resources
                 {
                     try
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Checking directories for new entries!",
                             api_type = "Status check",
@@ -745,13 +745,13 @@ namespace api.Resources
                         }
                         if (movieListToAdd.Count > 0)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Movie list contains one or more objects to be added to DB!",
                                 api_type = "Task -> new movies found",
                                 api_datetime = DateTime.Now
                             });
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Adding movies to local DB ...",
                                 api_type = "Task -> adding to local db",
@@ -761,7 +761,7 @@ namespace api.Resources
                     }
                     catch (Exception ex)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "Exception --> " + ex.Message,
                             api_type = "Exception thrown -> DatabaseMovieCheck",
@@ -779,7 +779,7 @@ namespace api.Resources
                 /// <returns></returns>
                 public static async Task MoviesToDatabase()
                 {
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Starting task -> Add movies to local Database",
                         api_datetime = DateTime.Now,
@@ -807,7 +807,7 @@ namespace api.Resources
                                     //databaseMovieCount++;
                                     //temp.Add(mData);
                                     var movie = db.Movie_Data.Where(x => x.name == item.Item1.name).First();
-                                    await History.Create("api", new History_API()
+                                    await History.Create(History.Type.API, new History_API()
                                     {
                                         api_action = "Movie " + movie.Movie_Info.title + " was added to the database as id " + movie.Id + "!",
                                         api_datetime = DateTime.Now,
@@ -817,7 +817,7 @@ namespace api.Resources
                                 }
                                 catch (Exception ex)
                                 {
-                                    await History.Create("api", new History_API()
+                                    await History.Create(History.Type.API, new History_API()
                                     {
                                         api_action = "Exception : Inserting movie to Database --> " + ex.Message,
                                         api_datetime = DateTime.Now,
@@ -827,7 +827,7 @@ namespace api.Resources
                             }
                             else
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Movie " + item.Item2.Groups["title"].ToString() + " was not added as there was a problem!",
                                     api_datetime = DateTime.Now,
@@ -837,7 +837,7 @@ namespace api.Resources
                         }
                         catch (Exception ex)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Error -> An error occured : " + ex.Message,
                                 api_datetime = DateTime.Now,
@@ -846,7 +846,7 @@ namespace api.Resources
                         }
 
                     }
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "End of import of movies.",
                         api_datetime = DateTime.Now,
@@ -882,7 +882,7 @@ namespace api.Resources
                     }
                     if (hapi != null)
                     {
-                        await History.Create("api", hapi);
+                        await History.Create(History.Type.API, hapi);
                     }
                 }
             }
@@ -916,7 +916,7 @@ namespace api.Resources
                         }
                         catch (Exception ex)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Exception caught | Message " + ex.Message,
                                 api_type = "Exception -> User.Get.ProfileImage()",
@@ -941,6 +941,16 @@ namespace api.Resources
                     var u = await db.User_Info.Where(x => x.unique_id == guid).FirstOrDefaultAsync();
                     if (u == null) { return null; }
                     return u;
+                }
+
+                /// <summary>
+                /// Retrieve user information from database by supplying the username
+                /// </summary>
+                /// <param name="username">string</param>
+                /// <returns>User_Info</returns>
+                public static async Task<User_Info>ByUsername(string username)
+                {
+                    return await db.User_Info.Where(x => x.username == username).FirstOrDefaultAsync();
                 }
 
                 /// <summary>
@@ -981,11 +991,41 @@ namespace api.Resources
                         users = await db.User_Info.Select(x => x).ToListAsync()
                     };
                 }
+
+                /// <summary>
+                /// Return last 100 rows in user's history box
+                /// </summary>
+                /// <param name="value">string</param>
+                /// <returns>List<History_User></returns>
+                public static async Task<List<History_User>> UserHistory(string value)
+                {
+                    return await db.History_User
+                        .OrderByDescending(x => x.user_datetime)
+                        .Where(x => x.user_id == value)
+                        .Take(20)
+                        .ToListAsync();
+                }
             }
 
             public static class Set
             {
-
+                public static async Task LastLogon(User_Info user)
+                {
+                    try
+                    {
+                        user.last_logon = DateTime.Now;
+                        await db.SaveChangesAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        await History.Create(History.Type.API, new History_API()
+                        {
+                            api_action = "Exception caught on User.Set.LastLogon with error -> "+ex.Message,
+                            api_type = "Exception ->  User.Set.LastLogon"
+                        });
+                    }
+                    
+                }
             }
 
             public static class Create
@@ -1053,6 +1093,61 @@ namespace api.Resources
 
                 }
 
+                public static async Task<User_Info> New(User_Info data,User_Groups group = null)
+                {
+                    try
+                    {
+                        var birthdate = (data.birthday != null) ? Convert.ToDateTime(data.birthday) : DateTime.Now;
+
+                        var user = new User_Info()
+                        {
+                            username = data.username,
+                            password = Functions.Functions.Encode.StringToBase64(data.password),
+                            email = data.email,
+                            display_name = (data.display_name != null) ? data.display_name : "User",
+                            birthday = (data.birthday != null) ? Convert.ToDateTime(data.birthday) : DateTime.Now,
+                            unique_id = Guid(data.username).ToString(),
+                            profile_created = DateTime.Now
+                        };
+                        User_Groups groupDB;
+                        if(group != null)
+                            groupDB = await db.User_Groups.Where(x => x.type == group.type).FirstAsync();
+                        else
+                            groupDB = await db.User_Groups.Where(x => x.type == "user").FirstAsync();
+
+                        user.groupId = groupDB.Id;
+                        user.User_Groups = groupDB;
+                        db.User_Info.Add(user);
+                        await db.SaveChangesAsync();
+                        await History.Create(History.Type.User, new History_User()
+                        {
+                            user_action = "User create -> " + user.unique_id,
+                            user_datetime = DateTime.Now,
+                            user_id = user.unique_id,
+                            user_movie = "",
+                            user_type = "UserCreationSuccess"
+                        });
+                        return await Get.ByGuid(user.unique_id);
+                    }
+                    catch(Exception ex)
+                    {
+                        await History.Create(History.Type.API, new History_API()
+                        {
+                            api_action = "Exception caught on User.Create.New -> Message: "+ex.Message,
+                            api_type = "Exception"
+                        });
+                    }
+                    return null;
+                    
+                }
+
+                public static Guid Guid(string data)
+                {
+                    using (MD5 md5 = MD5.Create())
+                    {
+                        return new Guid(md5.ComputeHash(Encoding.Default.GetBytes(data)));
+                    }
+                }
             }
 
             public static class Edit
@@ -1095,7 +1190,7 @@ namespace api.Resources
                         }
                         catch (HttpException ex)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "HttpException at ChangeUserPicture -->" + ex.Message + " | User -> name -" + user.display_name + ", guid - " + user.unique_id,
                                 api_type = "Exception thrown -> ChangeUserPicture",
@@ -1128,7 +1223,7 @@ namespace api.Resources
                             }
                             catch (DbEntityValidationException ex)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Exception caught on User.Edit.Data -> " + ex.Message,
                                     api_type = "Exception -> User.Edit.Data",

@@ -18,7 +18,7 @@ namespace MovieDB_Windows_app
     {
         public static Movie.Data movie_click_data { get; set; }
         public bool isPersistantStoragePrimary = false;
-        public API api = new API();
+        public API api; 
 
         public Main(User.Info u = null)
         {
@@ -54,6 +54,7 @@ namespace MovieDB_Windows_app
                 userLogedIn.Text = u.username;
             }
             rightClickMovieContextMenu.ItemClicked += RightClickMovieContextMenu_ItemClicked;
+
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -68,7 +69,7 @@ namespace MovieDB_Windows_app
                 GlobalVar.GlobalData.disks == null || 
                 GlobalVar.GlobalData.movies == null) || force)
             {
-                GlobalVar.GlobalData = await api.InitAppData();
+                GlobalVar.GlobalData = await GlobalVar.client.InitAppData();
                 
                 
             }
@@ -126,7 +127,7 @@ namespace MovieDB_Windows_app
 
             if(File.Exists(path)) return Image.FromFile(path) ?? null; 
 
-            var x = await API.Downloader.ImageDownload("https://image.tmdb.org/t/p/w160/" + image);
+            var x = await Downloader.ImageDownload("https://image.tmdb.org/t/p/w160/" + image);
             try
             {
                 x.Save(path, System.Drawing.Imaging.ImageFormat.Jpeg);

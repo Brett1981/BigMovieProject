@@ -87,24 +87,32 @@ namespace MovieDB_Windows_app.Views
             int currentRow = dataGridView1.Rows.Count;
             if(user != null)
             {
-                dataGridView1.Rows.Add(
+                try
+                {
+                    dataGridView1.Rows.Add(
                     user.Id.ToString(),
                     user.unique_id,
                     user.username,
                     user.password,
-                    user.profile_image.ToString(),
+                    user.profile_image.ToString() ?? "",
                     user.display_name.ToString(),
                     user.profile_created.ToString(),
-                    user.last_logon.ToString(),
+                    user.last_logon.ToString() ?? "",
                     user.birthday.ToString(),
                     user.email.ToString()
                 );
-                dataGridView1.Rows[currentRow]
-                    .Cells["Access"]
-                    .Value = FindUserGroup(
-                        user, 
-                        currentRow
-                        );
+                    dataGridView1.Rows[currentRow]
+                        .Cells["Access"]
+                        .Value = FindUserGroup(
+                            user,
+                            currentRow
+                            );
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Exception: " + ex.Message);
+                }
+                
             }
         }
 
@@ -155,5 +163,10 @@ namespace MovieDB_Windows_app.Views
             dataGridStatusLabel.Text = "";
         }
 
+        private void addUser_Click(object sender, EventArgs e)
+        {
+            Views.NewUser nUser = new NewUser();
+            nUser.Show();
+        }
     }
 }

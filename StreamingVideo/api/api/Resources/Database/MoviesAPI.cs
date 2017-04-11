@@ -35,7 +35,7 @@ namespace api.Resources
 
                     if (apikey == null)
                     {
-                        await History.Create("api", new History_API()
+                        await History.Create(History.Type.API, new History_API()
                         {
                             api_action = "API key was null or not defined! Check your Web.config to include value with key!",
                             api_type = "Exception -> MoviesAPI.Get.MovieInfo() -> No API Key",
@@ -99,7 +99,7 @@ namespace api.Resources
                             }
                             catch (Exception ex)
                             {
-                                await History.Create("api", new History_API()
+                                await History.Create(History.Type.API, new History_API()
                                 {
                                     api_action = "Exception caught - first | Message " + ex.Message ,
                                     api_type = "Exception -> MoviesAPI.Get.MovieInfo()",
@@ -110,7 +110,7 @@ namespace api.Resources
                         }
                         catch (Exception e)
                         {
-                            await History.Create("api", new History_API()
+                            await History.Create(History.Type.API, new History_API()
                             {
                                 api_action = "Exception caught - second | Message " + e.Message,
                                 api_type = "Exception -> MoviesAPI.Get.MovieInfo()",
@@ -128,7 +128,7 @@ namespace api.Resources
                 }
                 catch (Exception e)
                 {
-                    await History.Create("api", new History_API()
+                    await History.Create(History.Type.API, new History_API()
                     {
                         api_action = "Exception caught - third | Message " + e.Message,
                         api_type = "Exception -> MoviesAPI.Get.MovieInfo()",

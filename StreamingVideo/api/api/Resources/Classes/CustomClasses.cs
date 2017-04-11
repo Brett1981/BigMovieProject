@@ -26,10 +26,10 @@ namespace api.Resources
             public string title { get; set; }
             public string vote_average { get; set; }
             public string vote_count { get; set; }
-            public List<CustomClasses.Random.values> genres { get; set; }
-            public List<CustomClasses.Random.values> production_countries { get; set; }
-            public List<CustomClasses.Random.values> production_companies { get; set; }
-            public List<CustomClasses.Random.values> spoken_languages { get; set; }
+            public List<Random.values> genres { get; set; }
+            public List<Random.values> production_countries { get; set; }
+            public List<Random.values> production_companies { get; set; }
+            public List<Random.values> spoken_languages { get; set; }
         }
 
         public class MovieSession

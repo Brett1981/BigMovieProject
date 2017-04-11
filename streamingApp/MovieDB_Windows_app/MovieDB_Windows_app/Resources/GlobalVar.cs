@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static MovieDB_Windows_app.API;
@@ -101,6 +102,11 @@ namespace MovieDB_Windows_app.Resources
             }
         }
 
-
+        static MovieDB_Windows_app.API _client;
+        public static MovieDB_Windows_app.API client
+        {
+            get { return _client; }
+            set { _client = value; }
+        }
     }
 }

@@ -229,7 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API_Settings.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -276,35 +276,35 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="History_API.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="History_User.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MDBSQLEntities.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MDBSQLEntities.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MDBSQLEntities.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DatabaseUserModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="MovieDatabaseModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MovieDatabaseModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MovieDatabaseModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MovieDatabaseModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MovieDatabaseModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Movie_Data.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Movie_Info.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -331,18 +331,18 @@
     <Compile Include="Resources\Database\Streaming.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Session_Guest.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Session_Play.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="User_Groups.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="User_Info.cs">
-      <DependentUpon>MDBSQLEntities.tt</DependentUpon>
+      <DependentUpon>MovieDatabaseModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -356,15 +356,15 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="MDBSQLEntities.Context.tt">
+    <Content Include="MovieDatabaseModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
-      <LastGenOutput>MDBSQLEntities.Context.cs</LastGenOutput>
+      <DependentUpon>MovieDatabaseModel.edmx</DependentUpon>
+      <LastGenOutput>MovieDatabaseModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="MDBSQLEntities.tt">
+    <Content Include="MovieDatabaseModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
-      <LastGenOutput>MDBSQLEntities.cs</LastGenOutput>
+      <DependentUpon>MovieDatabaseModel.edmx</DependentUpon>
+      <LastGenOutput>MovieDatabaseModel.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
@@ -392,12 +392,12 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="MDBSQLEntities.edmx">
+    <EntityDeploy Include="MovieDatabaseModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MDBSQLEntities.Designer.cs</LastGenOutput>
+      <LastGenOutput>MovieDatabaseModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="MDBSQLEntities.edmx.diagram">
-      <DependentUpon>MDBSQLEntities.edmx</DependentUpon>
+    <Content Include="MovieDatabaseModel.edmx.diagram">
+      <DependentUpon>MovieDatabaseModel.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\MovieDB.pubxml" />
     <None Include="Properties\Settings.settings">

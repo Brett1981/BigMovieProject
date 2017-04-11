@@ -16,7 +16,19 @@ namespace MovieDB_Windows_app
 {
     public class API
     {
-        private static HttpClient client = new HttpClient() { Timeout = new TimeSpan(0,1,0)};
+        private static HttpClient client;
+        public API()
+        {
+            try
+            {
+                client = new HttpClient() { Timeout = new TimeSpan(0, 1, 0) };
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Connection error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
 
         private static string conAddress
         {
@@ -25,8 +37,6 @@ namespace MovieDB_Windows_app
                 return "http://" + Properties.Settings.Default.APIip + ":" + Properties.Settings.Default.APIport;
             }
         }
-
-        
 
         public async Task<APIObjects.Data> InitAppData()
         {
@@ -173,7 +183,13 @@ namespace MovieDB_Windows_app
                 {
                     return await client.PostAsync($"{conAddress}/api/administration/edit", content);
                 }
+
+                internal static async Task<HttpResponseMessage> NewUser(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/Administration/newuser", content);
+                }
             }
+
             
             public class Create
             {
@@ -194,7 +210,7 @@ namespace MovieDB_Windows_app
                 /// <param name="movie">Movie.Data</param>
                 /// <param name="user">User.Info</param>
                 /// <returns>HttpResponseMessage</returns>
-                public static async Task<HttpResponseMessage> MovieStatus(Movie.Data movie, User.Info user = null)
+                public static async Task<HttpResponseMessage> MovieStatus(Movie.Data movie, Resources.User.Info user = null)
                 {
                     if (user == null)
                     {
@@ -232,7 +248,7 @@ namespace MovieDB_Windows_app
             ///
             public class AuthMovieEdit
             {
-                public User.Info user { get; set; }
+                public Resources.User.Info user { get; set; }
                 public Movie.Data movie { get; set; }
             }
         }

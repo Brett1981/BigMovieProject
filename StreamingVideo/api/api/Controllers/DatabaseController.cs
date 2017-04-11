@@ -42,16 +42,16 @@ namespace api.Controllers
         [HttpPost,ActionName("PostGet")]
         public async Task<IHttpActionResult> PostGet([FromBody] string data)
         {
-            if (data.ToLower() == "api") { return Ok(await History.Return<List<History_API>>(data)); }
-            else if (data.ToLower() == "user") { return Ok(await History.Return<List<History_User>>(data)); }
+            if (data.ToLower() == "api") { return Ok(await History.Return<List<History_API>>(History.Type.API)); }
+            else if (data.ToLower() == "user") { return Ok(await History.Return<List<History_User>>(History.Type.User)); }
             else { return NotFound(); }
         }
 
         [HttpPost,ActionName("Set")]
         public async Task<IHttpActionResult> Set([FromUri] string value,[FromBody] object data)
         {
-            if(value.ToLower() == "api") { var s = await History.Create(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
-            else if(value.ToLower() == "user") { var s = await History.Create(value, data); if (s) { return Ok(); }else { return BadRequest(); } }
+            if(value.ToLower() == "api") { var s = await History.Create(History.Type.API, data); if (s) { return Ok(); }else { return BadRequest(); } }
+            else if(value.ToLower() == "user") { var s = await History.Create(History.Type.User, data); if (s) { return Ok(); }else { return BadRequest(); } }
             else { return BadRequest(); }
         }
     }

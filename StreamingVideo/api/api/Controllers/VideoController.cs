@@ -49,7 +49,7 @@ namespace api.Controllers
                 if (sp != null || sg != null && movieId != null)
                 {   
                      
-                    await History.Create("user", new History_User()
+                    await History.Create(History.Type.User, new History_User()
                     {
                         user_action = "User requesting to watch movie: " + value,
                         user_datetime = DateTime.Now,
@@ -60,7 +60,7 @@ namespace api.Controllers
                     //Getting movie from DB
                     if (movie != null && movie.enabled)
                     {
-                        await History.Create("user", new History_User()
+                        await History.Create(History.Type.User, new History_User()
                         {
                             user_action = "Movie " + value + " is being served.",
                             user_datetime = DateTime.Now,
@@ -78,7 +78,7 @@ namespace api.Controllers
             }
             catch(System.Web.HttpException ex)
             {
-                await History.Create("api", new History_API()
+                await History.Create(History.Type.API, new History_API()
                 {
                     api_action = "Exception caught on Play() -> " + ex.Message,
                     api_datetime = DateTime.Now,
@@ -127,7 +127,7 @@ namespace api.Controllers
             if (data.user_id.Length < 20)
             {
                 //user is a guest
-                await History.Create("user", new History_User()
+                await History.Create(History.Type.User, new History_User()
                 {
                     user_action = "Guest | Auth to watch Movie -> " + movie.Movie_Info.title,
                     user_datetime = DateTime.Now,
@@ -144,7 +144,7 @@ namespace api.Controllers
                 var u = await Database.User.Get.ByGuid(data.user_id);
                 if(u != null)
                 {
-                    await History.Create("user", new History_User()
+                    await History.Create(History.Type.User, new History_User()
                     {
                         user_action = "User -> " + u.display_name + " | Auth -> " + data.user_id + " | Movie -> " + movie.Movie_Info.title,
                         user_datetime = DateTime.Now,
