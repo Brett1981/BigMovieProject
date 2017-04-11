@@ -145,19 +145,27 @@ namespace MovieDB_Windows_app.Views
 
         private async Task CreateNewUser()
         {
-            user.birthday = dateTimePicker1.Value;
-            APIObjects.Edit edit = new APIObjects.Edit()
+            try
             {
-                user = new User.Info(),
-                groups = new User.Groups()
-            };
-            edit.user = user;
-            edit.groups = ((KeyValuePair<string, User.Groups>)userGroupComboBox.SelectedItem).Value;
+                user.birthday = dateTimePicker1.Value;
+                APIObjects.Edit edit = new APIObjects.Edit()
+                {
+                    user = new User.Info(),
+                    groups = new User.Groups()
+                };
+                edit.user = user;
+                edit.groups = ((KeyValuePair<string, User.Groups>)userGroupComboBox.SelectedItem).Value;
 
-            //send data to API for new user
-            var status = await API.Communication.Administration.NewUser(
-                API.Communication.Create.HttpContent<APIObjects.Edit>(edit)
-                );
+                //send data to API for new user
+                var status = await API.Communication.Administration.NewUser(
+                    API.Communication.Create.HttpContent<APIObjects.Edit>(edit)
+                    );
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.Source, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
         }
     }
 }

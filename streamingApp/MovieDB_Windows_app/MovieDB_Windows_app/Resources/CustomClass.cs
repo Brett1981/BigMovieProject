@@ -58,12 +58,11 @@ namespace MovieDB_Windows_app.Resources
             public string password { get; set; }
             public string profile_image { get; set; }
             public string display_name { get; set; }
-            public Nullable<System.DateTime> profile_created { get; set; }
-            public Nullable<System.DateTime> last_logon { get; set; }
-            public Nullable<System.DateTime> birthday { get; set; }
+            public DateTime? profile_created { get; set; }
+            public DateTime? last_logon { get; set; }
+            public DateTime? birthday { get; set; }
             public string email { get; set; }
-            public int groupId { get; set; }
-            public Groups User_Group { get; set; }
+            public int group { get; set; }
 
         }
         public class Groups

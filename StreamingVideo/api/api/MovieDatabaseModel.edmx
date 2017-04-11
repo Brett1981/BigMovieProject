@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MovieDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MovieDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="API_Settings">
           <Key>
             <PropertyRef Name="Id" />
@@ -120,7 +120,7 @@
           <Property Name="last_logon" Type="datetime" />
           <Property Name="birthday" Type="date" />
           <Property Name="email" Type="nvarchar" MaxLength="50" />
-          <Property Name="groupId" Type="int" Nullable="false" />
+          <Property Name="group" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_MovieInfo_ToMovieData">
           <End Role="Movie_Data" Type="Self.Movie_Data" Multiplicity="1" />
@@ -134,7 +134,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserGroup_ToUserInfo">
+        <Association Name="FK_User_Info_User_Groups">
           <End Role="User_Groups" Type="Self.User_Groups" Multiplicity="1" />
           <End Role="User_Info" Type="Self.User_Info" Multiplicity="*" />
           <ReferentialConstraint>
@@ -142,7 +142,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="User_Info">
-              <PropertyRef Name="groupId" />
+              <PropertyRef Name="group" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -160,13 +160,12 @@
             <End Role="Movie_Data" EntitySet="Movie_Data" />
             <End Role="Movie_Info" EntitySet="Movie_Info" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserGroup_ToUserInfo" Association="Self.FK_UserGroup_ToUserInfo">
+          <AssociationSet Name="FK_User_Info_User_Groups" Association="Self.FK_User_Info_User_Groups">
             <End Role="User_Groups" EntitySet="User_Groups" />
             <End Role="User_Info" EntitySet="User_Info" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MovieDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -261,14 +260,45 @@
           <Property Name="session_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="session_date" Type="DateTime" Precision="3" />
         </EntityType>
+        <Association Name="FK_MovieInfo_ToMovieData">
+          <End Role="Movie_Data" Type="Self.Movie_Data" Multiplicity="1" />
+          <End Role="Movie_Info" Type="Self.Movie_Info" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Movie_Data">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Movie_Info">
+              <PropertyRef Name="id_movie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MovieDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="API_Settings" EntityType="Self.API_Settings" />
+          <EntitySet Name="History_API" EntityType="Self.History_API" />
+          <EntitySet Name="History_User" EntityType="Self.History_User" />
+          <EntitySet Name="Movie_Data" EntityType="Self.Movie_Data" />
+          <EntitySet Name="Movie_Info" EntityType="Self.Movie_Info" />
+          <EntitySet Name="Session_Guest" EntityType="Self.Session_Guest" />
+          <EntitySet Name="Session_Play" EntityType="Self.Session_Play" />
+          <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
+            <End Role="Movie_Data" EntitySet="Movie_Data" />
+            <End Role="Movie_Info" EntitySet="Movie_Info" />
+          </AssociationSet>
+          <EntitySet Name="User_Groups" EntityType="MovieDatabaseModel.User_Groups" />
+          <EntitySet Name="User_Info" EntityType="MovieDatabaseModel.User_Info" />
+          <AssociationSet Name="FK_User_Info_User_Groups" Association="MovieDatabaseModel.FK_User_Info_User_Groups">
+            <End Role="User_Groups" EntitySet="User_Groups" />
+            <End Role="User_Info" EntitySet="User_Info" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="User_Groups">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="access" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="access" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="desc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="status" Type="Boolean" Nullable="false" />
         </EntityType>
@@ -286,52 +316,21 @@
           <Property Name="last_logon" Type="DateTime" Precision="3" />
           <Property Name="birthday" Type="DateTime" Precision="0" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="groupId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="User_Groups" Relationship="Self.FK_UserGroup_ToUserInfo" FromRole="User_Info" ToRole="User_Groups" />
+          <Property Name="group" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User_Groups" Relationship="MovieDatabaseModel.FK_User_Info_User_Groups" FromRole="User_Info" ToRole="User_Groups" />
         </EntityType>
-        <Association Name="FK_MovieInfo_ToMovieData">
-          <End Role="Movie_Data" Type="Self.Movie_Data" Multiplicity="1" />
-          <End Role="Movie_Info" Type="Self.Movie_Info" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Movie_Data">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Movie_Info">
-              <PropertyRef Name="id_movie" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserGroup_ToUserInfo">
-          <End Role="User_Groups" Type="Self.User_Groups" Multiplicity="1" />
-          <End Role="User_Info" Type="Self.User_Info" Multiplicity="*" />
+        <Association Name="FK_User_Info_User_Groups">
+          <End Type="MovieDatabaseModel.User_Groups" Role="User_Groups" Multiplicity="1" />
+          <End Type="MovieDatabaseModel.User_Info" Role="User_Info" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User_Groups">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="User_Info">
-              <PropertyRef Name="groupId" />
+              <PropertyRef Name="group" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MovieDatabaseEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="API_Settings" EntityType="Self.API_Settings" />
-          <EntitySet Name="History_API" EntityType="Self.History_API" />
-          <EntitySet Name="History_User" EntityType="Self.History_User" />
-          <EntitySet Name="Movie_Data" EntityType="Self.Movie_Data" />
-          <EntitySet Name="Movie_Info" EntityType="Self.Movie_Info" />
-          <EntitySet Name="Session_Guest" EntityType="Self.Session_Guest" />
-          <EntitySet Name="Session_Play" EntityType="Self.Session_Play" />
-          <EntitySet Name="User_Groups" EntityType="Self.User_Groups" />
-          <EntitySet Name="User_Info" EntityType="Self.User_Info" />
-          <AssociationSet Name="FK_MovieInfo_ToMovieData" Association="Self.FK_MovieInfo_ToMovieData">
-            <End Role="Movie_Data" EntitySet="Movie_Data" />
-            <End Role="Movie_Info" EntitySet="Movie_Info" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserGroup_ToUserInfo" Association="Self.FK_UserGroup_ToUserInfo">
-            <End Role="User_Groups" EntitySet="User_Groups" />
-            <End Role="User_Info" EntitySet="User_Info" />
-          </AssociationSet>
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -438,33 +437,33 @@
           <EntitySetMapping Name="User_Groups">
             <EntityTypeMapping TypeName="MovieDatabaseModel.User_Groups">
               <MappingFragment StoreEntitySet="User_Groups">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="type" ColumnName="type" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="access" ColumnName="access" />
-                <ScalarProperty Name="desc" ColumnName="desc" />
                 <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="desc" ColumnName="desc" />
+                <ScalarProperty Name="access" ColumnName="access" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="User_Info">
             <EntityTypeMapping TypeName="MovieDatabaseModel.User_Info">
               <MappingFragment StoreEntitySet="User_Info">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="unique_id" ColumnName="unique_id" />
-                <ScalarProperty Name="username" ColumnName="username" />
-                <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="profile_image" ColumnName="profile_image" />
-                <ScalarProperty Name="display_name" ColumnName="display_name" />
-                <ScalarProperty Name="profile_created" ColumnName="profile_created" />
-                <ScalarProperty Name="last_logon" ColumnName="last_logon" />
-                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="group" ColumnName="group" />
                 <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="groupId" ColumnName="groupId" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="last_logon" ColumnName="last_logon" />
+                <ScalarProperty Name="profile_created" ColumnName="profile_created" />
+                <ScalarProperty Name="display_name" ColumnName="display_name" />
+                <ScalarProperty Name="profile_image" ColumnName="profile_image" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="unique_id" ColumnName="unique_id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

@@ -24,7 +24,7 @@ namespace api
         public Nullable<System.DateTime> last_logon { get; set; }
         public Nullable<System.DateTime> birthday { get; set; }
         public string email { get; set; }
-        public int groupId { get; set; }
+        public int group { get; set; }
     
         public virtual User_Groups User_Groups { get; set; }
     }

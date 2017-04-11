@@ -78,7 +78,7 @@
             this.password_TextBox.Name = "password_TextBox";
             this.password_TextBox.Size = new System.Drawing.Size(200, 20);
             this.password_TextBox.TabIndex = 2;
-            this.password_TextBox.TextChanged += new System.EventHandler(this.TextBox_Leave);
+            this.password_TextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // displNameLabel
             // 
@@ -95,7 +95,7 @@
             this.displayName_TextBox.Name = "displayName_TextBox";
             this.displayName_TextBox.Size = new System.Drawing.Size(200, 20);
             this.displayName_TextBox.TabIndex = 4;
-            this.displayName_TextBox.TextChanged += new System.EventHandler(this.TextBox_Leave);
+            this.displayName_TextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // birthdayLabel
             // 
@@ -121,7 +121,7 @@
             this.email_TextBox.Name = "email_TextBox";
             this.email_TextBox.Size = new System.Drawing.Size(200, 20);
             this.email_TextBox.TabIndex = 11;
-            this.email_TextBox.TextChanged += new System.EventHandler(this.TextBox_Leave);
+            this.email_TextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // userGroupLabel
             // 

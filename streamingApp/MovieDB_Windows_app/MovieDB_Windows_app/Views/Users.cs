@@ -16,7 +16,7 @@ namespace MovieDB_Windows_app.Views
     public partial class Users : Form
     {
         private APIObjects.Users UsersData = new APIObjects.Users();
-        private string[] ignoreUserItem = new string[] { "User_Group", "groupId" };
+        private string[] ignoreUserItem = new string[] { "User_Group", "group" };
         private List<DataGridViewRow> UserDataGridRows = new List<DataGridViewRow>();
 
         private Dictionary<string, User.Groups> groupDict;
@@ -25,6 +25,7 @@ namespace MovieDB_Windows_app.Views
         {
             InitializeComponent();
             UsersData = GlobalVar.GlobalData.users;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         private void Users_Load(object sender, EventArgs e)
@@ -43,7 +44,7 @@ namespace MovieDB_Windows_app.Views
                             }
                             else {
                                 
-                                if(p.Name == ignoreUserItem[0])
+                                if(p.Name == ignoreUserItem[0] || p.Name == ignoreUserItem[1])
                                 {
                                     
                                     DataGridViewComboBoxColumn group = new DataGridViewComboBoxColumn()
@@ -90,23 +91,24 @@ namespace MovieDB_Windows_app.Views
                 try
                 {
                     dataGridView1.Rows.Add(
-                    user.Id.ToString(),
-                    user.unique_id,
-                    user.username,
-                    user.password,
-                    user.profile_image.ToString() ?? "",
-                    user.display_name.ToString(),
-                    user.profile_created.ToString(),
-                    user.last_logon.ToString() ?? "",
-                    user.birthday.ToString(),
-                    user.email.ToString()
-                );
+                        user.Id.ToString(),
+                        user.unique_id,
+                        user.username,
+                        user.password,
+                        (user.profile_image != null) ? user.profile_image : "Not set",
+                        (user.display_name != null) ? user.display_name : "",
+                        (user.profile_created.ToString() != null) ? user.profile_created.ToString() : "",
+                        (user.last_logon.ToString() != null) ? user.last_logon.ToString() : "",
+                        (user.birthday.ToString() != null) ? user.birthday.ToString() : "",
+                        user.email.ToString()
+                        );
                     dataGridView1.Rows[currentRow]
                         .Cells["Access"]
                         .Value = FindUserGroup(
                             user,
                             currentRow
                             );
+
                 }
                 catch(Exception ex)
                 {
@@ -120,12 +122,13 @@ namespace MovieDB_Windows_app.Views
         {
             if(row >= 0)
             {
+
                 var x = (((DataGridViewComboBoxCell)dataGridView1.Rows[row].Cells["Access"])
                    .Items
                    .Cast<KeyValuePair<string, User.Groups>>()
                    .ToList());
 
-                return x.Where(y => y.Value.Id == user.groupId)
+                return x.Where(y => y.Value.Id == user.group)
                     .FirstOrDefault()
                     .Value;
             }
@@ -135,26 +138,40 @@ namespace MovieDB_Windows_app.Views
 
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            var column = dataGridView1.Columns[e.ColumnIndex].HeaderText;
-            var item = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            switch (column.ToLower())
+            try
             {
-                case "display_name": ResetStatusLabel();
-                    //implementacija za spreminjanje display nama
-                    break;
-                case "password": ResetStatusLabel();
-                    //implementacija za spremembo gesla
-                    break;
-                case "select group":
-                    //implementacija spremembe groupe uporabniku
-                    ;
-                    break;
-                default: dataGridStatusLabel.Text = "Caution: ";
-                    dataGridDescriptionLabel.Text = "The selected item cannot be edited for security reasons!";
-                        ;break;
+                if (e.ColumnIndex > 0 && e.RowIndex >= 0)
+                {
+                    var column = dataGridView1.Columns[e.ColumnIndex].HeaderText;
+                    var item = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+                    switch (column.ToLower())
+                    {
+                        case "display_name":
+                            ResetStatusLabel();
+                            //implementacija za spreminjanje display nama
+                            break;
+                        case "password":
+                            ResetStatusLabel();
+                            //implementacija za spremembo gesla
+                            break;
+                        case "select group":
+                            //implementacija spremembe groupe uporabniku
+                            ;
+                            break;
+                        default:
+                            dataGridStatusLabel.Text = "Caution: ";
+                            dataGridDescriptionLabel.Text = "The selected item cannot be edited for security reasons!";
+                            ; break;
+                    }
+                    Debug.WriteLine("Not implemented cellclick");
+                }
             }
-            Debug.WriteLine("Not implemented cellclick");
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            
         }
 
         private void ResetStatusLabel()
@@ -167,6 +184,18 @@ namespace MovieDB_Windows_app.Views
         {
             Views.NewUser nUser = new NewUser();
             nUser.Show();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            if(dataGridView1.SelectedRows.Count == 1)
+            {
+                var item = dataGridView1.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells;
+                if(MessageBox.Show("Are you sure you want to remove ") == DialogResult.OK)
+                {
+
+                }
+            }
         }
     }
 }

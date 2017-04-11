@@ -1115,7 +1115,7 @@ namespace api.Resources
                         else
                             groupDB = await db.User_Groups.Where(x => x.type == "user").FirstAsync();
 
-                        user.groupId = groupDB.Id;
+                        user.group = groupDB.Id;
                         user.User_Groups = groupDB;
                         db.User_Info.Add(user);
                         await db.SaveChangesAsync();
