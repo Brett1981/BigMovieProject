@@ -250,7 +250,7 @@ namespace MovieDB_Windows_app.Views
             }
             try
             {
-                var response = await API.Communication.Edit.Movie(GlobalVar.GlobalAuthUser, movie);
+                var response = await API.Communication.Edit.Movie(movie);
             }
             catch(Exception ex)
             {

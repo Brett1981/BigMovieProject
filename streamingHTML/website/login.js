@@ -3,205 +3,268 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-$('#user-login').click(function(){
-    
-    $('#loginModal').css("display","block");
-    
-})
+//objects containing data 
+var title;
+var backupTitle;
 
-$('#login-pic').click(function(){
-    $('#loginModal').css("display","block");
-})
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == $('.close')[0] ||event.target == $('#loginModal')[0] ||event.target.className == 'bg-bubbles') {
-        $('#loginModal').css("display","none");
-        $('.hamburger-menu-top').css("display","none");
+// Login & register object 
+var login = new function(){
+    this.url    = "../login/client/client.php?login";
+    this.regUrl = "../login/client/client.php?register";
+    this.to = "";
+    this.modalTitle = function(){
+        return $('.modal-content .modal-header').children("h2");
+    } 
+    this.userReg = function(u,p,e,b,d){
+        return {
+            username    :u,
+            password    :p, 
+            email       :e, 
+            birthday    :b, 
+            display_name:d
+        };
     }
-}
+    this.userLogin = function(u,p){
+        return  {
+            username    :u,
+            password    :p
+        };
+    }
+    this.Status = {
+        SUCCESS :   {value:1,   name:"Success", code:"S"},
+        ERROR   :   {value:2,   name:"Error",   code:"E"}
+    };
+    this.userRegData;
+    //submit data 
+    this.submit = function(data,call){
+        var req = $.ajax({
+            type: "POST",
+            url: call,
+            data: data
+        });
 
-
-
-// When the user clicks on <span> (x), close the modal
-$('.close').click = function() {
-    console.log("escape clicked");
-    $('#loginModal').css("display","none");
-}
-var modalFooterItems = $('.modal-footer').children();
-var mf = $('.modal-footer');
-var ml = $('.modal-login');
-var mr = $('.modal-register');
-
-$('#modal-footer-login').click(function(){
-    toggleModalFooterItems();
-});
-$('#modal-footer-register').click(function(){
-    toggleModalFooterItems(); 
-});
-
-function toggleModalFooterItems(){
-    ml.toggle();
-    mr.toggle();
-    mf.find(modalFooterItems[0]).toggle();
-    mf.find(modalFooterItems[1]).toggle();
-}
-
-/* If user is loged in and browser is on a device or smaller monitor*/
+        req.done(function(info){
+            //console.log(info);
+            var json =  JSON.parse(info);
+            var arr = {response : json, data : data};
+            if(json['response'] == 'success'){ 
+                if(call == this.url){ login.completed(arr,this.url);  }
+                else { login.completed(arr,this.regUrl);}
+            }
+            else{ 
+                if(call == this.url){ login.failed(arr,this.url);  }
+                else { login.failed(arr,this.regUrl);}
+            }
+        });
+    }
+    
+    //on failed call
+    this.failed = function(data,type){
+        console.log(data);
+        console.log(type);
+        login.modalDom(data,type,this.Status.ERROR);
+    }
+    
+    //on completed call
+    this.completed = function(data,type){
+        console.log(data);
+        console.log(type);
+        login.modalDom(data,type,this.Status.SUCCESS);
+    }
+    
+    //edit modal DOM 
+    this.modalDom = function(data,type,status){
+        if(status == this.Status.SUCCESS){
+            if(type == this.regUrl){
+            
+            }
+            else{
+                sessionStorage.setItem('user_id', data.response.uid);
+                var id = "index.php?uid=" + data.response.uid;
+                login.to = this.rootUrl(id);
+                login.redirect();
+            } 
+        }
+        else{
+            
+        }
+    }
+    
+    //Parent check function for all elements inside register form
+    this.check = function(data,type){
+        if(this.userRegData == null){
+            this.userRegData = this.userReg();
+        }
+        if(type.name == "username"){
+            if(this.validateUsername({username:data})){
+                this.userRegData.username = data;
+            }
+        }
+        else if(type.name.includes("password")){
+            if(type.name.includes("v")){
+                if(this.userRegData.password != data){
+                    //display error
+                    
+                }
+                else{
+                    //reset error
+                }
+            }
+            else{
+                this.userRegData.password = data;
+            }
+            
+        }
+        else if(type.name == "email"){
+            if(this.validateEmail(data)){
+                this.userRegData.email = data;
+            }
+        }
+        else if(type.name == "display_name"){
+            console.log(data);
+        }
+    }
+    
+    //Check username validity
+    this.validateUsername = function(value){
+        console.log(title);
+        var req = $.ajax({
+                type: "POST",
+                url: '../login/client/client.php?check',
+                data:value
+            });
+        title.text("Checking username validity...");
+        req.done(function(info){
+            var json = JSON.parse(info);
+            console.log(json);
+            if(json['username_status'] == true){ 
+                //username is available
+                title.text("Username is available!");
+                var displayName = $('.modal-content .modal-register #register-form').children("display_name");
+                displayName.text(value.username);
+                return true;
+            }
+            else{
+                title.text("Username is not available!");
+                return false;
+            }
+        });
+        return false;
+    }
+    
+    //check email
+    this.validateEmail = function(data){
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(data);
+    }
+    
+    //Generate url to redirect on login or register
+    this.rootUrl = function(path){
+        if(!path){
+            return window.location.protocol + "//" + window.location.host + window.location.pathname;
+        }
+        return window.location.protocol + "//"+window.location.host + window.location.pathname + path;
+    }
+    
+    //Redirect
+    this.redirect = function(){
+        setTimeout(function(){ 
+            window.location = login.to;
+        }, 2000);     
+    }
+} 
 
 /* Login / Register */
 $('#login-form').submit(function(event){
     event.preventDefault();
     var f = event.currentTarget;
-    var user = {username : f[0].value,
-                password : btoa(f[1].value)
-               };
-    console.log(user);
-    postData(user,"login");      
+    var user = login.userLogin(
+                f[0].value,
+                btoa(f[1].value)
+            );
+    login.submit(user,login.url);      
 });
 
 $('#register-form').submit(function(event){
     var f = event.currentTarget.form;
-    var register = { username : f.username.value,
-                    password : f.password.value, 
-                    email: f.email.value, 
-                    display_name : f.display_name.value,
-                    birthday : f.birthday.value, 
-                    };
+    var register = login.userReg(
+                    f.username.value,
+                    f.password.value,
+                    f.email.value,
+                    f.birthday.value,
+                    f.display_name.value
+                    );
     console.log(register);
-    //postData(register,"register");          
+    login.submit(register,login.regUrl);       
 });
 
 
-//user check register
-
-function loginSuccess(data,cred,form){
-    console.log("Login successful");
-    var user = {
-        'client' : data,
-        'cred' : cred,
-        'form':form
-    };
-    changeHtmlDom(user);
-}
-function loginFailure(data){
-    console.log("Login failed");
-}
-function registerSuccess(data,cred,form){
-    console.log("Register successful");
-    var user = {
-        'client' : data,
-        'cred' : cred,
-        'form':form
-    };
-    changeHtmlDom(user);
-}
-function registerFailure(data){
-    console.log("Register failed");
-}
-function postData(data,form){
-    var url = "";
-    if(form == "login"){ url = "../login/client/client.php?login"; }
-    else if(form == "register"){ url = "../login/client/client.php?register"; }
-    var req = $.ajax({
-        type: "POST",
-        url: url,
-        data: data
-    });
-    
-    req.done(function(info){
-        console.log(info);
-        var json =  JSON.parse(info);
-        if(json['response'] == 'success'){ 
-            if(form == "login"){ loginSuccess(json,data,form);  }
-            else if(form == "register"){ registerSuccess(json,data,form);}
-        }
-        else{ 
-            if(form == "login"){ loginFailure(json);  }
-            else if(form == "register"){ registerFailure(json);}
-        }
-    });
-}
-function changeHtmlDom(data){
-    var h1 = null;
-    if(data.form == "login"){
-        h1 = $('.wrapper .container #login').children("h1");
-        //change welcome sign so that user see's changes
-        $('#login-form').fadeOut(500); 
-        $('.wrapper').addClass('form-success');
-        h1.text("Welcome, " + data.cred.username);
-        sessionStorage.setItem('user_id', data.client.uid);
-        setTimeout(function(){ 
-            redirectTo[0] = "../movies/index.php?uid="+data.client.uid; 
-            redirectTo.myMethod(); 
-        }, 2000);
+var modal = new function(){
+    this.loginClick = function(){
+        $('#loginModal').css("display","block");
+        title = login.modalTitle();
+        backupTitle = title;
     }
-    else if(data.form == "register"){ 
-        h1 = $('.wrapper .container #register').children("h1");
-        //change welcome sign so that user see's changes}
-        $('#register-form').fadeOut(500); 
-        $('.wrapper').addClass('form-success');
-        h1.text("You can now login as " + data.cred.username);
-        setTimeout(function(){ 
-            redirectTo[0] = "../login/index.php"; 
-            redirectTo.myMethod(); 
-        }, 2000);
+    this.profileClick = function(){
+        $('#loginModal').css("display","block");
+    }
+    
+    this.exit = function(event){
+        if (event.target == $('.close')[0] ||event.target == $('#loginModal')[0] ||event.target.className == 'bg-bubbles') {
+            $('#loginModal').css("display","none");
+            $('.hamburger-menu-top').css("display","none");
+        }
+    }
+    
+    this.close = function(){
+         $('#loginModal').css("display","none");
+    }
+    
+    this.domItems = function(){
+        return {
+            mfi :   $('.modal-footer').children(),
+            mf  :   $('.modal-footer'),
+            ml  :   $('.modal-login'),
+            mr  :   $('.modal-register')
+            };
     }
 }
 
-function registerUser(){
-    
-}
-redirectTo = [""];
-redirectTo.myMethod = function (sProperty) {
-    window.location.href = redirectTo[0];
-};
-var f_password = null;
-function check(value,type){
-    if(type.name == "username"){
-        checkUsername({username:value});
-    }
-    else if(type.name == "password"){
-        f_password = value;
-    }
-    else if(type.name == "v_password"){
-        if(value == f_password){
-            
-            console.log("Password 1 and 2 match!");
-        }
-        else{
-            console.log("Password's do not match!");
-        }
-    }
-    else if(type.name == "email"){
-        console.log(value);
-    }
-    else if(type.name == "display_name"){
-        console.log(value);
-    }
+var mItems = modal.domItems();
+
+$('#user-login').click(function(){
+    modal.loginClick();
+})
+
+$('#login-pic').click(function(){
+    modal.profileClick();
+})
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    modal.exit(event);
 }
 
-function checkUsername(value){
-    //var http = new XMLHttpRequest();
-    h1 = $('.wrapper .container #register').children("h1");
-    var req = $.ajax({
-            type: "POST",
-            url: '../login/client/client.php?check',
-            data:value
-        });
-    h1.text("Checking username validity...");
-    req.done(function(info){
-        var json = JSON.parse(info);
-        console.log(json);
-        if(json['username_status'] == true){ 
-            //username is available
-            h1.text("Username is available!");
-        }
-        else{
-            h1.text("Username is not available!");
-        }
-    });
+// When the user clicks on <span> (x), close the modal
+$('.close').click = function() {
+    modal.close();
 }
-function checkPass(){
-    
+
+$('#modal-footer-login').click(function(){
+    toggleModalFooterItems();
+});
+
+$('#modal-footer-register').click(function(){
+    toggleModalFooterItems(); 
+});
+
+function toggleModalFooterItems(){
+    mItems.ml.toggle();
+    mItems.mr.toggle();
+    mItems.mf.find(mItems.mfi[0]).toggle();
+    mItems.mf.find(mItems.mfi[1]).toggle();
 }
+
+/* If user is loged in and browser is on a device or smaller monitor*/
+
+

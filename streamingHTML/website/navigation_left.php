@@ -231,12 +231,12 @@ function modal(){
                     <div class='modal-register' id='register' style='display:none;'>
                         <div class='modal-body'>
                             <form id='register-form' class='form' method='post'>
-                                <input type='text' placeholder='Username' name='username' onblur='check(value,this)' required>
-                                <input type='password' placeholder='Password' name='password' onblur='check(value,this)' required>
-                                <input type='password' placeholder='Verify password' name='v_password' onblur='check(value,this)' required>
-                                <input type='email' placeholder='Email' name='email' onblur='check(value,this)' required>
+                                <input type='text' placeholder='Username' name='username' onblur='login.check(value,this)' required>
+                                <input type='password' placeholder='Password' name='password' onblur='login.check(value,this)' required>
+                                <input type='password' placeholder='Verify password' name='v_password' onblur='login.check(value,this)' required>
+                                <input type='email' placeholder='Email' name='email' onblur='login.check(value,this)' required>
                                 <input type='date' placeholder='Birthday' name='birthday'>
-                                <input type='text' placeholder='Display name' name='display_name' onblur='check(value,this)' required>
+                                <input type='text' placeholder='Display name' name='display_name' onblur='login.check(value,this)' required>
                                 <button type='submit' id='register-button' class='preventSubmit'>Register</button>
                             </form>
                         </div>

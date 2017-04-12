@@ -819,6 +819,7 @@ nav {
         float:left;
         background-color: rgba(198, 198, 198, 0.18);
         left:50px;
+        box-sizing: border-box;
 
     }
     .movies .movie .movie_data{
@@ -900,7 +901,7 @@ nav {
     }
     .movies .movie img{
         position: relative;
-        width:99.9% !important;
+        width:96.9% !important;
     }
 
     .movies .movie .poster{
@@ -1434,6 +1435,10 @@ form button:hover {
         }
             .right-modal-data div{
                 padding: 5px !important;
+            }
+            
+            .right-modal-data p{
+                text-align: center;
             }
     .bottom-modal-data{
         position: relative;

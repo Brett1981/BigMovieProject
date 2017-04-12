@@ -60,6 +60,11 @@ namespace MovieDB_Windows_app
             public class Get
             {
                 //Get API
+
+                /// <summary>
+                /// Retrieve all movies from API by retrieving JSON string
+                /// </summary>
+                /// <returns>string</returns>
                 public static async Task<string> AllMovies()
                 {
                     try
@@ -74,6 +79,11 @@ namespace MovieDB_Windows_app
                     
                 }
 
+                /// <summary>
+                /// Retrieve a movie by sending a guid
+                /// </summary>
+                /// <param name="guid">string</param>
+                /// <returns>Movie.Data</returns>
                 public static async Task<Movie.Data> MovieByGuid(string guid)
                 {
                     try
@@ -149,6 +159,17 @@ namespace MovieDB_Windows_app
                     return init;
                 }
 
+                //Retrieve new user's list from api
+                public static async Task<APIObjects.Users> AllUsers()
+                {
+                    return JsonConvert.DeserializeObject<APIObjects.Users>(
+                        await (await Administration.GetAllUsers(
+                        Create.HttpContent<Auth.User>(GlobalVar.GlobalAuthUser)
+                            )
+                        )
+                        .Content.ReadAsStringAsync());
+                }
+
             }
 
             public class Administration
@@ -160,33 +181,42 @@ namespace MovieDB_Windows_app
                 /// <returns>HttpResponseMessage</returns>
                 internal static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/administration/changemoviestatus", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/ChangeMovieStatus", content);
                 }
 
                 internal static async Task<HttpResponseMessage> Auth(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/administration/auth", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/Auth", content);
                 }
 
                 internal static async Task<HttpResponseMessage> Refresh(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/administration/refresh", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/Refresh", content);
                 }
 
                 internal static async Task<HttpResponseMessage> Init(StringContent content)
                 {
-                    Debug.WriteLine("Timeout is set to " + client.Timeout);
-                    return await client.PostAsync($"{conAddress}/api/administration/init", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/Init", content);
                 }
 
                 internal static async Task<HttpResponseMessage> Edit(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/administration/edit", content);
+                    return await client.PostAsync($"{conAddress}/api/administration/Edit", content);
                 }
 
                 internal static async Task<HttpResponseMessage> NewUser(StringContent content)
                 {
-                    return await client.PostAsync($"{conAddress}/api/Administration/newuser", content);
+                    return await client.PostAsync($"{conAddress}/api/Administration/NewUser", content);
+                }
+
+                internal static async Task<HttpResponseMessage> RemoveUser(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/Administration/RemoveUser", content);
+                }
+
+                internal static async Task<HttpResponseMessage> GetAllUsers(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}/api/Administration/GetAllUsers",content);
                 }
             }
 
@@ -199,6 +229,18 @@ namespace MovieDB_Windows_app
                             JsonConvert.SerializeObject(data),
                             Encoding.UTF8,
                             "application/json");
+                }
+
+                public static async Task<HttpResponseMessage> User(User.Info user, User.Groups group)
+                {
+                    return await Administration.NewUser(
+                        HttpContent<APIObjects.Edit>(
+                            new APIObjects.Edit()
+                            {
+                                user = user,
+                                groups = group,
+                                auth = GlobalVar.GlobalAuthUser
+                            }));
                 }
             }
             
@@ -235,11 +277,25 @@ namespace MovieDB_Windows_app
                 /// <param name="user">Auth.User</param>
                 /// <param name="data">Movie.Data</param>
                 /// <returns>HttpResponseMessage</returns>
-                public static async Task<HttpResponseMessage> Movie(Auth.User user, Movie.Data data)
+                public static async Task<HttpResponseMessage> Movie(Movie.Data data)
                 {
-                    return await Administration.Edit(Create.HttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = user, movie = data }));
+                    return await Administration.Edit(Create.HttpContent<APIObjects.Edit>(new APIObjects.Edit() { auth = GlobalVar.GlobalAuthUser, movie = data }));
                 }
 
+            }
+
+            public class Remove
+            {
+                public static async Task<HttpResponseMessage> User(User.Info user)
+                {
+                   return await Administration.RemoveUser(
+                       Create.HttpContent<APIObjects.Edit>(
+                           new APIObjects.Edit()
+                           {
+                               auth = GlobalVar.GlobalAuthUser,
+                               user = user
+                           }));
+                }
             }
             
             /// <summary>

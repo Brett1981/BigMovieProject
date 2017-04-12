@@ -890,6 +890,11 @@ namespace api.Resources
 
         public static class User
         {
+            public enum Type
+            {
+                User,
+                Administrator
+            }
 
             public static class Get
             {
@@ -1111,7 +1116,7 @@ namespace api.Resources
                         };
                         User_Groups groupDB;
                         if(group != null)
-                            groupDB = await db.User_Groups.Where(x => x.type == group.type).FirstAsync();
+                            groupDB = await db.User_Groups.Where(x => x.type == group.type ).FirstAsync();
                         else
                             groupDB = await db.User_Groups.Where(x => x.type == "user").FirstAsync();
 
@@ -1233,6 +1238,51 @@ namespace api.Resources
                             }
                         }
                         
+                    }
+                    return false;
+                }
+            }
+
+            public static class Check
+            {
+                public static async Task<bool> IsAdmin(Auth.Auth.User user)
+                {
+                    if(user.unique_id != null && user.username != null)
+                    {
+                        var admin = await Get.ByGuid(user.unique_id);
+                        if(admin.username == user.username && admin.User_Groups.type == Type.Administrator.ToString())
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                public static async Task<bool> IsAdmin(Auth.Auth.Login user)
+                {
+                    if (user.password != null && user.username != null)
+                    {
+                        var admin = await Get.ByUsername(user.username);
+                        if (admin.username == user.username 
+                            && admin.User_Groups.type == Type.Administrator.ToString() 
+                            && admin.password == user.password)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+
+            public static class Remove
+            {
+                public static async Task<bool> User(User_Info user)
+                {
+                    db.User_Info.Remove(user);
+                    await db.SaveChangesAsync();
+                    if(await db.User_Info.Where(u => u.unique_id == user.unique_id).FirstOrDefaultAsync() == null)
+                    {
+                        return true;
                     }
                     return false;
                 }

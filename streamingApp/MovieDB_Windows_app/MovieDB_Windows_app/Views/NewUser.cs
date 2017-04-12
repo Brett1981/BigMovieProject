@@ -148,18 +148,17 @@ namespace MovieDB_Windows_app.Views
             try
             {
                 user.birthday = dateTimePicker1.Value;
-                APIObjects.Edit edit = new APIObjects.Edit()
-                {
-                    user = new User.Info(),
-                    groups = new User.Groups()
-                };
-                edit.user = user;
-                edit.groups = ((KeyValuePair<string, User.Groups>)userGroupComboBox.SelectedItem).Value;
 
                 //send data to API for new user
-                var status = await API.Communication.Administration.NewUser(
-                    API.Communication.Create.HttpContent<APIObjects.Edit>(edit)
+                var status = await API.Communication.Create.User(
+                        user, 
+                        ((KeyValuePair<string, User.Groups>)userGroupComboBox.SelectedItem).Value
                     );
+                if (status.IsSuccessStatusCode)
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
             }
             catch(Exception ex)
             {

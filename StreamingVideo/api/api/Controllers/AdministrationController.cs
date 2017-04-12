@@ -53,7 +53,7 @@ namespace api.Controllers
             if(user != null)
             {
                 if (Functions.Decode.Base64toString(user.password) == Functions.Decode.Base64toString(data.password) 
-                    && user.User_Groups.type == "administrator")
+                    && await Resources.Database.User.Check.IsAdmin(data))
                 {
                     await Resources.Database.User.Set.LastLogon(user);
                     await History.Create(History.Type.API, new History_API()
@@ -132,7 +132,7 @@ namespace api.Controllers
                 }
                 else
                 {
-                    if(u.User_Groups.type == "administrator")
+                    if(await Resources.Database.User.Check.IsAdmin(data))
                     {
                         return Ok(new CustomClasses.API.Data()
                         {
@@ -155,73 +155,81 @@ namespace api.Controllers
         [HttpPost, ActionName("Edit")]
         public async Task<IHttpActionResult> Edit(CustomClasses.API.Edit data)
         {
-            if(data != null)
+            if (await Resources.Database.User.Check.IsAdmin(data.auth))
             {
-                if(data.auth != null && data.auth.unique_id.Length > 0 && data.auth.username.Length > 0)
+                if (data != null)
                 {
-                    var u = await Resources.Database.User.Get.ByGuid(data.auth.unique_id);
-                    if( u != null 
-                        && u.User_Groups.type == "administrator" 
-                        && u.unique_id == data.auth.unique_id 
-                        && data.auth.username == u.username
-                        )
+                    if (data.auth != null && data.auth.unique_id.Length > 0 && data.auth.username.Length > 0)
                     {
-                        List<object> tasks = new List<object>();
-                        if(data.api.disks != null || data.api.settings != null)
+                        var u = await Resources.Database.User.Get.ByGuid(data.auth.unique_id);
+                        if (u != null
+                            && u.User_Groups.type == "administrator"
+                            && u.unique_id == data.auth.unique_id
+                            && data.auth.username == u.username
+                            )
                         {
-                            //Edit settings
-                            if(await Resources.Settings.Edit.All(data.api)){
-                                Global.GlobalMovieDisksList = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Disks);
-                                Global.GlobalServerSettings = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Settings);
-                                tasks.Add(data.api);
+                            List<object> tasks = new List<object>();
+                            if (data.api.disks != null || data.api.settings != null)
+                            {
+                                //Edit settings
+                                if (await Resources.Settings.Edit.All(data.api))
+                                {
+                                    Global.GlobalMovieDisksList = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Disks);
+                                    Global.GlobalServerSettings = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Settings);
+                                    tasks.Add(data.api);
+                                }
                             }
-                        }
-                        if(data.movie != null)
-                        {
-                            //edit movie
-                            if(await Resources.Database.Movie.Edit.Movie(data.movie)){
-                                tasks.Add(data.movie);
+                            if (data.movie != null)
+                            {
+                                //edit movie
+                                if (await Resources.Database.Movie.Edit.Movie(data.movie))
+                                {
+                                    tasks.Add(data.movie);
+                                }
                             }
-                        }
-                        if(data.user != null)
-                        {
-                            //edit user data
-                            if(await Resources.Database.User.Edit.Data(data.user)){
-                                tasks.Add(data.user);
+                            if (data.user != null)
+                            {
+                                //edit user data
+                                if (await Resources.Database.User.Edit.Data(data.user))
+                                {
+                                    tasks.Add(data.user);
+                                }
                             }
-                        }
 
 
-                        if(tasks.Count > 0)
-                        {
-                            return Ok(tasks);
+                            if (tasks.Count > 0)
+                            {
+                                return Ok(tasks);
+                            }
                         }
-                        return BadRequest();
-
                     }
                 }
-                return Unauthorized();
+                return BadRequest();
             }
-            return BadRequest();
+            return Unauthorized();
         }
 
         //POST: api/Administration/GetAllUsers
         [HttpPost, ActionName("GetAllUsers")]
         public async Task<IHttpActionResult> GetAllUsers(Auth.User data)
         {
-            if (data != null && data.unique_id != null)
+            if (await Resources.Database.User.Check.IsAdmin(data))
             {
-                var user = await Resources.Database.User.Get.ByGuid(data.unique_id);
-                if (user != null && user.username == data.username)
+                if (data != null && data.unique_id != null)
                 {
-                    await History.Create(History.Type.API, new History_API()
+                    var user = await Resources.Database.User.Get.ByGuid(data.unique_id);
+                    if (user != null && user.username == data.username)
                     {
-                        api_action = "Administration -> Requesting user list from DB, user: " + user.username,
-                        api_datetime = DateTime.Now,
-                        api_type = "Request new user list"
-                    });
-                    return Ok(await Resources.Database.User.Get.AllUsersData());
+                        await History.Create(History.Type.API, new History_API()
+                        {
+                            api_action = "Administration -> Requesting user list from DB, user: " + user.username,
+                            api_datetime = DateTime.Now,
+                            api_type = "Request new user list"
+                        });
+                        return Ok(await Resources.Database.User.Get.AllUsersData());
+                    }
                 }
+                return BadRequest();
             }
             return Unauthorized();
         }
@@ -230,21 +238,52 @@ namespace api.Controllers
         [HttpPost,ActionName("NewUser")]
         public async Task<IHttpActionResult> NewUser(CustomClasses.API.Edit data)
         {
-            var user = await Resources.Database.User.Get.ByUsername(data.user.username);
-            if (user == null)
+            if(await Resources.Database.User.Check.IsAdmin(data.auth))
             {
-                if (data.user.password != null && data.user.email != null && data.groups.Id > 0)
+                var user = await Resources.Database.User.Get.ByUsername(data.user.username);
+                if (user == null)
                 {
-                    return Ok(await Resources.Database.User.Create.New(data.user, data.groups));
+                    if (data.user.password != null && data.user.email != null && data.groups.Id > 0)
+                    {
+                        return Ok(await Resources.Database.User.Create.New(data.user, data.groups));
+                    }
+                    return BadRequest("not enough paramaters were set to create a user");
                 }
-                return BadRequest("not enough paramaters were set to create a user");
+                await History.Create(History.Type.API, new History_API()
+                {
+                    api_action = "User was not created",
+                    api_type = "Error creating new user"
+                });
+                return BadRequest();
             }
-            await History.Create(History.Type.API, new History_API()
-            {
-                api_action = "User was not created",
-                api_type = "Error creating new user"
-            });
             return Unauthorized();
         }
+
+        //POST api/Administration/RemoveUser
+        [HttpPost, ActionName("RemoveUser")]
+        public async Task<IHttpActionResult> RemoveUser(CustomClasses.API.Edit data)
+        {
+            if(await Resources.Database.User.Check.IsAdmin(data.auth))
+            {
+                var user = await Resources.Database.User.Get.ByGuid(data.user.unique_id);
+                if (user != null)
+                {
+                    if (data.user.username == user.username)
+                    {
+                        return Ok(await Resources.Database.User.Remove.User(user));
+                    }
+                    return BadRequest("User was not found or something else went wrong!");
+                }
+                await History.Create(History.Type.API, new History_API()
+                {
+                    api_action = "User was not removed",
+                    api_type = "Error at User.Remove.User"
+                });
+                
+            }
+            return Unauthorized();
+            
+        }
+
     }
 }

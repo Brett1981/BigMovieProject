@@ -54,13 +54,14 @@ namespace MovieDB_Windows_app
                 userLogedIn.Text = u.username;
             }
             rightClickMovieContextMenu.ItemClicked += RightClickMovieContextMenu_ItemClicked;
-
+            api = new API();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
             await SetMovieList();
             SetAPIHistoryDataGrid();
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
         public async Task SetMovieList(List<Movie.Data> list = null , bool force = false)

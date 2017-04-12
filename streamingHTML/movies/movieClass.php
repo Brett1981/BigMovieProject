@@ -90,7 +90,7 @@ class Movies {
 
     //write movie html and return it
     private static function movieToHtml($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='movie(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='set(this);'>
                     <div class='poster'>
                         <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>
@@ -118,7 +118,7 @@ class Movies {
     }
 
     private static function movieToHtmlTopView($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='movie(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='set(this);'>
                     <div class='poster'>
                         <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>

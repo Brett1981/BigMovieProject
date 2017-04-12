@@ -30,23 +30,33 @@ namespace MovieDB_Windows_app.Views
 
         private void Users_Load(object sender, EventArgs e)
         {
-            foreach(var item in UsersData.users)
+            CreateDataGridRows();
+        }
+
+        private void CreateDataGridRows()
+        {
+            if (dataGridView1.Rows.Count > 0)
             {
-                if(item != null)
+                dataGridView1.Rows.Clear();
+            }
+            foreach (var item in UsersData.users)
+            {
+                if (item != null)
                 {
-                    if(dataGridView1.Columns.Count == 0)
+                    if (dataGridView1.Columns.Count == 0)
                     {
-                        foreach(var p in item.GetType().GetProperties())
+                        foreach (var p in item.GetType().GetProperties())
                         {
-                            if(!Array.Exists(ignoreUserItem,element => element.Equals(p.Name)))
+                            if (!Array.Exists(ignoreUserItem, element => element.Equals(p.Name)))
                             {
                                 dataGridView1.Columns.Add(p.Name, p.Name);
                             }
-                            else {
-                                
-                                if(p.Name == ignoreUserItem[0] || p.Name == ignoreUserItem[1])
+                            else
+                            {
+
+                                if (p.Name == ignoreUserItem[0] || p.Name == ignoreUserItem[1])
                                 {
-                                    
+
                                     DataGridViewComboBoxColumn group = new DataGridViewComboBoxColumn()
                                     {
                                         HeaderText = "Select Group",
@@ -54,19 +64,17 @@ namespace MovieDB_Windows_app.Views
                                     };
 
                                     groupDict = new Dictionary<string, User.Groups>();
-                                    
+
                                     foreach (var g in UsersData.groups)
                                     {
                                         groupDict.Add(g.type, g);
                                     }
-                                    group.DataSource = new BindingSource(groupDict,null);
+                                    group.DataSource = new BindingSource(groupDict, null);
                                     group.ValueMember = "Value";
                                     group.DisplayMember = "Key";
                                     dataGridView1.Columns.Add(group);
                                 }
                             }
-                            
-                            
                         }
                         DataGridViewButtonColumn bttn = new DataGridViewButtonColumn()
                         {
@@ -80,7 +88,6 @@ namespace MovieDB_Windows_app.Views
                     SetDataGridUserRow(item);
                 }
             }
-            this.Width = dataGridView1.Width+300;
         }
 
         private void SetDataGridUserRow(User.Info user)
@@ -180,22 +187,60 @@ namespace MovieDB_Windows_app.Views
             dataGridStatusLabel.Text = "";
         }
 
-        private void addUser_Click(object sender, EventArgs e)
+        private async void addUser_Click(object sender, EventArgs e)
         {
             Views.NewUser nUser = new NewUser();
-            nUser.Show();
+            if(nUser.ShowDialog() == DialogResult.OK)
+            {
+                UsersData = await API.Communication.Get.AllUsers();
+                CreateDataGridRows();
+            }
+            
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private async void toolStripButton1_Click(object sender, EventArgs e)
         {
+            User.Info user = new User.Info();
             if(dataGridView1.SelectedRows.Count == 1)
             {
-                var item = dataGridView1.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells;
-                if(MessageBox.Show("Are you sure you want to remove ") == DialogResult.OK)
+                var item = ((dataGridView1.SelectedRows.Cast<DataGridViewRow>().ToList()[0].Cells));
+                foreach(var i in item)
                 {
-
+                    if(i is DataGridViewTextBoxCell)
+                    {
+                        var textBox = (DataGridViewTextBoxCell)i;
+                        switch (dataGridView1.Columns[textBox.ColumnIndex].Name)
+                        {
+                            case "unique_id":
+                                user.unique_id = textBox.Value.ToString();
+                                break;
+                            case "username":
+                                user.username = textBox.Value.ToString();
+                                break;
+                        }
+                    }
                 }
+                if(user.unique_id != null && user.username != null)
+                {
+                    if (MessageBox.Show("Are you sure you want to remove user: "+ user.username,"Delete user",MessageBoxButtons.YesNoCancel,MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        //call api to remove user
+                        var response = await API.Communication.Remove.User(user);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            UsersData = await API.Communication.Get.AllUsers();
+                            CreateDataGridRows();
+                        }
+                    }
+                }
+                
             }
+        }
+
+        private async void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            UsersData = await API.Communication.Get.AllUsers();
+            CreateDataGridRows();
         }
     }
 }
