@@ -18,7 +18,7 @@ using api.Properties;
 
 namespace api.Controllers
 {
-    [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
+    [EnableCors(origins: "*", headers: "*", methods: "GET, POST")]
     public class AdministrationController : ApiController
     {
 
