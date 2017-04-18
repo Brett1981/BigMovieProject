@@ -60,8 +60,8 @@ class Movies {
         self::$html_mostViewedTitle = "<div class='most-viewed title'><a>Popular movies</a><hr></div>";
 
         /*self::$html_all = "<div class='movies'>";*/
-        self::$html_lastAdded = "<div class='seperator-movies'>".self::$html_lastAddedTitle."<div class='last-movies'>";
-        self::$html_mostViewed = "<div class='seperator-movies'>".self::$html_mostViewedTitle."<div class='top-movies'>";
+        self::$html_lastAdded = "<div class='seperator-movies'>".self::$html_lastAddedTitle."<div class='fp-movies'>";
+        self::$html_mostViewed = "<div class='seperator-movies'>".self::$html_mostViewedTitle."<div class='fp-movies'>";
 
         foreach(self::$data_lastAdded as $item){
             self::$html_lastAdded .= Movies::movieToHtmlTopView($item);
@@ -80,7 +80,7 @@ class Movies {
 
     //partial
     private static function Partial($movie){
-        self::$html_partial = "<div class='movies'>";
+        self::$html_partial = "<div class='bg-movies'>";
         foreach($movie as $item){
             self::$html_partial .= Movies::movieToHtml($item);
         }
@@ -90,7 +90,7 @@ class Movies {
 
     //write movie html and return it
     private static function movieToHtml($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='set(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='View(this);'>
                     <div class='poster'>
                         <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>
@@ -118,7 +118,7 @@ class Movies {
     }
 
     private static function movieToHtmlTopView($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='set(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='View(this);'>
                     <div class='poster'>
                         <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>

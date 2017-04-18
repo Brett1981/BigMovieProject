@@ -18,7 +18,17 @@ $data['userDefIcon']    = $data['icons'] .'user_default_icon.png';
 $data['homePage']       = $data['serverRoot'].'/movies/';
 //nov profile link!
 $data['profilePage']    = $data['serverRoot'].'/profile/index.php';
-
+//script list
+$lib = [
+    'lib'       => [
+                    'root' => '../lib/',
+                    'items' => ['Login.js','Menu.js','Modal.js','Movie.js']
+                   ],
+    'website'   => [
+                    'root' => '../website/',
+                    'items' => ['nav.js','login.js','movies.js']
+                   ]
+        ]; 
 //init variables
 $img;
 $user;
@@ -59,13 +69,14 @@ if(isset($enableGenres)){
     $eGenres = $enableGenres;
 }
 if(isset($watching) && !empty($watching)){
-    setNavigation($data['logedIn'],$eGenres,$data,$watching );
+    setNavigation($data['logedIn'],$eGenres,$data,$watching,$lib );
 }
 else{
-    setNavigation($data['logedIn'],$eGenres,$data );
+    setNavigation($data['logedIn'],$eGenres,$data,null,$lib );
 }
 
-function setNavigation($logedIn,$enableGenres,$data,$watching = null){
+function setNavigation($logedIn,$enableGenres,$data,$watching = null,$lib){
+    $s  = loadScripts($lib);
     echo "<div class='navigacija'>";
     $n  = navigation("start");
     $u  = user($logedIn,$data);
@@ -76,7 +87,6 @@ function setNavigation($logedIn,$enableGenres,$data,$watching = null){
     if(isset($watching) && $watching != null){
         $w  = watching($watching);
     }
-    $s  = loadScripts();
     $m  = modal();
     $ne  = navigation("end");
     
@@ -231,12 +241,12 @@ function modal(){
                     <div class='modal-register' id='register' style='display:none;'>
                         <div class='modal-body'>
                             <form id='register-form' class='form' method='post'>
-                                <input type='text' placeholder='Username' name='username' onblur='login.check(value,this)' required>
-                                <input type='password' placeholder='Password' name='password' onblur='login.check(value,this)' required>
-                                <input type='password' placeholder='Verify password' name='v_password' onblur='login.check(value,this)' required>
-                                <input type='email' placeholder='Email' name='email' onblur='login.check(value,this)' required>
+                                <input type='text' placeholder='Username' name='username' onblur='Login.check(value,this)' required>
+                                <input type='password' placeholder='Password' name='password' onblur='Login.check(value,this)' required>
+                                <input type='password' placeholder='Verify password' name='v_password' onblur='Login.check(value,this)' required>
+                                <input type='email' placeholder='Email' name='email' onblur='Login.check(value,this)' required>
                                 <input type='date' placeholder='Birthday' name='birthday'>
-                                <input type='text' placeholder='Display name' name='display_name' onblur='login.check(value,this)' required>
+                                <input type='text' placeholder='Display name' name='display_name' onblur='Login.check(value,this)' required>
                                 <button type='submit' id='register-button' class='preventSubmit'>Register</button>
                             </form>
                         </div>
@@ -250,8 +260,15 @@ function modal(){
             </div>";
 }
 
-function loadScripts(){
-    return "<script src='../website/login.js'></script>";
+function loadScripts($lib){
+    $scripts = "";
+    foreach($lib as $key ){
+        foreach($key['items'] as $items){
+            $scripts .= "<script src='".$key['root'].$items."'></script>";
+        }
+    }
+    return $scripts;
+    
 }
 
 

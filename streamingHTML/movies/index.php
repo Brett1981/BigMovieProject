@@ -90,8 +90,5 @@ else{
           </div>
         </div>
         <!-- /#page-content-wrapper -->
-        <script type="application/javascript" src="../website/nav.js"></script>
-        <script type="application/javascript" src="movies.js"></script>
-
     </body>
 </html>
