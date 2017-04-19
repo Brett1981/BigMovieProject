@@ -12,20 +12,20 @@ if(isset($_GET['login']) && isset($_POST)){
     if(isset($cred['username']) && isset($cred['password'])){
         if(!empty($cred['username']) && !empty($cred['password'])){
             $result = Server::login($cred);
-            $data = json_decode($result);
-            if(($data->user_id) !== ''){
-                $_SESSION['guid'] = $data->user_id;
-                $responseArr['uid'] = $data->user_id;
-                $responseArr['response'] = 'success';
-                echo json_encode($responseArr);
-                exit();
+            if($result !== null && strlen($result) > 0){
+                $data = json_decode($result);
+                if(($data->user_id) !== ''){
+                    $_SESSION['guid'] = $data->user_id;
+                    $responseArr['uid'] = $data->user_id;
+                    $responseArr['response'] = 'success';
+                    echo json_encode($responseArr);
+                    exit();
+                }
             }
-            else{
-                $responseArr['uid'] = '';
-                $responseArr['response'] = 'Wrong username or password!';
-                echo json_encode($responseArr);
-                exit();
-            }
+            $responseArr['uid'] = '';
+            $responseArr['response'] = 'Wrong username or password!';
+            echo json_encode($responseArr);
+            exit();
         }
         else{
             //username or password was empty
@@ -48,10 +48,10 @@ elseif(isset($_GET['register'])){
     if(!empty($reg['username']) && !empty($reg['password']) && !empty($reg['email']) && !empty($reg['display_name'])){
         $result = Server::register($reg);
         $data = json_decode($result); // decode string json so that we get stdclass object
-        $results = $data->Result; //export result part of stdclass to var
-        if(($results->unique_id) !== '' ){
-            $responseArr['uid'] = $results->unique_id;
-            $responseArr['username'] = $results->username;
+        //$results = $data->Result; //export result part of stdclass to var
+        if($data->unique_id !== '' ){
+            $responseArr['uid'] = $data->unique_id;
+            $responseArr['username'] = $data->username;
             $responseArr['response'] = "success";
             echo json_encode($responseArr);
             exit();

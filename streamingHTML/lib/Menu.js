@@ -22,8 +22,8 @@ var Menu = new function(){
         }
         
         this.change = function(){
-            var w = $(window).width();
-            if(w < 1024){
+            var w = $(document).width();
+            if(w < 1025){
                 $('#hamburger').removeClass('open');
                 $('.hamburger-menu-top').hide();
             }
@@ -35,8 +35,8 @@ var Menu = new function(){
         this.toggle = function(item){
             
             $(item).toggleClass('open');
-            var w =$( window ).width();
-            if(w <= 1024){
+            var w =$(document).width();
+            if(w < 1025){
                 $('.hamburger-menu-top').toggle();
             }
             else{
@@ -62,7 +62,7 @@ var Menu = new function(){
         this.windowClick = function(event){
             if(!$(event.target).closest('.navigacija').length) {
                 if($('.hamburger-menu-top').is(":visible")) {
-                    if($(window).width() < 1024){
+                    if($(window).width() < 1025){
                         $('.hamburger-menu-top').hide();
                         $('.hamburger').toggleClass('open');
                     }
@@ -71,10 +71,10 @@ var Menu = new function(){
         }
         
         this.windowResize = function(){
-            var w =$( window ).width();
+            var w = $( document ).width();
             var v = $('.hamburger-menu-top').is(':visible');
             if(w > 1024){
-                if(v && $('body').has('sidenav-active')){
+                if($('body').has('sidenav-active')){
                     $('#hamburger').addClass('open');
                 }
                 else{

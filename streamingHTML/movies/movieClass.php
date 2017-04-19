@@ -15,7 +15,9 @@ class Movies {
 
     private static $data_partial;
     private static $html_partial;
-
+    
+    private static $UrlImages = "https://image.tmdb.org/t/p/w160";
+    private static $ImageOnClickCall = "View(this);";
 
     public static function createMovieList($movies, $type){
         if ($type != 'all') {
@@ -90,9 +92,9 @@ class Movies {
 
     //write movie html and return it
     private static function movieToHtml($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='View(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='".self::$ImageOnClickCall."'>
                     <div class='poster'>
-                        <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
+                        <img alt='poster' src='".self::$UrlImages.$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>
                     </div>
                     <div class='movie_data'>
@@ -118,9 +120,9 @@ class Movies {
     }
 
     private static function movieToHtmlTopView($movie){
-        $movieHtml ="<div id='m' class='movie' onClick='View(this);'>
+        $movieHtml ="<div id='m' class='movie' onClick='".self::$ImageOnClickCall."'>
                     <div class='poster'>
-                        <img alt='poster' src='https://image.tmdb.org/t/p/w160".$movie["Movie_Info"]["poster_path"]."' width='120'/>
+                        <img alt='poster' src='".self::$UrlImages.$movie["Movie_Info"]["poster_path"]."' width='120'/>
                         <div class='gradient'></div>
                     </div>
                     <div class='movie_data'>

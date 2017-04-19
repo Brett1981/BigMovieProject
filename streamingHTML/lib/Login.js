@@ -5,8 +5,9 @@
  */
 
 var Login = new function(){
-    this.url    = "../login/client/client.php?login";
-    this.regUrl = "../login/client/client.php?register";
+    this.url        = "../login/client/client.php?login";
+    this.regUrl     = "../login/client/client.php?register";
+    this.regCheck   = "../login/client/client.php?check";
     this.to = "";
     this.title = $();
 
@@ -47,49 +48,55 @@ var Login = new function(){
         SUCCESS :   {value:1,   name:"Success", code:"S"},
         ERROR   :   {value:2,   name:"Error",   code:"E"}
     };
-
+    
+    //post data to server
+    this.post = function(value,call){
+        return $.ajax({
+                type: "POST",
+                url: call,
+                data:value
+            });
+    }
+    
     //submit data 
     this.submit = function(data,call){
-        var req = $.ajax({
-            type: "POST",
-            url: call,
-            data: data
-        });
-
+        Login.showForm(call,false);
+        Login.showLoader(true);
+        var req = Login.post(data,call);
         req.done(function(info){
             //console.log(info);
             var json =  JSON.parse(info);
             var arr = {response : json, data : data};
             if(json['response'] == 'success'){ 
-                if(call == this.url){ Login.completed(arr,this.url);  }
-                else { Login.completed(arr,this.regUrl);}
+                if(call == Login.url){ Login.completed(arr,Login.url);  }
+                else { Login.completed(arr,Login.regUrl);}
             }
             else{ 
-                if(call == this.url){ Login.failed(arr,this.url);  }
-                else { Login.failed(arr,this.regUrl);}
+                if(call == Login.url){ Login.failed(arr,Login.url);  }
+                else { Login.failed(arr,Login.regUrl);}
             }
+            return false;
         });
     };
     
     //on failed call
     this.failed = function(data,type){
-        console.log(data);
-        console.log(type);
         this.modalDom(data,type,this.Status.ERROR);
+        Login.showForm(type,true);
+        Login.showLoader(false);
     };
     
     //on completed call
     this.completed = function(data,type){
-        console.log(data);
-        console.log(type);
         this.modalDom(data,type,this.Status.SUCCESS);
     };
     
     //edit modal DOM 
     this.modalDom = function(data,type,status){
-        if(status == this.Status.SUCCESS){
-            if(type == this.regUrl){
-            
+        if(status === this.Status.SUCCESS){
+            if(type === Login.regUrl){
+                //set UI for new registered user
+                
             }
             else{
                 sessionStorage.setItem('user_id', data.response.uid);
@@ -99,10 +106,37 @@ var Login = new function(){
             } 
         }
         else{
-            
+            Login.setModalTitle(data.response.response);
         }
     };
     
+    this.showForm = function(link,visible = false){
+        if(link !== null){
+            var type;
+            if(link === Login.url){
+                type = $('#loginModal .modal-login');
+            }
+            else if(link === Login.regUrl){
+                type = $('#loginModal .modal-register');
+            }
+
+            if(type !== null){
+                if(visible){
+                    type.css('display','block');
+                }
+                else{
+                    type.css('display','none');
+                }
+            }
+        }
+    };
+    
+    this.showLoader = function(visible){
+        var loader = $('#loginModal .modal-loader');
+        
+        if(visible){ loader.css('display','block'); }
+        else{ loader.css('display','none'); }
+    }
     //Parent check function for all elements inside register form
     this.check = function(data,type){
         if(this.userRegData == null){
@@ -115,13 +149,15 @@ var Login = new function(){
         }
         else if(type.name.includes("password")){
             if(type.name.includes("v")){
+                var text = "";
                 if(this.userRegData.password != data){
-                    //display error
-                    
+                    text = "Password's do not match!";
+                    this.userRegData.password = "";
                 }
                 else{
-                    //reset error
+                    text = "Password's match";
                 }
+                Login.setModalTitle(text);
             }
             else{
                 this.userRegData.password = data;
@@ -140,11 +176,7 @@ var Login = new function(){
     
     //Check username validity
     this.validateUsername = function(value){
-        var req = $.ajax({
-                type: "POST",
-                url: '../login/client/client.php?check',
-                data:value
-            });
+        var req = Login.post(value,this.regCheck);
         this.setModalTitle("Checking username validity...");
         req.done(function(info){
             var json = JSON.parse(info);
@@ -163,7 +195,7 @@ var Login = new function(){
         });
         return false;
     };
-    
+
     //check email
     this.validateEmail = function(data){
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -20,15 +20,15 @@ $(document).ready(function(){
     });
 
     $('#register-form').submit(function(event){
-        
-        var f = event.currentTarget.form;
+        event.preventDefault();
+        var f = event.currentTarget;
         console.log(f);
         var register = Login.userReg(
-            f.username.value,
-            f.password.value,
-            f.email.value,
-            f.birthday.value,
-            f.display_name.value
+            f[0].value,
+            f[1].value,
+            f[3].value,
+            f[4].value,
+            f[5].value
         );
         console.log(register);
         Login.submit(register,Login.regUrl);
@@ -42,6 +42,7 @@ $(document).ready(function(){
     });
 
     $('#login-pic').click(function(){
+        Menu.disableBodyScroll(true);
         Modal.profileClick();
     });
 

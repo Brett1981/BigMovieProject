@@ -229,26 +229,37 @@ function modal(){
                       <span class='close'>&times;</span>
                       <h2>Login / Register</h2>
                     </div>
-                    <div class='modal-login' id='login' style='display:block;'>
-                        <div class='modal-body'>
-                            <form id='login-form' class='form' method='post' >
-                                <input type='text' placeholder='Username' name='username'>
-                                <input type='password' placeholder='Password' name='password'>
-                                <button type='submit' id='login-button' class='preventSubmit'>Login</button>
-                            </form>
+                    <div class='modal-body'>
+                        <div class='modal-login' id='login' style='display:block;'>
+
+                                <form id='login-form' class='form' method='post' >
+                                    <input type='text' placeholder='Username' name='username' required>
+                                    <input type='password' placeholder='Password' name='password' required>
+                                    <button type='submit' id='login-button' class='preventSubmit'>Login</button>
+                                </form>
+
                         </div>
-                    </div>
-                    <div class='modal-register' id='register' style='display:none;'>
-                        <div class='modal-body'>
-                            <form id='register-form' class='form' method='post'>
-                                <input type='text' placeholder='Username' name='username' onblur='Login.check(value,this)' required>
-                                <input type='password' placeholder='Password' name='password' onblur='Login.check(value,this)' required>
-                                <input type='password' placeholder='Verify password' name='v_password' onblur='Login.check(value,this)' required>
-                                <input type='email' placeholder='Email' name='email' onblur='Login.check(value,this)' required>
-                                <input type='date' placeholder='Birthday' name='birthday'>
-                                <input type='text' placeholder='Display name' name='display_name' onblur='Login.check(value,this)' required>
-                                <button type='submit' id='register-button' class='preventSubmit'>Register</button>
-                            </form>
+                        <div class='modal-register' id='register' style='display:none;'>
+
+                                <form id='register-form' class='form' method='post' onsubmit='return false'>
+                                    <input type='text' placeholder='Username' name='username' onblur='Login.check(value,this)' required>
+                                    <input type='password' placeholder='Password' name='password' onblur='Login.check(value,this)' required>
+                                    <input type='password' placeholder='Verify password' name='v_password' onblur='Login.check(value,this)' required>
+                                    <input type='email' placeholder='Email' name='email' onblur='Login.check(value,this)' required>
+                                    <input type='date' placeholder='Birthday' name='birthday'>
+                                    <input type='text' placeholder='Display name' name='display_name' onblur='Login.check(value,this)' required>
+                                    <button type='submit' id='register-button' class='preventSubmit'>Register</button>
+                                </form>
+
+                        </div>
+                        <div class='modal-loader' style='display:none;'>
+                            <div class='cssload-container'>
+                                    <ul class='cssload-flex-container'>
+                                            <li>
+                                                    <span class='cssload-loading'></span>
+                                            </li>
+                                    </ul>
+                            </div>	
                         </div>
                     </div>
                     <div class='modal-footer'>

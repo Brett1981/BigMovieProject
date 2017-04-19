@@ -101,6 +101,31 @@ class Server {
     public static function getLast10(){
         return Server::getData("/api/video/last10");
     }
+    //GET: retrieve temp session
+    public static function getBySession($data){
+        return Server::getData("/api/video/getbysession/",$data);
+    }
+    //POST: retrieve temp session
+    public static function getSession($data){
+        return Server::postData($data,"/api/video/getsession");
+    }
+    //POST: retrieve movie data
+    public static function getMovie($data){
+        return Server::postData($data, "/api/video/getmovie");
+    }
+    
+    //POST: change user profile picture
+    public static function setUserProfilePicture($data){
+        return Server::postData($data, "/api/user/changeprofilepicture");
+    }
+    //POST: Login
+    public static function login($data){
+        return Server::postData($data, "/api/user/login");
+    }
+    //POST: Register
+    public static function register($data){
+        return Server::postData($data, "/api/user/create");
+    }
     //GET: user data
     public static function getUser($data){
         return Server::getData("/api/user/getuser/",$data);
@@ -116,30 +141,5 @@ class Server {
     //GET: check register form data
     public static function checkFormUser($data){
         return Server::getData("/api/user/check/",$data);
-    }
-    //GET: retrieve temp session
-    public static function getBySession($data){
-        return Server::getData("/api/video/getbysession/",$data);
-    }
-    //POST: Login
-    public static function login($data){
-        return Server::postData($data, "/api/user/login");
-    }
-    //POST: Register
-    public static function register($data){
-        return Server::postData($data, "/api/user/create");
-    }
-    //POST: retrieve temp session
-    public static function getSession($data){
-        return Server::postData($data,"/api/video/getsession");
-    }
-
-    //POST: retrieve movie data
-    public static function getMovie($data){
-        return Server::postData($data, "/api/video/getmovie");
-    }
-    //POST: change user profile picture
-    public static function setUserProfilePicture($data){
-        return Server::postData($data, "/api/user/changeprofilepicture");
     }
 }

@@ -111,10 +111,11 @@ function getMovie($user_id, $movie_id, $username = null, $password = null)
         <script src="../assets/js/jquery-3.1.1.min.js"></script>
         <!-- VideoJs plugin and stylesheet -->
         <script src="../assets/videojs/video.min.js"></script>
-        <link href="../assets/videojs/video-js.min.css" rel="stylesheet">
+        <link href="../assets/videojs/video-js.min.css" rel="stylesheet"> 
         <!-- support IE8 -->
         <script src="../assets/videojs/ie8/videojs-ie8.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/loader.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script type="text/javascript">
 

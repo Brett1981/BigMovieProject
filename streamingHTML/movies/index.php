@@ -49,6 +49,7 @@ else{
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Movies</title>
         <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/loader.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
         <script src="../assets/js/jquery-3.1.1.min.js"></script>
