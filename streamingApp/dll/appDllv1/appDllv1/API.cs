@@ -109,6 +109,73 @@ namespace appDllv1
 
         public class Communication
         {
+            public class Administration
+            {
+                /// <summary>
+                /// List of all calls that can be made to the API
+                /// </summary>
+                private static Dictionary<string, string> Do = new Dictionary<string, string>() {
+                    { "ChangeMovieStatus"   ,"/api/administration/ChangeMovieStatus" },
+                    { "Auth"                ,"/api/administration/Auth" },
+                    { "Refresh"             ,"/api/administration/Refresh" },
+                    { "Init"                ,"/api/administration/Init" },
+                    { "Edit"                ,"/api/administration/Edit" },
+                    { "NewUser"             ,"/api/Administration/NewUser" },
+                    { "RemoveUser"          ,"/api/Administration/RemoveUser" },
+                    { "GetAllUsers"         ,"/api/Administration/GetAllUsers" }
+                };
+
+
+                /// <summary>
+                /// Administration API
+                /// </summary>
+                /// <param name="content"></param>
+                /// <returns>HttpResponseMessage</returns>
+                internal static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["ChangeMovieStatus"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> Auth(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["Auth"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> Refresh(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["Refresh"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> Init(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["Init"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> Edit(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["Edit"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> NewUser(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["NewUser"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> RemoveUser(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["RemoveUser"]}", content);
+                }
+
+                internal static async Task<HttpResponseMessage> GetAllUsers(StringContent content)
+                {
+                    return await client.PostAsync($"{conAddress}{Do["GetAllUsers"]}", content);
+                }
+            }
+
+            private static Dictionary<string, string> Do = new Dictionary<string, string>() {
+                { "All", "/api/video/all" },
+                { "Get", "/api/video/get/" }
+            };
 
             public class Get
             {
@@ -122,7 +189,7 @@ namespace appDllv1
                 {
                     try
                     {
-                        return await client.GetStringAsync(conAddress + "/api/video/allmovies");
+                        return await client.GetStringAsync(conAddress + Do["All"]);
                     }
                     catch (Exception ex)
                     {
@@ -141,7 +208,7 @@ namespace appDllv1
                 {
                     try
                     {
-                        return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + "/api/video/getmovie/" + guid));
+                        return JsonConvert.DeserializeObject<Movie.Data>(await client.GetStringAsync(conAddress + Do["Get"] + guid));
                     }
                     catch (Exception ex)
                     {
@@ -225,53 +292,7 @@ namespace appDllv1
 
             }
 
-            public class Administration
-            {
-                /// <summary>
-                /// Administration API
-                /// </summary>
-                /// <param name="content"></param>
-                /// <returns>HttpResponseMessage</returns>
-                internal static async Task<HttpResponseMessage> ChangeMovieStatus(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/administration/ChangeMovieStatus", content);
-                }
-
-                internal static async Task<HttpResponseMessage> Auth(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/administration/Auth", content);
-                }
-
-                internal static async Task<HttpResponseMessage> Refresh(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/administration/Refresh", content);
-                }
-
-                internal static async Task<HttpResponseMessage> Init(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/administration/Init", content);
-                }
-
-                internal static async Task<HttpResponseMessage> Edit(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/administration/Edit", content);
-                }
-
-                internal static async Task<HttpResponseMessage> NewUser(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/Administration/NewUser", content);
-                }
-
-                internal static async Task<HttpResponseMessage> RemoveUser(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/Administration/RemoveUser", content);
-                }
-
-                internal static async Task<HttpResponseMessage> GetAllUsers(StringContent content)
-                {
-                    return await client.PostAsync($"{conAddress}/api/Administration/GetAllUsers", content);
-                }
-            }
+            
 
 
             public class Create

@@ -10,7 +10,7 @@ using api.Resources;
 
 namespace api.Controllers
 {
-    public class MoviesController : Controller
+    public class MovieController : Controller
     {
         private static HttpClient client = new HttpClient();
         // GET: Movies

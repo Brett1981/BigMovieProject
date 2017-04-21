@@ -92,7 +92,7 @@ namespace api.Controllers
         }
 
         //GET: api/Users/5
-        [HttpGet,ActionName("GetUser"),ResponseType(typeof(User_Info))]
+        [HttpGet,ActionName("ById"),ResponseType(typeof(User_Info))]
         public async Task<IHttpActionResult> GetUser(string value)
         {
             var user = await Resources.Database.User.Get.ByGuid(value);
@@ -131,8 +131,8 @@ namespace api.Controllers
             return Ok(new User_Info());
         }
 
-        //POST: api/Users/ChangeProfilePicture
-        [HttpPost,ActionName("ChangeProfilePicture")]
+        //POST: api/Users/ProfilePicture
+        [HttpPost,ActionName("ProfilePicture")]
         public async Task<IHttpActionResult> ChangeProfilePicture([FromBody] Auth.User data)
         { 
             try
@@ -204,8 +204,8 @@ namespace api.Controllers
             
         }
 
-        //GET: api/Users/GetProfilePicture
-        [HttpGet,ActionName("GetProfilePicture")]
+        //GET: api/Users/ProfilePicture
+        [HttpGet,ActionName("ProfilePicture")]
         public async Task<IHttpActionResult> GetProfilePicture([FromUri] string value)
         {
             var user = await Resources.Database.User.Get.ByGuid(value);
@@ -224,27 +224,11 @@ namespace api.Controllers
             return NotFound();
         }
 
-        //GET: api/Users/GetUserHistory
-        [HttpGet,ActionName("GetUserHistory")]
+        //GET: api/Users/History
+        [HttpGet,ActionName("History")]
         public async Task<IHttpActionResult> GetUserHistory([FromUri] string value)
         {
             return Ok(await Resources.Database.User.Get.UserHistory(value));
-        }
-
-        // DELETE: api/Users/5
-        [ResponseType(typeof(User_Info))]
-        public async Task<IHttpActionResult> DeleteUser(int id)
-        {
-            var user = await db.User_Info.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            db.User_Info.Remove(user);
-            await db.SaveChangesAsync();
-
-            return Ok(user);
         }
 
         protected override void Dispose(bool disposing)
@@ -256,9 +240,5 @@ namespace api.Controllers
             base.Dispose(disposing);
         }
 
-        private bool UserExists(int id)
-        {
-            return db.User_Info.Count(e => e.Id == id) > 0;
-        }
     }
 }

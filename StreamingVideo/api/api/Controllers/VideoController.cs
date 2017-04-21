@@ -22,7 +22,7 @@ namespace api.Controllers
         //public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
         public static HttpClient client = new HttpClient();
         
-        //GET: api/videoplay/value
+        //GET: api/video/play/value
         [HttpGet, ActionName("Play")]
         public async Task<HttpResponseMessage> Play([FromUri]string value)
         {
@@ -90,29 +90,22 @@ namespace api.Controllers
             
         }
 
-        //GET: api/video/allmovies
-        [HttpGet, ActionName("AllMovies")]
-        public IHttpActionResult AllMovies()
+        //GET: api/video/all
+        [HttpGet, ActionName("All")]
+        public IHttpActionResult All()
         {
             return Ok(Database.AllMovies);
         }
 
-        //GET: api/video/getmovie/value
-        [HttpGet,ActionName("GetMovie")]
+        //GET: api/video/get/value
+        [HttpGet,ActionName("Get")]
         public async  Task<IHttpActionResult> GetMovie([FromUri]string value)
         {
             return Ok(await Database.Movie.Get.ByGuid(value));
         }
 
-        //GET: api/video/moviebyid
-        [HttpGet, ActionName("GetMovieById")]
-        public async Task<IHttpActionResult> GetMovieById([FromUri]string value)
-        {
-            return Ok(await Database.Movie.Get.ByGuid(value));
-        }
-
-        //POST: api/video/getmovie (object)
-        [HttpPost,ActionName("GetMovie")]
+        //POST: api/video/get (object)
+        [HttpPost,ActionName("Get")]
         public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
         {
             var movie = await Database.Movie.Get.ByModel(data);
@@ -171,7 +164,7 @@ namespace api.Controllers
         }
 
         //GET: api/video/genre/value
-        [HttpGet, ActionName("Genre")]
+        [HttpGet, ActionName("ByGenre")]
         public IHttpActionResult Genre([FromUri]string value)
         {
             if(value == "scifi") { value = "Science Fiction"; } //website has scifi short for science fiction
@@ -196,6 +189,7 @@ namespace api.Controllers
         {
             return Ok(await Database.Movie.Get.Last10());
         }
+
         //POST: api/video/session
         [HttpPost,ActionName("GetSession")]
         public async Task<IHttpActionResult> GetSession([FromBody] DatabaseUserModels data)
