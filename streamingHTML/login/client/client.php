@@ -11,7 +11,7 @@ if(isset($_GET['login']) && isset($_POST)){
     $cred = $_POST;
     if(isset($cred['username']) && isset($cred['password'])){
         if(!empty($cred['username']) && !empty($cred['password'])){
-            $result = Server::login($cred);
+            $result = Server::Login($cred);
             if($result !== null && strlen($result) > 0){
                 $data = json_decode($result);
                 if(($data->user_id) !== ''){
@@ -46,7 +46,7 @@ if(isset($_GET['login']) && isset($_POST)){
 elseif(isset($_GET['register'])){
     $reg = $_POST;
     if(!empty($reg['username']) && !empty($reg['password']) && !empty($reg['email']) && !empty($reg['display_name'])){
-        $result = Server::register($reg);
+        $result = Server::Register($reg);
         $data = json_decode($result); // decode string json so that we get stdclass object
         //$results = $data->Result; //export result part of stdclass to var
         if($data->unique_id !== '' ){
@@ -71,7 +71,7 @@ elseif(isset($_GET['check']) && isset($_POST)){
     $responseArr['username'] = null;
     if(!empty($data['username'])){
         $responseArr['username'] = $data['username'];
-        $result = Server::checkFormUser($data['username']);
+        $result = Server::CheckFormUser($data['username']);
         if(!empty($result)){ $responseArr['username_status'] = false; }
         else{ $responseArr['username_status'] = true; }
         echo json_encode($responseArr);

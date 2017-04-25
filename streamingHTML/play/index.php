@@ -7,7 +7,7 @@ include_once '../server/serverClass.php';
 $dir_root = dirname(dirname(__FILE__ ));
 
 //navigation dir
-$dir_nav = $dir_root.'\website\navigation_left.php';
+$dir_nav = $dir_root.'\website\nav.php';
 
 //Server client init
 $client = Server::Client();
@@ -22,8 +22,8 @@ if(isset($_SESSION['user']['unique_id']) && !empty($_SESSION['user']['unique_id'
     if(isset($_GET['id']) && $_GET['id'] != null){
         $mGuid = $_GET['id'];
         try {
-            $api = getMovie($_SESSION['user']['unique_id'], $mGuid);
-            $api_session = getSessionRegistered($_SESSION['user']['unique_id'], $mGuid);
+            $api = GetMovie($_SESSION['user']['unique_id'], $mGuid);
+            $api_session = GetSessionRegistered($_SESSION['user']['unique_id'], $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
@@ -48,7 +48,7 @@ else{
         $mGuid = $_GET['id'];
         $guest_id = uniqid();
         try {
-            $api = getMovie($guest_id, $mGuid);
+            $api = GetMovie($guest_id, $mGuid);
         } catch (Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
@@ -65,10 +65,10 @@ else{
     else{ header('location: ../movies'); }
 
 }
-function getSessionRegistered($user_id, $movie_id){
+function GetSessionRegistered($user_id, $movie_id){
     if(isset($user_id) && isset($movie_id) && $movie_id != null){
         $u = array('user_id' => $user_id, 'movie_id' => $movie_id);
-        $result = Server::getSession($u);
+        $result = Server::GetSession($u);
         if($result == null){
             header('location: ../movies/');
             $_SESSION['play_error'] = "Error retrieving data";
@@ -79,11 +79,11 @@ function getSessionRegistered($user_id, $movie_id){
     else{ header('location: ../movies/'); exit(); }
 }
 
-function getMovie($user_id, $movie_id, $username = null, $password = null)
+function GetMovie($user_id, $movie_id, $username = null, $password = null)
 {
     if(isset($user_id) && isset($movie_id) && $movie_id != null){
         $play = array('user_id' => $user_id, 'movie_id' => $movie_id);
-        $result = Server::getMovie($play);
+        $result = Server::GetMovie($play);
         if($result === null){
             header('location: ../movies/');
             $_SESSION['play_error'] = "No movie was found ";

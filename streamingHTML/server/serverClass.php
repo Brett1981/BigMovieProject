@@ -13,13 +13,46 @@
  */
 class Server {
     //put your code here
+    private static $client      = null;
+    
     public static $debug        = false;
     public static $serverIp     = '213.143.88.175';
     public static $serverPort   = '53851';
     public static $httpType     = 'http';
-    private static $client      = null;
-    private static $apiUrl      = ["user" => "/api/user/", "video" => "/api/video/"];
-
+    private static $apiUrl      = ["user" => "api/user/", "video" => "api/video/"];
+    /*public static $apiUrl       = array(
+            "user" => [
+                "url" => "/api/user/", 
+                "get" => array(
+                    "byid"              => ["action" => "byid", "hasData" => true],
+                    "profilepicture"    => ["action" => "profilepicture", "hasData" => true],
+                    "history"           => ["action" => "history", "hasData" => true],
+                    "check"             => ["action" => "check", "hasData" => true],
+                ),
+                "post" => array(
+                    "profilepicture"       => ["action" => "profilepicture", "hasData" => true],
+                    "login"       => ["action" => "login", "hasData" => true],
+                    "create"       => ["action" => "create", "hasData" => true],
+                )
+            ],
+            "video" => [ 
+                "url"  => "/api/video/",
+                "get" => array(
+                    "all"       => ["action" => "all", "hasData" => false],
+                    "top10"     => ["action" => "top10","hasData" => false],
+                    "last10"    => ["action" => "last10","hasData" => false],
+                    "get"       => ["action" => "get","hasData" => true],
+                    "bygenre"      =>  ["action" => "bygenre","hasData" => true],
+                    "getbysession" =>  ["action" => "getbysession","hasData" => true],
+                    
+                ),
+                "post" => array(
+                    "getsession"   =>  ["action" => "getsession", "hasData" => true],
+                    "get"          =>  ["action" => "get","hasData" => true]
+                    )
+            ]
+        );
+    */
     //Client
     public static function Client(){
         self::$client = Server::Connection();
@@ -27,10 +60,10 @@ class Server {
     }
     //Connection string
     private static function Connection(){
-        return self::$httpType."://".self::$serverIp.":".self::$serverPort;
+        return self::$httpType."://".self::$serverIp.":".self::$serverPort."/";
     }
     //GET
-    private static function getData($api = null,$data = null){
+    private static function Get($api = null,$data = null){
         if($api != null){
             try{
                return json_decode(file_get_contents(Server::$client.$api.$data),true);
@@ -42,7 +75,7 @@ class Server {
         else{ header('locaton ../index.php'); }
     }
     //POST
-    private static function postData($data,$api){
+    private static function Post($data,$api){
         $pData = json_encode($data);
         //cURL call to api
         $ch = curl_init(Server::$client.$api);
@@ -82,65 +115,97 @@ class Server {
         $movies[0]['Movie_Info'] = $movieInfo;
         return $movies;
     }
-    //GET: all movies
-    public static function getAllMovies(){
-        return Server::getData(self::$apiUrl['video']."all");
+    
+    /*public static function Get($item,$call,$data){
+        $get = "";
+        if($call["url"] != null){
+            if($item["hasData"]){
+                $get = $call["url"].$item["action"]."/";
+            }
+            else{
+                $get = $call["url"].$item["action"];
+            }
+        }
+        
+        if($get != ""){
+            if($item["hasData"]){
+                return Server::getData($get,$data);
+            }
+            return Server::getData($get); 
+        }
     }
     
-    public static function getMovieById($data){
-        return Server::getData(self::$apiUrl['video']."get/",$data);
+    public static function Post($item,$call,$data){
+        if($call["url"] != null){
+            if($item["action"] != null){
+                if($data != null && $item["hasData"]){ 
+                    return Server::postData($data, $call["url"].$item["action"]);
+                }
+                else{
+                    return Server::postData($call["url"].$item["action"]);
+                }
+            }
+        }
+    }*/
+    //GET: all movies
+    public static function GetAllMovies(){
+        return Server::Get(self::$apiUrl['video']."all");
+    }
+    
+    public static function GetMovieById($data){
+        return Server::Get(self::$apiUrl['video']."get/",$data);
     }
     //GET: movies by genre
-    public static function getByGenre($data){
-        return Server::getData(self::$apiUrl['video']."bygenre/",$data);
+    public static function GetByGenre($data){
+        return Server::Get(self::$apiUrl['video']."bygenre/",$data);
     }
    //GET: top 10
-    public static function getTop10(){
-        return Server::getData(self::$apiUrl['video']."top10");
+    public static function GetTop10(){
+        return Server::Get(self::$apiUrl['video']."top10");
     }
     //GET: last 10
-    public static function getLast10(){
-        return Server::getData(self::$apiUrl['video']."last10");
+    public static function GetLast10(){
+        return Server::Get(self::$apiUrl['video']."last10");
     }
     //GET: retrieve temp session
-    public static function getBySession($data){
-        return Server::getData(self::$apiUrl['video']."getbysession/",$data);
+    public static function GetBySession($data){
+        return Server::Get(self::$apiUrl['video']."getbysession/",$data);
     }
     //POST: retrieve temp session
-    public static function getSession($data){
-        return Server::postData($data, self::$apiUrl['video']."getsession");
+    public static function GetSession($data){
+        return Server::Post($data, self::$apiUrl['video']."getsession");
     }
     //POST: retrieve movie data
-    public static function getMovie($data){
-        return Server::postData($data, self::$apiUrl['video']."get");
+    public static function GetMovie($data){
+        return Server::Post($data, self::$apiUrl['video']."get");
     }
     
     //POST: change user profile picture
-    public static function setUserProfilePicture($data){
-        return Server::postData($data, self::$apiUrl['user']."profilepicture");
+    public static function EditUserProfilePicture($data){
+        return Server::Post($data, self::$apiUrl['user']."profilepicture");
     }
     //POST: Login
-    public static function login($data){
-        return Server::postData($data, self::$apiUrl['user']."login");
+    public static function Login($data){
+        return Server::Post($data, self::$apiUrl['user']."login");
     }
     //POST: Register
-    public static function register($data){
-        return Server::postData($data, self::$apiUrl['user']."create");
+    public static function Register($data){
+        return Server::Post($data, self::$apiUrl['user']."create");
     }
     //GET: user data
-    public static function getUser($data){
-        return Server::getData(self::$apiUrl['user']."byid/",$data);
+    public static function GetUser($data){
+        return Server::Get(self::$apiUrl['user']."byid/",$data);
     }
     //GET: user profile picture
-    public static function getUserProfilePicture($data){
-        return Server::getData(self::$apiUrl['user']."profilepicture/",$data);
+    public static function GetUserProfilePicture($data){
+        return Server::Get(self::$apiUrl['user']."profilepicture/",$data);
     }
     //GET: user history
-    public static function getUserHistory($data){
-        return Server::getData(self::$apiUrl['user']."history/",$data);
+    public static function GetUserHistory($data){
+        return Server::Get(self::$apiUrl['user']."history/",$data);
     }
     //GET: check register form data
-    public static function checkFormUser($data){
-        return Server::getData(self::$apiUrl['user']."check/",$data);
+    public static function CheckFormUser($data){
+        return Server::Get(self::$apiUrl['user']."check/",$data);
     }
 }

@@ -1,14 +1,15 @@
 <?php
-session_start();
-//movie list class
-include_once 'movieClass.php';
 //server communicator
-include_once '../server/serverClass.php';
+require '../server/serverClass.php';
+//movie list class
+require 'movieClass.php';
+
+session_start();
 //root of project
 $dir_root = dirname(dirname(__FILE__ ));
 
 //navigation dir
-$dir_nav = $dir_root.'\website\navigation_left.php';
+$dir_nav = $dir_root.'\website\nav.php';
 
 //genres init
 $enableGenres = true;
@@ -24,19 +25,20 @@ $client = Server::Client();
 
 if(isset($_GET['genre']) && $_GET['genre'] != ""){
     $g = $_GET['genre'];
-    $genreMovies = Server::getByGenre($g);
+    $genreMovies = Server::GetByGenre($g);
 }
 elseif(isset($_GET['top10'])){
-    $top10 = Server::getTop10();
+    $top10 = Server::GetTop10();
 }
 elseif(isset($_GET['last10'])){
-    $last10 = Server::getLast10();
+    $last10 = Server::GetLast10();
 }
 elseif(isset($_GET['showall'])){
-    $showall = Server::getAllMovies();
+    $showall = Server::GetAllMovies();
 }
 else{
-    $all = Server::getAllMovies();
+    //$all = Server::Get(Server::$apiUrl["video"]["get"]["all"],Server::$apiUrl["video"],null);
+    $all = Server::GetAllMovies();
     //Unit test for movies//
     //$all = Server::getDataTest();
 }

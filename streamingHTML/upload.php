@@ -71,13 +71,13 @@ else{
 
 if($isUploaded == 1){
     $data = array('unique_id' => $_SESSION['user']['unique_id'], 'image_url' => $data['serverDir'].basename($_FILES["avatar"]["name"]));
-    Server::setUserProfilePicture($data);
+    Server::EditUserProfilePicture($data);
     //var_dump(file_post_contents($api,$data,$target_file));
     $_SESSION['post_message'] = "Profile updated.";
     //delete file on successfull upload
     unlink($_SESSION['upload']['targetFileUpload']); 
     //redirect to profile page of user
-    $_SESSION['user']['user_image'] = Server::getUserProfilePicture($_SESSION['user']['unique_id']);
+    $_SESSION['user']['user_image'] = Server::GetUserProfilePicture($_SESSION['user']['unique_id']);
 }
 if(isset($_SESSION['user']['unique_id']))
 { 

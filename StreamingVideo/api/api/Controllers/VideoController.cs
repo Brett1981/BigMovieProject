@@ -104,7 +104,7 @@ namespace api.Controllers
             return Ok(await Database.Movie.Get.ByGuid(value));
         }
 
-        //POST: api/video/get (object)
+        //POST: api/video/get
         [HttpPost,ActionName("Get")]
         public async Task<IHttpActionResult> GetMovie([FromBody] DatabaseUserModels data)
         {
@@ -200,6 +200,13 @@ namespace api.Controllers
                 return NotFound();
             }
             return Ok(s.session_id);
+        }
+
+        //GET: api/video/search
+        [HttpGet, ActionName("Search")]
+        public async Task<IHttpActionResult> Search(string value)
+        {
+            return Ok(await Database.Movie.Get.ByName(value));
         }
         
     }

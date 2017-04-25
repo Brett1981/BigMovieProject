@@ -410,7 +410,7 @@ namespace api.Resources
                 /// </summary>
                 /// <param name="value">string</param>
                 /// <returns>Match</returns>
-                public static Match ByMovieName(string value)
+                public static Match ByMovieFolderName(string value)
                 {
                     Match r = null;
                     string pattern = @"(?'title'.*)(?=\.[\d]{4})\.(?'year'[\d]{4})\.(?'pixelsize'[\d]{4}p)\.(?'format'[\w]+)\.(?'formatsize'[\w]+)-\[(?'group'.*)\]\.(?'extension'[\w]+)$";
@@ -480,6 +480,16 @@ namespace api.Resources
                 public static async Task<List<Movie_Data>> Top10()
                 {
                     return await db.Movie_Data.Where(x => x.views > 0).Take(5).ToListAsync();
+                }
+
+                /// <summary>
+                /// Returns an array of movies that contain the searched query
+                /// </summary>
+                /// <param name="name">string</param>
+                /// <returns>List<Movie_Data></returns>
+                public static async Task<List<Movie_Data>> ByName(string name)
+                {
+                    return await db.Movie_Data.Where(x => x.Movie_Info.title.Contains(name)).ToListAsync();
                 }
             }
 
@@ -713,7 +723,7 @@ namespace api.Resources
                                         int idx = item.Name.LastIndexOf('.');
                                         var name = item.Name.Substring(0, idx);
                                         //regex to get movie info
-                                        var movie = Get.ByMovieName(item.Name);
+                                        var movie = Get.ByMovieFolderName(item.Name);
                                         var movieName = movie.Groups["title"].Value.Replace('.', ' ');
                                         var ext = movie.Groups["extension"].Value;
                                         if (ext == "mp4" || ext == "webm")

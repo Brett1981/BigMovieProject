@@ -22,7 +22,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="api_datetime" Type="datetime" />
           <Property Name="api_action" Type="nvarchar(max)" />
-          <Property Name="api_type" Type="nvarchar" MaxLength="50" />
+          <Property Name="api_type" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="History_User">
           <Key>
@@ -186,7 +186,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="api_datetime" Type="DateTime" Precision="3" />
           <Property Name="api_action" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="api_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="api_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="History_User">
           <Key>

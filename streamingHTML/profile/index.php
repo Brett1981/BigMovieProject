@@ -9,7 +9,7 @@ $client = Server::Client();
 $dir_root = dirname(dirname(__FILE__ ));
 
 //navigation dir
-$dir_nav = $dir_root.'\website\navigation_left.php';
+$dir_nav = $dir_root.'\website\nav.php';
 
 //init variables
 $data = null;
@@ -22,11 +22,11 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
     if(!empty($_SESSION['user']['unique_id'])){ $user_id = $_SESSION['user']['unique_id']; }
     elseif(!empty($_GET['user'])){ $user_id = $_GET['user']; }
     else{ 
-        //header('location ../index.php'); 
+        header('location ../index.php'); 
         }
     
-    $data['user'] = Server::getUser($user_id);
-    $data['history'] = Server::getUserHistory($user_id);
+    $data['user'] = Server::GetUser($user_id);
+    $data['history'] = Server::GetUserHistory($user_id);
 }
 ?>
 <!DOCTYPE html>
@@ -53,8 +53,8 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
 
                     $profile .= "<form name='profile_pic_form' action='../upload.php?avatar=upload' method='post' enctype='multipart/form-data' class='profile_pic_form'>";
                     //echo strlen($_SESSION['user_img']);
-                    if(isset($_SESSION['user']['profile_image']['Result']) && strlen($_SESSION['user']['profile_image']['Result']) > 100){
-                        $profile .= "<img alt='{$data['user']['display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user']['profile_image']['Result']}' />";
+                    if(isset($_SESSION['user']['image']) && strlen($_SESSION['user']['image']) > 100){
+                        $profile .= "<img alt='{$data['user']['display_name']}_picture' src='data:image/jpeg;base64, {$_SESSION['user']['image']}' />";
                     }
                      else{
                         $profile .= "<img alt='profile_picture' src='{$_SESSION['user']['profile_image']}' style='width:100px;'/>";
