@@ -62,6 +62,7 @@ else{
         <!-- /#sidebar-wrapper -->
         <!-- Page Content -->
         <div class="main">
+            <!-- Movie list -->
             <?php
                 Movies::itemsInRow(5);
                 if(isset($genreMovies) && $genreMovies != null){
@@ -82,7 +83,8 @@ else{
                 }
             ?>
         </div>
-        <div id='movieModal' class='modal-movie'>
+        <!-- Modal Movie -->
+        <div id='movieModal' class='modal'>
           <div class='modal-movie-content'>
             <div class='modal-movie-header'>
               <span class='close'>&times;</span>

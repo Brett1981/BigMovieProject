@@ -96,10 +96,7 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
         </div>
         <!-- /#page-content-wrapper -->
         <script type="application/javascript">
-            function toggleSidenav() {
-              document.body.classList.toggle('sidenav-active');
-            }
+            
         </script>
-        <script type="application/javascript" src="../website/nav.js"></script>
     </body>
 </html>

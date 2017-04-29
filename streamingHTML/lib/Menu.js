@@ -60,11 +60,16 @@ var Menu = new function(){
         }
         
         this.windowClick = function(event){
-            if(!$(event.target).closest('.navigacija').length) {
-                if($('.hamburger-menu-top').is(":visible")) {
-                    if($(window).width() < 1025){
-                        $('.hamburger-menu-top').hide();
+            if($(event.target).closest('.navigacija').length > 0) {
+                var h = $('.hamburger-menu-top').is(":visible");
+                if(h != null && $(window).width() < 1025) {
+                    if(h == false){
+                        $('.hamburger-menu-top').show();
                         $('.hamburger').toggleClass('open');
+                    }
+                    else{
+                        $('.hamburger-menu-top').hide();
+                        $('.hamburger').removeClass('open');
                     }
                 }
             }      

@@ -7,6 +7,7 @@ class Builder{
     public $data;
     public $scripts;
     public $user;
+    public $modal;
             
     public function __construct($data){
         $this->watching     = $data['isWatching'];
@@ -15,47 +16,57 @@ class Builder{
         $this->enableGenres = $data['enableGenres'];
         $this->data         = $data['data'];
         $this->scripts      = $data['scripts'];
+        $this->modal        = $data['modal'];
         $this->Create($this);
     }
     
     function Create($data){
-        $s      = $this->LoadScripts($this->scripts);
+        echo $this->Start(true); 
+        $items = array();
+        $items[]      = $this->Navigation("start");
         
-        echo "<div class='navigacija'>";
+        $items[]      = $this->User(
+                            $this->logedIn,
+                            $this->data,
+                            $this->user
+                            );
         
-        $n      = $this->Navigation("start");
+        $items[]      = $this->Search();
         
-        $u      = $this->User(
-                $this->logedIn,
-                $this->data,
-                $this->user);
+        $items[]      = $this->HamburgerMenu("start");
         
-        $h      = $this->HamburgerMenu("start");
-        
-        $l      = $this->Links(
-                $this->enableGenres,
-                $this->logedIn,
-                $this->data,
-                $this->user
-                );
-        
-        $he     = $this->HamburgerMenu("end");
-        
-        $w      = "";
-        
+        $items[]      = $this->Links(
+                            $this->enableGenres,
+                            $this->logedIn,
+                            $this->data,
+                            $this->user
+                            );
+
         if(isset($this->watching) && $this->watching != null){
-            $w  = $this->Watching($this->watching);
+            $items[]  = $this->Watching($this->watching);
         }
         
-        $m      = $this->Modal();
+        $items[]     = $this->HamburgerMenu("end");
         
-        $ne     = $this->Navigation("end");
-
-        echo $n.$u.$h.$l.$w.$he.$ne.$m.$s;
-        echo "</div>";
+        $items[]     = $this->Navigation("end");
+        
+        $items[]     = $this->Modal($this->modal);
+        
+        $items[]     = $this->LoadScripts($this->scripts);
+        foreach($items as $i){
+            echo $i;
+        }
+        echo $this->Start(false);
     }
-
-    function Navigation($d = null){
+    private function Start($isStart){
+            if($isStart){
+                return "<div class='navigacija'>";
+            }
+            else{
+                return "</div>";
+            }
+    }
+    private function Navigation($d = null){
         if($d !== "end"){
             $n      =  "<div class='hamburger' id='hamburger'>
                             <div></div>
@@ -71,8 +82,15 @@ class Builder{
         return $n;
 
     }
-
-    function User($logedIn,$data,$user){
+    private function Search(){
+        return $s = "<!--- Search form --->
+            <div class='search'>
+                <form>
+                    <input type='text' name='search' placeholder='Search..'>
+                </form>
+            </div>";
+    }
+    private function User($logedIn,$data,$user){
         $u = "<div class='user'>";
             if($logedIn){
                 if(isset($user['image']) && $user['image'] !== $data['userDefIcon']){
@@ -97,7 +115,7 @@ class Builder{
         return $u;
     }
 
-    function HamburgerMenu($d){
+    private function HamburgerMenu($d){
         if($d !== "end"){
             $h = "<div class='hamburger-menu-top'>";
         }
@@ -108,8 +126,10 @@ class Builder{
 
     }
 
-    function Links($enableGenres,$logedIn,$data,$user){
-        $u = "<div class='links'>
+    private function Links($enableGenres,$logedIn,$data,$user){
+        $u = "
+            <!--- Menu --->
+            <div class='links'>
                 <ul>
                     <li>
                         <a>Menu</a>
@@ -118,7 +138,6 @@ class Builder{
                 $u  .=         "<li id='user-login'><a id='login' href='#' >Login</a></li>";
             }
                 $u  .=         "<li class='active'><a id='home' href='{$data['serverRoot']}/movies/' >Home</a></li>
-                                <li><a id='search' href='#'>Search</a></li>
                                 <li><a id='about' href='#'>About</a></li>";
 
             if($logedIn){
@@ -129,29 +148,33 @@ class Builder{
                 </ul>
             </div>";
             if(isset($enableGenres) && $enableGenres == true){
-                $u  .=  "<div class='search'>
+                $u  .=  "
+                    <!--- Genres --->
+                    <div class='genres'>
                             <ul>
-                                <li><a>Genres</a>
-                                    <ul>";
-                                    foreach($data['genres'] as $key => $value){
-                                        $u .= "<li><a href='";
-                                        if(strpos($value, '.php') !== false){
-                                            $u .= $value;
+                                <li>
+                                    <a>Genres</a>
+                                        <ul>";
+                                        foreach($data['genres'] as $key => $value){
+                                            $u .= "<li><a href='";
+                                            if(strpos($value, '.php') !== false){
+                                                $u .= $value;
+                                            }
+                                            else{
+                                                $u .= "index.php?genre={$value}";
+                                            }
+                                            $u .= "'>{$key}</a></li>";
                                         }
-                                        else{
-                                            $u .= "index.php?genre={$value}";
-                                        }
-                                        $u .= "'>{$key}</a></li>";
-                                    }
                                 $u .= "</ul>
                                 </li>
                             </ul>
                         </div>";
                     }
+            
         return $u;
     }
 
-    function Watching($d){
+    private function Watching($d){
 
         return "<div class='movie_watching'>
                             <p>Watching: ".$d['movie_name']."</p>
@@ -178,39 +201,33 @@ class Builder{
 
     }
 
-    function Modal(){
+    private function Modal($m){
+        $form = "";
+        foreach($m as $item){
+            $form .= "<div class='{$item['div']['class']}' id='{$item['div']['id']}' style='display:{$item['div']['style']['display']};overflow-y:{$item['div']['style']['overflow-y']}'>"
+            . "<form id='{$item['form']['id']}' class='{$item['form']['class']}' method='{$item['form']['method']}' onsubmit='{$item['form']['onsubmit']}'>";
+            foreach($item['inputs'] as $inp){
+                $form .= "<input type='{$inp['type']}' placeholder='{$inp['placeholder']}' name='{$inp['name']}' onblur='{$inp['onblur']}' ";
+                if($inp['isRequired']){ $form .= "required"; }
+                $form .= ">";
+            }
+            $form .= "<button type='{$item['submit']['type']}' id='{$item['submit']['id']}' class='{$item['submit']['class']}' >{$item['submit']['text']}</button>"
+            . "</form>"
+            . "</div>";
+        }
         return "<!-- The Modal -->
                     <div id='loginModal' class='modal'>
 
-                      <!-- Modal content -->
-                      <div class='modal-content'>
-                        <div class='modal-header'>
-                          <span class='close'>&times;</span>
-                          <h2>Login / Register</h2>
-                        </div>
+                        <!-- Modal content -->
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <span class='close'>&times;</span>
+                                <h2>Login / Register</h2>
+                            </div>
                         <div class='modal-body'>
-                            <div class='modal-login' id='login' style='display:block;'>
-
-                                    <form id='login-form' class='form' method='post' >
-                                        <input type='text' placeholder='Username' name='username' required>
-                                        <input type='password' placeholder='Password' name='password' required>
-                                        <button type='submit' id='login-button' class='preventSubmit'>Login</button>
-                                    </form>
-
-                            </div>
-                            <div class='modal-register' id='register' style='display:none;'>
-
-                                    <form id='register-form' class='form' method='post' onsubmit='return false'>
-                                        <input type='text' placeholder='Username' name='username' onblur='Login.check(value,this)' required>
-                                        <input type='password' placeholder='Password' name='password' onblur='Login.check(value,this)' required>
-                                        <input type='password' placeholder='Verify password' name='v_password' onblur='Login.check(value,this)' required>
-                                        <input type='email' placeholder='Email' name='email' onblur='Login.check(value,this)' required>
-                                        <input type='date' placeholder='Birthday' name='birthday'>
-                                        <input type='text' placeholder='Display name' name='display_name' onblur='Login.check(value,this)' required>
-                                        <button type='submit' id='register-button' class='preventSubmit'>Register</button>
-                                    </form>
-
-                            </div>
+                            <!--- Forms --->
+                            {$form}
+                            <!--- Loader --->
                             <div class='modal-loader' style='display:none;'>
                                 <div class='cssload-container'>
                                         <ul class='cssload-flex-container'>
@@ -228,9 +245,10 @@ class Builder{
                       </div>
                     </div>
                 </div>";
+            return $modal;
     }
 
-    function LoadScripts($lib){
+    private function LoadScripts($lib){
         $scripts = "";
         foreach($lib as $key ){
             foreach($key['items'] as $items){

@@ -247,6 +247,5 @@ function GetMovie($user_id, $movie_id, $username = null, $password = null)
               document.body.classList.toggle('sidenav-active');
             }
         </script>
-        <script type="text/javascript" src="../website/nav.js"></script>
     </body>
 </html>

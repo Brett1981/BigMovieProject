@@ -1,5 +1,9 @@
 $(document).ready(function(){
     
+    function toggleSidenav() {
+        document.body.classList.toggle('sidenav-active');
+    }
+    
     console.log(Menu.setHamStatus());
     if($(window).has('sidenav-active')){
         Menu.change();
@@ -12,9 +16,13 @@ $(document).ready(function(){
         console.log(event);
         Menu.hamburgerMenuTopClick(event);
     });
-
-    $(window).click(function(event){ 
-        Menu.windowClick(event);
+    
+    $("#hamburger").one('click',function(){ 
+        Menu.windowClick(this);
+        /*console.log($(event.target).closest("#hamburger"));
+        if($(event.target).closest("#hamburger").length > 0){
+            
+        }*/
     });
     $(window).resize(function(event){
         Menu.windowResize();
@@ -23,6 +31,5 @@ $(document).ready(function(){
     function disableBodyScroll(data){
         Menu.disableBodyScroll(data);
     }
-    
 
 });

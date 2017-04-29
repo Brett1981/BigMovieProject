@@ -49,7 +49,11 @@ $(document).ready(function(){
 // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         Modal.exit(event);
-        Menu.disableBodyScroll(false);
+//        var l = $('#loginModal').css('display');
+//        var m = $('#movieModal').css('display');
+//        if(l != 'block' && m != 'block'){
+//            
+//        }
     };
 
 // When the user clicks on <span> (x), close the modal

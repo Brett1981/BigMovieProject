@@ -51,6 +51,32 @@ $data['genres'] = array(
     'Thriller'          => 'thriller'
     );
 
+$modalJsAction = "Login.check(value,this)";
+$modal = array(
+    "login" => array(
+        "div" => array("class" => "modal-login","id" => "login","style" => array("display" => "block", "overflow-y" => "auto")),
+        "form" => array("id" => "login-form","class" => "form","method" => "post","onsubmit" => ""),
+        "inputs" => array(
+            array("type" => "text","placeholder" => "Username","name"  => "username","onblur" => "","isRequired" => true),
+            array("type" => "text","placeholder" => "Password","name"  => "password","onblur" => "","isRequired" => true),
+        ),
+        "submit" => array("type" => "submit","id" => "login-button","class" => "preventSubmit","text" => "Login")
+    ),
+    "register" => array(
+        "div" => array( "class" => "modal-register", "id"    => "register", "style" => array("display" => "none", "overflow-y" => "auto")),
+        "form" => array("id" => "register-form","class" => "form","method" => "post","onsubmit"  => "return false"),
+        "inputs" => array(
+            array("type" => "text","placeholder" => "Username","name"  => "username","onblur" => $modalJsAction,"isRequired" => true),
+            array("type" => "password","placeholder" => "Password","name"  => "password","onblur" => $modalJsAction,"isRequired" => true),
+            array("type" => "password","placeholder" => "Verify password","name"  => "v_password","onblur" => $modalJsAction,"isRequired" => true),
+            array("type" => "email","placeholder" => "Email","name"  => "email","onblur" => $modalJsAction,"isRequired" => true),
+            array("type" => "date","placeholder" => "Birthday","name"  => "birthday","onblur" => $modalJsAction,"isRequired" => true),
+            array("type" => "text","placeholder" => "Display name","name"  => "display_name","onblur" => $modalJsAction,"isRequired" => true),
+        ),
+        "submit" => array( "type" => "submit","id" => "login-button","class" => "preventSubmit","text" => "Login")
+    )
+);
+
 
 //user guid length
 $data['guidLength']     = 36;
@@ -66,7 +92,8 @@ else if((isset($_GET['uid']) && !empty($_GET['uid']))
     
         if(strlen($_GET['uid']) == $data['guidLength'] ){
             //guid is from registered user
-            $navData->UserLogin($_GET['uid']); //"7ee711fa-91f6-4902-9e26-fe739c4638a3"
+            // for test "7ee711fa-91f6-4902-9e26-fe739c4638a3"
+            $navData->UserLogin($_GET['uid']); 
         }
         else{
             $navData->UserLogin();
@@ -96,7 +123,8 @@ $build = array(
     'user'          =>  null,
     'enableGenres'  =>  null,
     'data'          =>  $data,
-    'scripts'       =>  $lib
+    'scripts'       =>  $lib,
+    'modal'         =>  $modal
 );
 
 
