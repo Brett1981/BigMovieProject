@@ -15,5 +15,9 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
     echo json_encode($response);
     exit();
 }
+else if(isset($_GET['contains']) && !empty($_GET['contains'])){
+    echo json_encode(Server::MovieSearch($_GET['contains']));
+    exit();
+}
 
 ?>

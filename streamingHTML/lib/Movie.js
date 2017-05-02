@@ -15,6 +15,9 @@ var Movie = new function(){
     }
     
     this.view = function(data){
+        if(typeof data !== 'string' ){
+            data = data.toString();
+        }
         Menu.disableBodyScroll(true);
         this.id = data;
         this.modalView(this.id);
@@ -112,4 +115,77 @@ var Movie = new function(){
             });
         }
     }
+    
+    this.search = function(data){
+        Search.get(data);
+    }
+    
+    
+}
+
+var Search = new function(){
+    this.urlImages = "https://image.tmdb.org/t/p/w160";
+    /*this.genres = {
+        All               : 'index.php?showall',
+        Action            : 'action',
+        Adventure         : 'adventure',
+        Animation         : 'animation',
+        Comedy            : 'comedy',
+        Drama             : 'drama',
+        Family            : 'family',
+        History           : 'history',
+        Horror            : 'horror',
+        Science Fiction   : 'scifi',
+        Thriller          : 'thriller'
+    };*/
+    
+    this.get = function(item){
+        var m = $.get("../website/get.php?contains="+item,function(){});
+        m.done(function(data){
+            if(data.length > 0){
+                Search.create(JSON.parse(data));
+            }
+        });
+    }
+    this.create = function(data){
+        //TODO - Implement search list
+        var sl = $('.search-list');
+        var items = $('.search-list #items');
+        //console.log(data);
+        data.forEach(function(item){
+            if(item.Movie_Info != null){
+                items.append(Search.newLiElement(item));
+                sl.children()
+            }
+        });
+        items.html();
+        sl.css('display','block');
+    }
+    
+    this.newLiElement = function(data){
+        if(data !== null){
+            var k = "'";
+            var onclick = "Movie.view("+data.guid.toString()+");";
+            return "<li>"
+                    + "<a href='#' onclick='"+onclick+"'>"
+                        + "<img alt='poster' class='thumb' src='"+Search.urlImages+data.Movie_Info.poster_path+"' width='60'/>"
+                        + "<span class='info'>"
+                            + "<p>"+data.Movie_Info.title+"</p>"
+                            + "<p>"+Search.setGenres(data.Movie_Info.genres)+"</p>"
+                        + "</span>"
+                    + "</a>"
+                 + "</li>"
+        }
+    }
+    
+    this.setGenres = function(genres){
+        var g = genres.split('|');
+        var genre = new Array();
+        for(var x = 0; x < g.length && x < 3; x++){
+            genre[x] = g[x].split(':')[1] ;
+        }
+        return genre;
+    }
+    
+    
 }

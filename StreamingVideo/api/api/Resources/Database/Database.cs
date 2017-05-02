@@ -288,9 +288,9 @@ namespace api.Resources
                     var movie = await db.Movie_Data.Where(x => x.guid == guid).FirstOrDefaultAsync();
                     if (movie != null)
                     {
-                        if (isPlay)
+                        if (!isPlay)
                         {
-                            return await db.Movie_Data.Where(x => x.guid == guid).FirstOrDefaultAsync();
+                            return movie;
                         }
                         else
                         {
@@ -333,6 +333,7 @@ namespace api.Resources
                 public static async Task<Movie_Data> ByModel(DatabaseUserModels data)
                 {
                     var user = await db.User_Info.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
+                    var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
                     if (user != null)
                     {
 
@@ -341,68 +342,11 @@ namespace api.Resources
                             user_action = "User | Requesting content-> " + data.movie_id + 
                             " | Username -> "+ user.username +", UserId-> " + user.unique_id,
                             user_datetime = DateTime.Now,
-                            user_movie = "",
+                            user_movie = movie.Movie_Info.title,
                             user_type = "User  Requesting content from Movie.Get.ByModel()"
                         });
-                        var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
-                        if (movie.views == null) { movie.views = 1; }
-                        else { movie.views += 1; }
-                        try
-                        {
-                            db.SaveChanges();
-                        }
-                        catch (Exception e)
-                        {
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_action = "Cannot save movie views ",
-                                api_type = "Exception -> GetMovie (object) --> " + e.Message,
-                                api_datetime = DateTime.Now
-                            });
-                        }
-                        finally
-                        {
-                            movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
-                        }
-                        if (movie == null)
-                        {
-                            return new Movie_Data();
-                        }
-                        return movie;
                     }
-                    else
-                    {
-                        if (data.user_id.Length < 20)
-                        {
-                            //it is a guest
-                            var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
-                            if (movie != null)
-                            {
-                                if (movie.views == null) { movie.views = 1; }
-                                else { movie.views++; }
-                                try
-                                {
-                                    db.SaveChanges();
-                                }
-                                catch (Exception e)
-                                {
-                                    await History.Create(History.Type.API, new History_API()
-                                    {
-                                        api_action = "Cannot save movie views ",
-                                        api_type = "Exception -> GetMovie (object) --> " + e.Message,
-                                        api_datetime = DateTime.Now
-                                    });
-                                }
-                                finally
-                                {
-                                    movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
-                                }
-                                return movie;
-                            }
-                            return new Movie_Data();
-                        }
-                    }
-                    return new Movie_Data();
+                    return movie;
                 }
 
                 /// <summary>
@@ -489,7 +433,7 @@ namespace api.Resources
                 /// <returns>List<Movie_Data></returns>
                 public static async Task<List<Movie_Data>> ByName(string name)
                 {
-                    return await db.Movie_Data.Where(x => x.Movie_Info.title.Contains(name)).ToListAsync();
+                    return await db.Movie_Data.Where(x => x.Movie_Info.title.Contains(name)).Take(10).ToListAsync();
                 }
             }
 

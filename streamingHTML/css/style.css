@@ -119,6 +119,12 @@ body{
         top: -10px;
     }
 
+/*------------- Search elements -------------------*/
+.thumb{
+    background-position: 50% 25%;
+    background-size: cover;
+    display: inline-block;
+}
 @media only screen and (min-width: 1024px) {
     /*--- hamburger ---*/
     .hamburger {
@@ -484,6 +490,62 @@ body{
                 transition: width 0.4s ease-in-out;
                 direction: ltr;
             }
+    
+    .search-list{
+        z-index: 1;
+        background: #fff; 
+        width: 264px;
+        border-top: 2px solid #693ae7;
+        overflow: hidden;
+        display: block;
+        position: absolute;
+        margin: 0 auto;
+        top: 50px;
+        right: 0;
+        border-radius: 3px;
+        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+        z-index:0;
+    }
+    .search-list #close{
+        display:none;
+    }
+    .search-list  ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    .search-list li{
+        display: inline-block;
+        width: 100% !important;
+        overflow: hidden;
+        color: #888;
+        border-bottom: 1px solid #eee;
+        box-sizing:border-box;
+    }
+    .search-list .thumb{
+        float: left;
+        width: 40px;
+        height: 60px;
+        display: inline-block;
+        
+    }
+    .search-list .info{
+        padding-left: 0px;
+        color: #646464;
+        font-size: 12px;
+    }
+    .search-list .info p{
+        padding: 0;
+    }
+    .search-list li a:hover{
+        background-color: #dbdbdb;
+    }
+    
+    .search-list li a:hover p{
+         color:#4e4e4e;
+    }
+    
 
         nav .user {
             display: flex;
@@ -1485,3 +1547,5 @@ form button:hover {
     to {top:0; opacity:1}
 }
 /*--------------------!MOVIE MODAL ------------------*/
+
+

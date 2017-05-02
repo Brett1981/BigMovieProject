@@ -21,42 +21,51 @@ class Builder{
     }
     
     function Create($data){
-        echo $this->Start(true); 
         $items = array();
+        //load needed lib's before navigation
+        //$items[]      = $this->LoadPartialScripts($this->scripts['website']);
+        //start nav div
+        $items[]      = $this->Start(true); 
+        //start navigation items  
         $items[]      = $this->Navigation("start");
-        
+        //create user information
         $items[]      = $this->User(
                             $this->logedIn,
                             $this->data,
                             $this->user
                             );
-        
+        //create search items
         $items[]      = $this->Search();
-        
+        //start hamburger menu 
         $items[]      = $this->HamburgerMenu("start");
-        
+        //create all links
         $items[]      = $this->Links(
                             $this->enableGenres,
                             $this->logedIn,
                             $this->data,
                             $this->user
                             );
-
+        //if user is watching movie then insert current movie info
         if(isset($this->watching) && $this->watching != null){
             $items[]  = $this->Watching($this->watching);
         }
-        
+        //end hamburger menu
         $items[]     = $this->HamburgerMenu("end");
-        
+        //end navigation
         $items[]     = $this->Navigation("end");
-        
+        //insert modal html dom item
         $items[]     = $this->Modal($this->modal);
         
+        //load all the necessary libraries required
         $items[]     = $this->LoadScripts($this->scripts);
+        //conclude the builder
+        $items[]     = $this->Start(false);
+        
+        //show on HTML webpage
         foreach($items as $i){
             echo $i;
         }
-        echo $this->Start(false);
+        
     }
     private function Start($isStart){
             if($isStart){
@@ -66,6 +75,7 @@ class Builder{
                 return "</div>";
             }
     }
+    
     private function Navigation($d = null){
         if($d !== "end"){
             $n      =  "<div class='hamburger' id='hamburger'>
@@ -82,14 +92,17 @@ class Builder{
         return $n;
 
     }
+    
     private function Search(){
         return $s = "<!--- Search form --->
             <div class='search'>
                 <form>
-                    <input type='text' name='search' placeholder='Search..'>
+                    <input id='searchbox' type='text' name='search' placeholder='Search..' />
                 </form>
+                ".$this->SearchList()."
             </div>";
     }
+    
     private function User($logedIn,$data,$user){
         $u = "<div class='user'>";
             if($logedIn){
@@ -247,16 +260,28 @@ class Builder{
                 </div>";
             return $modal;
     }
+    
+    private function SearchList(){
+        return "<div class='search-list' style='display:none;'>"
+        . "<ul id='items'></ul></div>";
+    }
 
     private function LoadScripts($lib){
         $scripts = "";
-        foreach($lib as $key ){
+        foreach($lib as $key){
             foreach($key['items'] as $items){
                 $scripts .= "<script src='".$key['root'].$items."'></script>";
             }
         }
         return $scripts;
-
+    }
+    
+    private function LoadPartialScripts($lib){
+        $scripts = "";
+        foreach($lib['items'] as $items ){
+            $scripts .= "<script src='".$lib['root'].$items."'></script>";
+        }
+        return $scripts;
     }
 }
 

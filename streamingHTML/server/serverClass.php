@@ -19,40 +19,8 @@ class Server {
     public static $serverIp     = '213.143.88.175';
     public static $serverPort   = '53851';
     public static $httpType     = 'http';
-    private static $apiUrl      = ["user" => "api/user/", "video" => "api/video/"];
-    /*public static $apiUrl       = array(
-            "user" => [
-                "url" => "/api/user/", 
-                "get" => array(
-                    "byid"              => ["action" => "byid", "hasData" => true],
-                    "profilepicture"    => ["action" => "profilepicture", "hasData" => true],
-                    "history"           => ["action" => "history", "hasData" => true],
-                    "check"             => ["action" => "check", "hasData" => true],
-                ),
-                "post" => array(
-                    "profilepicture"       => ["action" => "profilepicture", "hasData" => true],
-                    "login"       => ["action" => "login", "hasData" => true],
-                    "create"       => ["action" => "create", "hasData" => true],
-                )
-            ],
-            "video" => [ 
-                "url"  => "/api/video/",
-                "get" => array(
-                    "all"       => ["action" => "all", "hasData" => false],
-                    "top10"     => ["action" => "top10","hasData" => false],
-                    "last10"    => ["action" => "last10","hasData" => false],
-                    "get"       => ["action" => "get","hasData" => true],
-                    "bygenre"      =>  ["action" => "bygenre","hasData" => true],
-                    "getbysession" =>  ["action" => "getbysession","hasData" => true],
-                    
-                ),
-                "post" => array(
-                    "getsession"   =>  ["action" => "getsession", "hasData" => true],
-                    "get"          =>  ["action" => "get","hasData" => true]
-                    )
-            ]
-        );
-    */
+    private static $apiUrl      = ["user" => "/api/user/", "video" => "/api/video/"];
+    
     //Client
     public static function Client(){
         self::$client = Server::Connection();
@@ -60,7 +28,7 @@ class Server {
     }
     //Connection string
     private static function Connection(){
-        return self::$httpType."://".self::$serverIp.":".self::$serverPort."/";
+        return self::$httpType."://".self::$serverIp.":".self::$serverPort;
     }
     //GET
     private static function Get($api = null,$data = null){
@@ -76,18 +44,24 @@ class Server {
     }
     //POST
     private static function Post($data,$api){
-        $pData = json_encode($data);
-        //cURL call to api
-        $ch = curl_init(Server::$client.$api);
-        # Setup request to send json via POST
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $pData );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        # Return response instead of printing.
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        # Send request.
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
+        try
+        {
+            $pData = json_encode($data);
+            //cURL call to api
+            $ch = curl_init(Server::$client.$api);
+            # Setup request to send json via POST
+            curl_setopt( $ch, CURLOPT_POSTFIELDS, $pData );
+            curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            # Return response instead of printing.
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            # Send request.
+            $result = curl_exec($ch);
+            curl_close($ch);
+            return $result;
+        } catch (Exception $ex) {
+            echo 'There was an error', $e->getMessage(),"\n";
+        }
+        return null;
     }
 
     public static function getDataTest(){
@@ -159,7 +133,11 @@ class Server {
     public static function GetByGenre($data){
         return Server::Get(self::$apiUrl['video']."bygenre/",$data);
     }
-   //GET: top 10
+    //GET: return movies from search
+    public static function MovieSearch($data){
+        return Server::Get(self::$apiUrl['video']."search/",$data);
+    }
+    //GET: top 10
     public static function GetTop10(){
         return Server::Get(self::$apiUrl['video']."top10");
     }
@@ -179,6 +157,7 @@ class Server {
     public static function GetMovie($data){
         return Server::Post($data, self::$apiUrl['video']."get");
     }
+    
     
     //POST: change user profile picture
     public static function EditUserProfilePicture($data){

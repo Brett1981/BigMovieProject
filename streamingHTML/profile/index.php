@@ -95,8 +95,5 @@ if(isset($_GET['user'])  || isset($_SESSION['user']['unique_id'])){
             ?>
         </div>
         <!-- /#page-content-wrapper -->
-        <script type="application/javascript">
-            
-        </script>
     </body>
 </html>

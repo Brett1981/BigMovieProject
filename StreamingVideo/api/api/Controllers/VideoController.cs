@@ -204,7 +204,7 @@ namespace api.Controllers
 
         //GET: api/video/search
         [HttpGet, ActionName("Search")]
-        public async Task<IHttpActionResult> Search(string value)
+        public async Task<IHttpActionResult> Search([FromUri]string value)
         {
             return Ok(await Database.Movie.Get.ByName(value));
         }
