@@ -320,6 +320,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Resources\Auth\Auth.cs" />
     <Compile Include="Resources\Classes\CustomClasses.cs" />
+    <Compile Include="Resources\Database\Email.cs" />
     <Compile Include="Resources\Database\Settings.cs" />
     <Compile Include="Resources\Database\Database.cs" />
     <Compile Include="Resources\Functions\Functions.cs" />

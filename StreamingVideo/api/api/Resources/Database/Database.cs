@@ -26,7 +26,7 @@ using System.Text.RegularExpressions;
 using api.Resources.Enum;
 using api.Resources.Auth;
 using api.Resources.Global;
-
+using System.Net.Mail;
 
 namespace api.Resources
 {
@@ -1086,7 +1086,16 @@ namespace api.Resources
                             user_movie = "",
                             user_type = "UserCreationSuccess"
                         });
-                        return await Get.ByGuid(user.unique_id);
+                        //SEND EMAIL OR 
+                        if (Email.Email.Send(user)) {
+                            return await Get.ByGuid(user.unique_id);
+                        }
+                        //REMOVE USER FROM DB AND RETURN NULL
+                        db.User_Info.Remove(user);
+                        await db.SaveChangesAsync();
+                        return new User_Info();
+                        
+                       
                     }
                     catch(Exception ex)
                     {
@@ -1108,6 +1117,8 @@ namespace api.Resources
                     }
                 }
             }
+
+            
 
             public static class Edit
             {
