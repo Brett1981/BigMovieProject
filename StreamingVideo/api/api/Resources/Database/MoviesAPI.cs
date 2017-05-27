@@ -19,7 +19,7 @@ namespace api.Resources
 
         public static class Get
         {
-            public static async Task<Movie_Info> MovieInfo(Match data, int id)
+            public static async Task<Movie_Info> Info(Match data, int id)
             {
                 try
                 {

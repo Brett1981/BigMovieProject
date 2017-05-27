@@ -36,5 +36,6 @@ namespace api
         public string production_countries { get; set; }
         public string production_companies { get; set; }
         public string spoken_languages { get; set; }
+        public Nullable<long> length { get; set; }
     }
 }

@@ -63,6 +63,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MediaToolkit, Version=1.1.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaToolkit.1.1.0.1\lib\net40\MediaToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -330,6 +333,7 @@
     <Compile Include="Resources\Database\History.cs" />
     <Compile Include="Resources\Database\MoviesAPI.cs" />
     <Compile Include="Resources\Database\Streaming.cs" />
+    <Compile Include="Resources\Database\Processing.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Session_Guest.cs">
       <DependentUpon>MovieDatabaseModel.tt</DependentUpon>

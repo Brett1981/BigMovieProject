@@ -35,46 +35,34 @@ namespace api.Resources
 
         public static Movie_Data movie;
         private static MovieDatabaseEntities db = new MovieDatabaseEntities();
-        private static int createListCount = 0;
-        private static int checkDbCount = 0;
-
-        /// <summary>
-        /// ProjectDebug is used for only creating a list of movies from database if false reads directories specified
-        /// and checks db to add movie to it.
-        /// </summary>
-        private static bool projectDebug = false;
-
-        private static int databaseMovieCount = 0;
-
-        private static List<Movie_Data> _movies;
+        private static int CreateListCount = 0;
+        public static List<Movie_Data> MovieList { get; private set; }
         
         /// <summary>
         /// Movie Database  public / private items
         /// </summary>
-        public static List<Movie_Data> allMovies
+        public static List<Movie_Data> AllMovies
         {
             get
             {
-                if (_movies != null) { return _movies; }
+                if (MovieList != null) { return MovieList; }
                 else
                 {
                     try {  Movie.Refresh.RefreshAndOrganize(); }
                     catch (Exception ex)
                     {
+                        
                         Debug.WriteLine("Exception caught on AllMovies() -> " + ex.Message);
                     }
                     finally
                     {
-                        if (_movies == null || _movies.Count == 0) { _movies = null; }
+                        if (MovieList == null || MovieList.Count == 0) { MovieList = null; }
                     }
-                    return _movies;
+                    return MovieList;
                 }
             }
-            set { _movies = value; }
+            set { MovieList = value; }
         }
-
-        private static DateTime time;
-        private static DateTime createListTime;
 
 
         public static class Movie
@@ -87,12 +75,26 @@ namespace api.Resources
                 /// Create movie list every x minutes or hours, depends how it is set up
                 /// </summary>
                 /// <returns>null</returns>
-                public static async Task List()
+                public static async Task<bool> List()
                 {
                     try
                     {
-                        bool edited = false;
-                        while (true)
+                        await History.Create(History.Type.API, new History_API()
+                        {
+                            api_action = "Creating new movie list",
+                            api_type = "Task -> status",
+                            api_datetime = DateTime.Now
+                        });
+                        AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
+                        Organize.ByDate();
+                        await History.Create(History.Type.API, new History_API()
+                        {
+                            api_action = "Waiting for next movie list cycle ",
+                            api_type = "Task -> waiting",
+                            api_datetime = DateTime.Now
+                        });
+                        return true;
+                        /*while (true)
                         {
                             if (createListCount == 0)
                             {
@@ -125,7 +127,7 @@ namespace api.Resources
                             }
                             await Task.Delay(new TimeSpan(0, 5, 0));
                             edited = false;
-                        }
+                        }*/
                     }
                     catch (Exception e)
                     {
@@ -135,6 +137,7 @@ namespace api.Resources
                             api_type = "Task -> Error | Exception caught -> Movie.Create.List()",
                             api_datetime = DateTime.Now
                         });
+                        return false;
                     }
                 }
 
@@ -350,21 +353,6 @@ namespace api.Resources
                     return movie;
                 }
 
-                /// <summary>
-                /// Retrieve a movie name from its folder and return an array of strings
-                /// </summary>
-                /// <param name="value">string</param>
-                /// <returns>Match</returns>
-                public static Match ByMovieFolderName(string value)
-                {
-                    Match r = null;
-                    string pattern = @"(?'title'.*)(?=\.[\d]{4})\.(?'year'[\d]{4})\.(?'pixelsize'[\d]{4}p)\.(?'format'[\w]+)\.(?'formatsize'[\w]+)-\[(?'group'.*)\]\.(?'extension'[\w]+)$";
-                    string pattern2 = @"(?'title'.*)\.(?'year'[^\.]+)\.(?'pixelsize'[^\.]+)\.(?'format'[^\.]+)\.(?'formatsize'[^\.]+)\.(?'filename'[^\.]+)\.(?'extension'[^\.]+)";
-
-                    if (value.Contains("[")) r = Regex.Match(value, pattern);
-                    else r = Regex.Match(value, pattern2);
-                    return r;
-                }
 
                 /// <summary>
                 /// Retrieve movies from db where genre is the same as searched
@@ -374,7 +362,7 @@ namespace api.Resources
                 public static List<Movie_Data> ByGenre(string genre)
                 {
                     List<Movie_Data> searchedMovies = new List<Movie_Data>();
-                    foreach (var item in allMovies)
+                    foreach (var item in AllMovies)
                     {
                         if (item.Movie_Info.genres != "")
                         {
@@ -465,71 +453,6 @@ namespace api.Resources
 
                 }
 
-                /// <summary>
-                /// Remove movie database entries if directory does not exist
-                /// </summary>
-                /// <returns>string</returns>
-                public static async Task<string> DeletedMovies()
-                {
-                    try
-                    {
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_type = "Task start -> DatabaseRemoveDeletedFolderFromDb",
-                            api_action = "Starting task -> Remove deleted Movies from Database",
-                            api_datetime = DateTime.Now
-                        });
-                        List<Movie_Data> toDelete = new List<Movie_Data>();
-                        if (allMovies.Count > 0)
-                        {
-                            foreach (var item in allMovies)
-                            {
-                                if (!Directory.Exists(item.dir)) { toDelete.Add(item); }
-                            }
-                            if (toDelete.Count > 0)
-                            {
-                                await History.Create(History.Type.API, new History_API()
-                                {
-                                    api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
-                                    api_action = "Task action -> Found " + toDelete.Count + " movies to delete",
-                                    api_datetime = DateTime.Now
-                                });
-                                db.Movie_Data.RemoveRange(toDelete); //removing entries in database
-                                await db.SaveChangesAsync();
-                                await History.Create(History.Type.API, new History_API()
-                                {
-                                    api_type = "Task status -> DatabaseRemoveDeletedFolderFromDb",
-                                    api_action = "Task status -> removed " + toDelete.Count + " movies with success",
-                                    api_datetime = DateTime.Now
-                                });
-                                return "Ok";
-                            }
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
-                                api_action = "Task action -> No movies found for deletion",
-                                api_datetime = DateTime.Now
-                            });
-                        }
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_type = "Task action -> DatabaseRemoveDeletedFolderFromDb",
-                            api_action = "Task action -> No entries in database ...",
-                            api_datetime = DateTime.Now
-                        });
-                        return "No entries in database ...";
-                    }
-                    catch (Exception ex)
-                    {
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_type = "Exception thrown -> DatabaseRemoveDeletedFolderFromDb",
-                            api_action = "Exception --> " + ex.Message + " -- " + ex.InnerException.InnerException,
-                            api_datetime = DateTime.Now
-                        });
-                        return ex.Message;
-                    }
-                }
             }
 
             public static class Organize
@@ -539,11 +462,11 @@ namespace api.Resources
                 /// </summary>
                 public static void ByDate()
                 {
-                    if (allMovies.Count > 0)
+                    if (AllMovies.Count > 0)
                     {
                         try
                         {
-                            allMovies.Sort((x, y) => y.Movie_Info.release_date.Value.CompareTo(x.Movie_Info.release_date.Value));
+                            AllMovies.Sort((x, y) => y.Movie_Info.release_date.Value.CompareTo(x.Movie_Info.release_date.Value));
                         }
                         catch(Exception ex)
                         {
@@ -562,319 +485,11 @@ namespace api.Resources
                 /// </summary>
                 public static void RefreshAndOrganize()
                 {
-                    allMovies = db.Movie_Data.Select(x => x).ToList();
+                    AllMovies = db.Movie_Data.Select(x => x).ToList();
                     Organize.ByDate();
                 }
             }
             
-            public static class Check
-            {
-                /// <summary>
-                /// Check directories if new movie was found that is not in the local db
-                /// </summary>
-                /// <returns>null</returns>
-                public static async Task DatabaseThread()
-                {
-                    try
-                    {
-                        while (true)
-                        {
-                            if (!projectDebug && checkDbCount == 0)
-                            {
-                                await DirectoriesForNewMovies();
-                                await Insert.MoviesToDatabase();
-                                await Remove.DeletedMovies();
-                                time = DateTime.Now;
-                                Thread t2 = new Thread(async () => await Create.List())
-                                {
-                                    Priority = ThreadPriority.Normal
-                                };
-                                t2.Start();
-                            }
-                            else if (!projectDebug && checkDbCount > 0 && DateTime.Now > time.AddMinutes(10))
-                            {
-                                await DirectoriesForNewMovies();
-                                await Insert.MoviesToDatabase();
-                                await Remove.DeletedMovies();
-                                time = DateTime.Now;
-                            }
-                            else if (projectDebug)
-                            {
-                                Thread t2 = new Thread(async () => await Create.List())
-                                {
-                                    Priority = ThreadPriority.Normal
-                                };
-                                t2.Start();
-                            }
-                            else
-                            {
-                                await Task.Delay(new TimeSpan(0, 0, 0));
-                            }
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_action = "Completed Task -> check/create/remove movies. | DatabaseThread()",
-                                api_type = "Task -> status " ,
-                                api_datetime = DateTime.Now
-                            });
-                            await Task.Delay(new TimeSpan(0, 10, 0));
-                            checkDbCount++;
-                        }
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_action = "Exception caught | Message " + e.Message,
-                            api_type = "Exception -> DatabaseThread()",
-                            api_datetime = DateTime.Now
-                        });
-                    }
-                }
-
-                /// <summary>
-                /// Method that checks directories
-                /// </summary>
-                /// <returns>null</returns>
-                private static async Task DirectoriesForNewMovies()
-                {
-                    try
-                    {
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_action = "Checking directories for new entries!",
-                            api_type = "Status check",
-                            api_datetime = DateTime.Now
-                        });
-                        movieListToAdd = new List<Tuple<Movie_Data, Match>>();
-
-                        foreach (var childDirs in Global.Global.GlobalMovieDisksList)
-                        {
-                            var dirs = Directory.GetDirectories(childDirs.value);
-                            //var dbCount = db.MovieDatas.Count();
-                            //if (dbCount == 0) { databaseMovieCount = 0; } else { databaseMovieCount = db.MovieDatas.Count(); }
-
-                            foreach (var d in dirs)
-                            {
-                                //DirectoryInfo v = new DirectoryInfo(d);
-                                var files = Directory.GetFiles(d);
-                                if (files.Any(s => s.Contains(".mp4") || s.Contains(".webm")))
-                                {
-                                    var mName = files.Where(s => s.Contains(".mp4") || s.Contains(".webm")).ToArray();
-
-                                    if (mName.Count() > 0)
-                                    {
-                                        //create a string from folder name so that it can retrieve movie information from external API
-                                        var item = new FileInfo(mName[0]);
-                                        int idx = item.Name.LastIndexOf('.');
-                                        var name = item.Name.Substring(0, idx);
-                                        //regex to get movie info
-                                        var movie = Get.ByMovieFolderName(item.Name);
-                                        var movieName = movie.Groups["title"].Value.Replace('.', ' ');
-                                        var ext = movie.Groups["extension"].Value;
-                                        if (ext == "mp4" || ext == "webm")
-                                        {
-                                            //check if movie exists in current server db
-                                            var m = await db.Movie_Data.Where(x => x.name == name).FirstOrDefaultAsync();
-                                            if (m == null)
-                                            {
-                                                //creating a list of movies to be searched on the selected API 
-                                                movieListToAdd.Add(new Tuple<Movie_Data, Match>(
-                                                    new Movie_Data() //movie data to be written to db
-                                                {
-                                                        name = name,
-                                                        ext = ext,
-                                                        guid = Create.Guid(name).ToString(),
-                                                        folder = item.Directory.Name.ToString(),
-                                                        dir = item.Directory.FullName,
-                                                        added = DateTime.Now,
-                                                        enabled = true,
-                                                        views = 0
-                                                    },
-                                                    movie //movie regex
-                                                ));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (movieListToAdd.Count > 0)
-                        {
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_action = "Movie list contains one or more objects to be added to DB!",
-                                api_type = "Task -> new movies found",
-                                api_datetime = DateTime.Now
-                            });
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_action = "Adding movies to local DB ...",
-                                api_type = "Task -> adding to local db",
-                                api_datetime = DateTime.Now
-                            });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        await History.Create(History.Type.API, new History_API()
-                        {
-                            api_action = "Exception --> " + ex.Message,
-                            api_type = "Exception thrown -> DatabaseMovieCheck",
-                            api_datetime = DateTime.Now
-                        });
-                    }
-                }
-            }
-
-            public static class Insert
-            {
-                /// <summary>
-                /// Insert new movies to database
-                /// </summary>
-                /// <returns></returns>
-                public static async Task MoviesToDatabase()
-                {
-                    await History.Create(History.Type.API, new History_API()
-                    {
-                        api_action = "Starting task -> Add movies to local Database",
-                        api_datetime = DateTime.Now,
-                        api_type = "Task -> add movies to db",
-                    });
-                    var list = new List<int>();
-                    //item1 = MovieData, item2 = Match
-                    foreach (var item in movieListToAdd)
-                    {
-                        try
-                        {
-                            //check if movie is already in database with this title and update values only for data not info!!
-                            var db_Movie = await db.Movie_Data.Where(x => x.name == item.Item1.name).FirstOrDefaultAsync();
-                            if(db_Movie == null)
-                            {
-                                //get movieinfo from api 
-                                if (MoviesAPI.countAPICalls > 30) { await Task.Delay(5000); MoviesAPI.countAPICalls = 0; }
-                                //editMovieInfo, movie[0] is array from method GetMovieName
-                                Movie_Info mInfo = await MoviesAPI.Get.MovieInfo(item.Item2, databaseMovieCount);
-
-                                if (mInfo.id != null)
-                                {
-                                    if (mInfo.tagline.Length > 128) { mInfo.tagline = mInfo.tagline.Substring(0, 127); }
-                                    item.Item1.Movie_Info = mInfo;
-                                    try
-                                    {
-                                        db.Movie_Data.Add(item.Item1);
-                                        await db.SaveChangesAsync();
-                                        //databaseMovieCount++;
-                                        //temp.Add(mData);
-                                        var movie = db.Movie_Data.Where(x => x.name == item.Item1.name).First();
-                                        await History.Create(History.Type.API, new History_API()
-                                        {
-                                            api_action = "Movie " + movie.Movie_Info.title + " was added to the database as id " + movie.Id + "!",
-                                            api_datetime = DateTime.Now,
-                                            api_type = "Movie added to database",
-                                        });
-                                        list.Add(movie.Id);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        await History.Create(History.Type.API, new History_API()
-                                        {
-                                            api_action = "Exception : Inserting movie to Database --> " + ex.Message,
-                                            api_datetime = DateTime.Now,
-                                            api_type = "Exception thrown InsertMoviesToDb",
-                                        });
-                                    }
-                                }
-                                else
-                                {
-                                    await History.Create(History.Type.API, new History_API()
-                                    {
-                                        api_action = "Movie " + item.Item2.Groups["title"].ToString() + " was not added as there was a problem!",
-                                        api_datetime = DateTime.Now,
-                                        api_type = "Error on movie addition",
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                //update movie info but only directory at whic the movie is located
-                                await History.Create(History.Type.API, new History_API()
-                                {
-                                    api_action = "Movie update -> Updating movie: "+db_Movie.name +" directory!",
-                                    api_datetime = DateTime.Now,
-                                    api_type = "Task -> update movie data / info in SQL...",
-                                });
-                                if (await Update.Directory(db_Movie,item.Item1))
-                                {
-                                    await History.Create(History.Type.API, new History_API()
-                                    {
-                                        api_action = "Movie update -> Succesfully updated movie: " + db_Movie.name + " directory!",
-                                        api_datetime = DateTime.Now,
-                                        api_type = "Task -> Success",
-                                    });
-                                }
-                                else
-                                {
-                                    await History.Create(History.Type.API, new History_API()
-                                    {
-                                        api_action = "Movie update -> Failed to update movie: " + db_Movie.name + " directory!",
-                                        api_datetime = DateTime.Now,
-                                        api_type = "Task -> Failed",
-                                    });
-                                }
-                            }
-                            
-                        }
-                        catch (Exception ex)
-                        {
-                            await History.Create(History.Type.API, new History_API()
-                            {
-                                api_action = "Error -> An error occured : " + ex.Message,
-                                api_datetime = DateTime.Now,
-                                api_type = "Error occured on InsertMoviesToDb",
-                            });
-                        }
-
-                    }
-                    await History.Create(History.Type.API, new History_API()
-                    {
-                        api_action = "End of import of movies.",
-                        api_datetime = DateTime.Now,
-                        api_type = "Status -> InsertMoviesToDb",
-                    });
-                    History_API hapi;
-                    if (list.Count == movieListToAdd.Count)
-                    {
-                        hapi = new History_API()
-                        {
-                            api_type = "Movie to db status",
-                            api_datetime = DateTime.Now,
-                            api_action = "Info -> All movies added (" + list.Count + " - ADDED)",
-                        };
-                    }
-                    else if (list.Count < movieListToAdd.Count)
-                    {
-                        hapi = new History_API()
-                        {
-                            api_type = "Movie to db status",
-                            api_datetime = DateTime.Now,
-                            api_action = "Error -> Less movies added than found on local storage! Movies added " + list.Count,
-                        };
-                    }
-                    else
-                    {
-                        hapi = new History_API()
-                        {
-                            api_type = "Movie to db status",
-                            api_datetime = DateTime.Now,
-                            api_action = "Error -> Something went wrong with importing data to DB! Movies added " + list.Count,
-                        };
-                    }
-                    if (hapi != null)
-                    {
-                        await History.Create(History.Type.API, hapi);
-                    }
-                }
-            }
 
             public static class Update
             {
@@ -1116,7 +731,7 @@ namespace api.Resources
                             username = data.username,
                             password = Functions.Functions.Encode.StringToBase64(data.password),
                             email = data.email,
-                            display_name = (data.display_name != null) ? data.display_name : "User",
+                            display_name = data.display_name ?? "User",
                             birthday = (data.birthday != null) ? Convert.ToDateTime(data.birthday) : DateTime.Now,
                             unique_id = Guid(data.username).ToString(),
                             profile_created = DateTime.Now

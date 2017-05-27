@@ -75,6 +75,7 @@
           <Property Name="production_countries" Type="nvarchar(max)" />
           <Property Name="production_companies" Type="nvarchar(max)" />
           <Property Name="spoken_languages" Type="nvarchar(max)" />
+          <Property Name="length" Type="bigint" />
         </EntityType>
         <EntityType Name="Session_Guest">
           <Key>
@@ -240,6 +241,7 @@
           <Property Name="production_countries" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="production_companies" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="spoken_languages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="length" Type="Int64" />
         </EntityType>
         <EntityType Name="Session_Guest">
           <Key>
@@ -388,6 +390,7 @@
           <EntitySetMapping Name="Movie_Info">
             <EntityTypeMapping TypeName="MovieDatabaseModel.Movie_Info">
               <MappingFragment StoreEntitySet="Movie_Info">
+                <ScalarProperty Name="length" ColumnName="length" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="id_movie" ColumnName="id_movie" />
                 <ScalarProperty Name="adult" ColumnName="adult" />

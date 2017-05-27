@@ -67,7 +67,7 @@ namespace api
             await Task.Delay(0);
             try
             {
-                t1 = new Thread(async () => await Database.Movie.Check.DatabaseThread())
+                t1 = new Thread(async () => await Processing.Start())
                 {
                     Priority = ThreadPriority.Normal
                 };

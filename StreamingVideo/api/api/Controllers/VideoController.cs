@@ -16,7 +16,7 @@ using System.Web.Http.Cors;
 
 namespace api.Controllers
 {
-    [EnableCors(origins: "http://31.15.224.24", headers: "*", methods: "GET, POST")]
+    [EnableCors(origins: "*", headers: "*", methods: "GET, POST")]
     public class VideoController : ApiController
     {
         //public static string[] movieDir = { @"D:\Torrent2\Movies", @"K:\uTorrent\Movies" };
@@ -94,7 +94,7 @@ namespace api.Controllers
         [HttpGet, ActionName("All")]
         public IHttpActionResult All()
         {
-            return Ok(Database.allMovies);
+            return Ok(Database.AllMovies);
         }
 
         //GET: api/video/get/value

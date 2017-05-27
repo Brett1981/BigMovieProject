@@ -16,7 +16,7 @@ namespace api.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            return View(Database.allMovies);
+            return View(Database.AllMovies);
         }
 
         // GET: Movies/Edit/d4e06ba5-6a0a-98af-10cf-b597d49a7021
