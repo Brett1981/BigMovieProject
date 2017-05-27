@@ -1,6 +1,6 @@
 <?php
 class Builder{
-    
+
     public $watching;
     public $logedIn;
     public $enableGenres;
@@ -8,7 +8,7 @@ class Builder{
     public $scripts;
     public $user;
     public $modal;
-            
+
     public function __construct($data){
         $this->watching     = $data['isWatching'];
         $this->logedIn      = $data['isLogedIn'];
@@ -19,14 +19,14 @@ class Builder{
         $this->modal        = $data['modal'];
         $this->Create($this);
     }
-    
+
     function Create($data){
         $items = array();
         //load needed lib's before navigation
         //$items[]      = $this->LoadPartialScripts($this->scripts['website']);
         //start nav div
-        $items[]      = $this->Start(true); 
-        //start navigation items  
+        $items[]      = $this->Start(true);
+        //start navigation items
         $items[]      = $this->Navigation("start");
         //create user information
         $items[]      = $this->User(
@@ -36,7 +36,7 @@ class Builder{
                             );
         //create search items
         $items[]      = $this->Search();
-        //start hamburger menu 
+        //start hamburger menu
         $items[]      = $this->HamburgerMenu("start");
         //create all links
         $items[]      = $this->Links(
@@ -55,17 +55,17 @@ class Builder{
         $items[]     = $this->Navigation("end");
         //insert modal html dom item
         $items[]     = $this->Modal($this->modal);
-        
+
         //load all the necessary libraries required
         $items[]     = $this->LoadScripts($this->scripts);
         //conclude the builder
         $items[]     = $this->Start(false);
-        
+
         //show on HTML webpage
         foreach($items as $i){
             echo $i;
         }
-        
+
     }
     private function Start($isStart){
             if($isStart){
@@ -75,7 +75,7 @@ class Builder{
                 return "</div>";
             }
     }
-    
+
     private function Navigation($d = null){
         if($d !== "end"){
             $n      =  "<div class='hamburger' id='hamburger'>
@@ -92,37 +92,37 @@ class Builder{
         return $n;
 
     }
-    
+
     private function Search(){
         return $s = "<!--- Search form --->
             <div class='search'>
                 <form>
-                    <input id='searchbox' type='text' name='search' placeholder='Search..' />
+                    <input id='searchbox' type='text' name='search' placeholder='Search..' autocomplete='off'/>
                 </form>
                 ".$this->SearchList()."
             </div>";
     }
-    
+
     private function User($logedIn,$data,$user){
         $u = "<div class='user'>";
             if($logedIn){
                 if(isset($user['image']) && $user['image'] !== $data['userDefIcon']){
-                    $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='data:image/jpeg;base64, {$user['image']}' ";
+                    $u .= "<a href='{$data['profilePage']}'><img class='img' src='data:image/jpeg;base64, {$user['image']}' ";
                 }
                 else{
-                    $u .= "<a href='{$data['profilePage']}'><img class='user_img' src='{$user['image']}' ";
-                } 
+                    $u .= "<a href='{$data['profilePage']}'><img class='img' src='{$user['profile_image']}' ";
+                }
             }
             else{
-                    $u .= "<a href='#' id='login-pic'><img class='user_img' src='{$data['userDefIcon']}' ";
+                    $u .= "<a href='#' id='login-pic'><img class='img' src='{$data['userDefIcon']}' ";
             }
-                    $u .= " style='width:100px;'/> 
+                    $u .= " style='width:100px;'/>
                     <!-- For modern browsers. -->
                     <i class='material-icons'>settings</i>
                     </a>
                     <span>
                         <p>Welcome:</p>
-                        <p class='user_username'>{$user['username']}</p>
+                        <p class='username'>{$user['username']}</p>
                     </span>
                 </div>";
         return $u;
@@ -183,7 +183,7 @@ class Builder{
                             </ul>
                         </div>";
                     }
-            
+
         return $u;
     }
 
@@ -238,6 +238,8 @@ class Builder{
                                 <h2>Login / Register</h2>
                             </div>
                         <div class='modal-body'>
+                            <!--- Status --->
+                            <div class='modal-status' style='display:none;'></div>
                             <!--- Forms --->
                             {$form}
                             <!--- Loader --->
@@ -248,7 +250,7 @@ class Builder{
                                                         <span class='cssload-loading'></span>
                                                 </li>
                                         </ul>
-                                </div>	
+                                </div>
                             </div>
                         </div>
                         <div class='modal-footer'>
@@ -260,7 +262,7 @@ class Builder{
                 </div>";
             return $modal;
     }
-    
+
     private function SearchList(){
         return "<div class='search-list' style='display:none;'>"
         . "<ul id='items'></ul></div>";
@@ -275,7 +277,7 @@ class Builder{
         }
         return $scripts;
     }
-    
+
     private function LoadPartialScripts($lib){
         $scripts = "";
         foreach($lib['items'] as $items ){

@@ -38,7 +38,7 @@ namespace api.Controllers
                         api_datetime = DateTime.Now,
                         api_type = "Refresh movie list"
                     });
-                    return Ok(Resources.Database.AllMovies);
+                    return Ok(Resources.Database.allMovies);
                 }
             }
             return Unauthorized();
@@ -138,7 +138,7 @@ namespace api.Controllers
                         {
                             users = await Resources.Database.User.Get.AllUsersData(),
                             disks = Global.GlobalMovieDisksList ?? null,
-                            movies = Resources.Database.AllMovies ?? new List<Movie_Data>(),
+                            movies = Resources.Database.allMovies ?? new List<Movie_Data>(),
                             settings = Global.GlobalServerSettings ?? null,
                             apiHistory = await History.Get.API()
                         });

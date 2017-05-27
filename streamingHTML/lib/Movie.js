@@ -124,7 +124,7 @@ var Movie = new function(){
 }
 
 var Search = new function(){
-    this.urlImages = "https://image.tmdb.org/t/p/w160";
+    this.urlImages = "https://image.tmdb.org/t/p/w92";
     /*this.genres = {
         All               : 'index.php?showall',
         Action            : 'action',
@@ -151,30 +151,31 @@ var Search = new function(){
         //TODO - Implement search list
         var sl = $('.search-list');
         var items = $('.search-list #items');
-        //console.log(data);
+        items.empty();
         data.forEach(function(item){
             if(item.Movie_Info != null){
                 items.append(Search.newLiElement(item));
-                sl.children()
             }
         });
-        items.html();
         sl.css('display','block');
     }
     
     this.newLiElement = function(data){
         if(data !== null){
             var k = "'";
-            var onclick = "Movie.view("+data.guid.toString()+");";
-            return "<li>"
-                    + "<a href='#' onclick='"+onclick+"'>"
-                        + "<img alt='poster' class='thumb' src='"+Search.urlImages+data.Movie_Info.poster_path+"' width='60'/>"
+            console.log(data);
+            var h =  "<li>"
+                    + "<a href='#' ";
+                        h += 'onclick="Movie.view(\''+data.guid+'\')">';
+                        h += "<img alt='poster' class='thumb' src='"+Search.urlImages+data.Movie_Info.poster_path+"' width='92'/>"
                         + "<span class='info'>"
                             + "<p>"+data.Movie_Info.title+"</p>"
                             + "<p>"+Search.setGenres(data.Movie_Info.genres)+"</p>"
                         + "</span>"
+                        + "<p style='display:none;' id='mid'>"+data.guid+"</p>"
                     + "</a>"
                  + "</li>"
+            return h;
         }
     }
     
@@ -185,6 +186,11 @@ var Search = new function(){
             genre[x] = g[x].split(':')[1] ;
         }
         return genre;
+    }
+    
+    this.view = function(data){
+        console.log($(data));
+        Movie.view($(data).children("#mid")[0].innerHTML);
     }
     
     

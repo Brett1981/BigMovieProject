@@ -125,6 +125,7 @@ body{
     background-size: cover;
     display: inline-block;
 }
+/* ----------- FOR LARGER SCRENS ----------------  */
 @media only screen and (min-width: 1024px) {
     /*--- hamburger ---*/
     .hamburger {
@@ -167,6 +168,62 @@ body{
             transition: width 0.4s ease-in-out;
             direction: ltr;
         }
+    .search-list{
+        z-index: 1;
+        background: #fff;
+        width: auto;
+        border-top: 2px solid #693ae7;
+        overflow: hidden;
+        display: block;
+        position: absolute;
+        margin: 0 auto;
+        top: 300px;
+        /* left: 0; */
+        /* right: 0; */
+        border-radius: 3px;
+        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    }
+    .search-list #close{
+        display:none;
+    }
+    .search-list  ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+    .search-list li{
+        display: inline-block;
+        width: 100% !important;
+        overflow: hidden;
+        color: #888;
+        border-bottom: 1px solid #eee;
+        box-sizing:border-box;
+    }
+    .search-list .thumb{
+        float: left;
+        width: 40px;
+        height: 60px;
+        display: inline-block;
+        margin-left: 10px;
+    }
+    .search-list .info{
+        padding-left: 0px;
+        color: #646464;
+        font-size: 12px;
+    }
+    .search-list .info p{
+        padding: 0;
+    }
+    .search-list li a:hover{
+        background-color: #dbdbdb;
+    }
+    
+    .search-list li a:hover p{
+         color:#4e4e4e;
+    }
 
     nav a {
       display: block;
@@ -177,36 +234,36 @@ body{
       padding: 5px 0;
     }
 
-        nav a:first-child img{
+        nav .user .img{
             position: relative;
             border-radius: 60px !important;
             margin:0 auto; margin-top:25px; margin-bottom: 25px;
             left:12px;
             border: 5px solid #41295a;}
 
-        nav a:first-child  img:hover{
+        nav .user #login-pic:hover .img{
             border: 5px solid #8856bc;
             transition-property: color 1s ease-in-out;
         }
-        nav a:first-child + span{
+        nav .user a:first-child + span{
             display: inline-flex;
             flex-direction: row;
             width:100%;
             font-size:18px;
         }
 
-        nav a:first-child + span p:not(:last-child){
+        nav .user a:first-child + span p:not(:last-child){
             margin-left: 35px;
             margin-right: 10px;
         }
-        nav a:first-child + span p:last-child{
+        nav .user a:first-child + span p:last-child{
             font-weight: 600;
             text-overflow: ellipsis;
         }
 
-        nav a:hover { background-color: #f5f5f5; }
+        nav .user a:hover { background-color: #f5f5f5; }
 
-        nav a:visited { color: black; }
+        nav .user a:visited { color: black; }
 
         nav a.active {
           background-color: #41295a;
@@ -388,6 +445,8 @@ body{
 
 }
 
+/*--------- FOR SMALL SCREENS --------------*/
+
 @media only screen and (max-width: 1024px){
 
     .hamburger {
@@ -514,6 +573,7 @@ body{
         margin: 0;
         padding: 0;
         overflow: hidden;
+        display: grid;
     }
     .search-list li{
         display: inline-block;
@@ -536,8 +596,23 @@ body{
         font-size: 12px;
     }
     .search-list .info p{
-        padding: 0;
+        padding: 0px;
+        margin: 0;
+        position:relative;
     }
+    
+    .search-list .info p:first-child{
+        white-space: pre-wrap; 
+        width: 18em; 
+        height: 3em;
+        text-overflow: clip; 
+        padding-top: 3px;
+        font-size: 14px;
+    }
+    .search-list .info p:last-child{
+        margin-top: 5px;
+    }
+    
     .search-list li a:hover{
         background-color: #dbdbdb;
     }

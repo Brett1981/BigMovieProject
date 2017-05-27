@@ -69,25 +69,32 @@ namespace api.Controllers
             {
                 if (data.password != null && data.email != null )
                 {
-                    return Ok(await Resources.Database.User.Create.New(new User_Info()
+                    user = await Resources.Database.User.Create.New(new User_Info()
                     {
                         username = data.username,
                         password = data.password,
                         email = data.email,
                         birthday = data.birthday,
                         display_name = data.display_name,
-                    }));
+                    });
+                    if(user != null && user.unique_id != null)
+                    {
+                        if (Resources.Email.Email.Send(user))
+                        {
+                            if((await Resources.Database.User.Get.ByGuid(user.unique_id)).unique_id != null)
+                                return Ok();
+                            await Resources.Database.User.Remove.User(user);
+                            return Conflict();
+                        }
+                        else
+                        {
+                            await Resources.Database.User.Remove.User(user);
+                            return BadRequest("Email address was incorrect or invalid!");
+                        }
+                    }
                 }
                 return BadRequest("not enough paramaters were set to create a user");
             }
-            await History.Create(History.Type.User, new History_User()
-            {
-                user_action = "User create -> " + user.unique_id,
-                user_datetime = DateTime.Now,
-                user_id = user.unique_id,
-                user_movie = "",
-                user_type = "UserCreationError"
-            });
             return Unauthorized();
         }
 

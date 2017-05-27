@@ -13,6 +13,8 @@ var Login = new function(){
 
     var bckpTitle = $('.modal-content .modal-header').children("h2");
     var isSetTitleOrig = false;
+    
+    this.statusDiv = $('#loginModal .modal-status');
 
     this.getModalTitle = function(){
         if(isSetTitleOrig) {
@@ -96,6 +98,9 @@ var Login = new function(){
         if(status === this.Status.SUCCESS){
             if(type === Login.regUrl){
                 //set UI for new registered user
+                Login.showLoader(false);
+                $('#loginModal .modal-status').html("<a>Registration Successfull</a><a>You can now login</a>");
+                //poprav za login status
                 
             }
             else{

@@ -37,7 +37,6 @@ elseif(isset($_GET['showall'])){
     $showall = Server::GetAllMovies();
 }
 else{
-    //$all = Server::Get(Server::$apiUrl["video"]["get"]["all"],Server::$apiUrl["video"],null);
     $all = Server::GetAllMovies();
     //Unit test for movies//
     //$all = Server::getDataTest();

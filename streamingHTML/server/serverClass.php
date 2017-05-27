@@ -34,10 +34,17 @@ class Server {
     private static function Get($api = null,$data = null){
         if($api != null){
             try{
-               return json_decode(file_get_contents(Server::$client.$api.$data),true);
+               if($d = file_get_contents(Server::$client.$api.$data)){
+                   return json_decode($d,true);
+               }
+               else{
+                   throw new Exception;
+               }     
+
             }
             catch(Exception $e){
-                echo 'there was an error ', $e->getMessage(),"\n";
+                echo 'There was an error. Try and refresh the page.', $e->getMessage(),"\n";
+                exit();
             }
         }
         else{ header('locaton ../index.php'); }
@@ -60,6 +67,7 @@ class Server {
             return $result;
         } catch (Exception $ex) {
             echo 'There was an error', $e->getMessage(),"\n";
+            exit();
         }
         return null;
     }

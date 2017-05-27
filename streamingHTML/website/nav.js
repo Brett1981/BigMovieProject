@@ -59,7 +59,4 @@ $(document).ready(function(){
             container.css('display','none');
         }
     });
-    /*$('.search-list').on('clickout',function(){
-        this.css('display','none');
-    })*/
 });

@@ -94,7 +94,7 @@ namespace api.Controllers
         [HttpGet, ActionName("All")]
         public IHttpActionResult All()
         {
-            return Ok(Database.AllMovies);
+            return Ok(Database.allMovies);
         }
 
         //GET: api/video/get/value

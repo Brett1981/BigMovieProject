@@ -2,7 +2,7 @@
 //server communicator
 
 require 'nav/Init.php';
-require 'nav/Builder.php'; 
+require 'nav/Builder.php';
 if(!class_exists("Server")){
     require '../server/serverClass.php';
 }
@@ -35,9 +35,9 @@ $lib = [
                     'root' => '../website/',
                     'items' => ['nav.js','login.js','movies.js']
                    ]
-        ]; 
+        ];
 
-$data['genres'] = array( 
+$data['genres'] = array(
     "All"               => 'index.php?showall',
     'Action'            => 'action',
     'Adventure'         => 'adventure',
@@ -89,20 +89,20 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user']) && !empty($_SESSION['us
 }
 else if((isset($_GET['uid']) && !empty($_GET['uid']))
         && empty($_SESSION['user']['unique_id'])){
-    
+
         if(strlen($_GET['uid']) == $data['guidLength'] ){
             //guid is from registered user
             // for test "7ee711fa-91f6-4902-9e26-fe739c4638a3"
-            $navData->UserLogin($_GET['uid']); 
+            $navData->UserLogin($_GET['uid']);
         }
         else{
             $navData->UserLogin();
         }
-        
+
         if(!empty($navData->profile->user)){
             $profile = $navData->profile->user;
             $_SESSION['user'] = $profile;
-        }  
+        }
 }
 else{
     $navData->UserLogin();
@@ -115,7 +115,6 @@ else{
     //is guest
     $navData->profile->logedIn = false;
 }
-//$_SESSION['userData'] = 
 
 $build = array(
     'isWatching'    =>  null,
@@ -132,7 +131,7 @@ if(isset($enableGenres)){
     $build['enableGenres'] = $enableGenres;
 }
 if(isset($watching) && !empty($watching)){
-    $build['isWatching'] = $watching;    
+    $build['isWatching'] = $watching;
 }
 if(isset($_SESSION['user']) && !empty($_SESSION['user']['unique_id'])){
     $build['user'] = $_SESSION['user'];
@@ -140,8 +139,10 @@ if(isset($_SESSION['user']) && !empty($_SESSION['user']['unique_id'])){
 }
 else if(isset($navData->profile->user) && !empty($navData->profile->user)){
     $build['user'] = $navData->profile->user;
-    
+
 }
+
+//builds the page index
 $builder = new Builder($build);
 
 

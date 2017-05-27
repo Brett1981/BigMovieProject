@@ -29,15 +29,16 @@ namespace api.Resources.Email
             {
                 try
                 {
-                    client.Send("zan.pangrsic@gmail.com", m.ToString(), "Thank you for your registration", 
-                        "Hello " + u.username +"\n Thank you for registering on MovieDatabase website.\nWe hope you will enjoy your stay and movies." +
-                        "\nHere is your login information:" +
-                        "\n"+u.username +
-                        "\n"+ Functions.Functions.Decode.Base64toString(u.password)
+                    client.Send("moviedb@mdb.com", m.ToString(), "MovieDB - Thank you for your registration", 
+                        "Hello " + u.username +"\n\n Thank you for registering on the MovieDatabase website.\n\nWe hope you will enjoy your our movie collection." +
+                        "\nHere is your login information:\n" +
+                        "\nUsername:"+u.username +
+                        "\nPassword"+ Functions.Functions.Decode.Base64toString(u.password) +
+                        "\n\n Debug: pw (b64): "+ Functions.Functions.Decode.Base64toString(u.password) + " | pw (plain): "+ u.password.ToString()
                         );
                     return true;
                 }
-                catch (SmtpException ex)
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
