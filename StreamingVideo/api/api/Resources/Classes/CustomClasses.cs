@@ -7,7 +7,7 @@ namespace api.Resources
 {
     public class CustomClasses
     {
-        public partial class MovieInfoToJSON
+        public partial class JSONToMovieInfo
         {
             public int id { get; set; }
             public Nullable<bool> adult { get; set; }

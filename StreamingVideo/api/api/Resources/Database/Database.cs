@@ -35,7 +35,6 @@ namespace api.Resources
 
         public static Movie_Data movie;
         private static MovieDatabaseEntities db = new MovieDatabaseEntities();
-        private static int CreateListCount = 0;
         public static List<Movie_Data> MovieList { get; private set; }
         
         /// <summary>
@@ -67,7 +66,6 @@ namespace api.Resources
 
         public static class Movie
         {
-            private static List<Tuple<Movie_Data, Match>> movieListToAdd;
 
             public static class Create
             {
@@ -85,7 +83,7 @@ namespace api.Resources
                             api_type = "Task -> status",
                             api_datetime = DateTime.Now
                         });
-                        AllMovies = await db.Movie_Data.Select(x => x).ToListAsync();
+                        AllMovies = await db.Movie_Data.Select(x => x).OrderByDescending(x => x.FileCreationDate).ToListAsync();
                         Organize.ByDate();
                         await History.Create(History.Type.API, new History_API()
                         {
@@ -94,40 +92,6 @@ namespace api.Resources
                             api_datetime = DateTime.Now
                         });
                         return true;
-                        /*while (true)
-                        {
-                            if (createListCount == 0)
-                            {
-                                await History.Create(History.Type.API, new History_API()
-                                {
-                                    api_action = "Creating new movie list",
-                                    api_type = "Task -> status",
-                                    api_datetime = DateTime.Now
-                                });
-                                allMovies = await db.Movie_Data.Select(x => x).ToListAsync();
-                                createListCount++; edited = true;
-                            }
-                            if (DateTime.Now > createListTime.AddMinutes(5))
-                            {
-                                allMovies = await db.Movie_Data.Select(x => x).ToListAsync();
-                                createListCount++;
-                                createListTime = DateTime.Now;
-                                edited = true;
-                            }
-
-                            if (edited)
-                            {
-                                Organize.ByDate();
-                                await History.Create(History.Type.API, new History_API()
-                                {
-                                    api_action = "Waiting for next movie list cycle ",
-                                    api_type = "Task -> waiting",
-                                    api_datetime = DateTime.Now
-                                });
-                            }
-                            await Task.Delay(new TimeSpan(0, 5, 0));
-                            edited = false;
-                        }*/
                     }
                     catch (Exception e)
                     {
@@ -403,7 +367,7 @@ namespace api.Resources
                 /// <returns>MovieData</returns>
                 public static async Task<List<Movie_Data>> Last10()
                 {
-                    return await db.Movie_Data.OrderByDescending(x => x.added).Take(10).ToListAsync();
+                    return await db.Movie_Data.OrderByDescending(x => x.FileCreationDate).Take(10).ToListAsync();
                 }
 
                 /// <summary>

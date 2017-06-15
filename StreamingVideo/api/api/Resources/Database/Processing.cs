@@ -229,7 +229,9 @@ namespace api.Resources
                                                     dir     = item.Directory.FullName,
                                                     added   = DateTime.Now,
                                                     enabled = true,
-                                                    views   = 0
+                                                    views   = 0,
+                                                    FileCreationDate = item.LastWriteTime.ToLocalTime()
+                                                    
                                                 },
                                                 movie //movie regex
                                             ));

@@ -23,6 +23,7 @@ namespace api
         public Nullable<int> views { get; set; }
         public Nullable<System.DateTime> added { get; set; }
         public bool enabled { get; set; }
+        public Nullable<System.DateTime> FileCreationDate { get; set; }
     
         public virtual Movie_Info Movie_Info { get; set; }
     }

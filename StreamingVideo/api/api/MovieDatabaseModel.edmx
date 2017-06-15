@@ -48,6 +48,7 @@
           <Property Name="views" Type="int" />
           <Property Name="added" Type="datetime" />
           <Property Name="enabled" Type="bit" Nullable="false" />
+          <Property Name="FileCreationDate" Type="date" />
         </EntityType>
         <EntityType Name="Movie_Info">
           <Key>
@@ -214,6 +215,7 @@
           <Property Name="added" Type="DateTime" Precision="3" />
           <Property Name="enabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Movie_Info" Relationship="Self.FK_MovieInfo_ToMovieData" FromRole="Movie_Data" ToRole="Movie_Info" />
+          <Property Name="FileCreationDate" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="Movie_Info">
           <Key>
@@ -375,6 +377,7 @@
           <EntitySetMapping Name="Movie_Data">
             <EntityTypeMapping TypeName="MovieDatabaseModel.Movie_Data">
               <MappingFragment StoreEntitySet="Movie_Data">
+                <ScalarProperty Name="FileCreationDate" ColumnName="FileCreationDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="ext" ColumnName="ext" />

@@ -28,9 +28,10 @@ namespace api
                 routeTemplate: "api/{controller}/{action}/{value}",
                 defaults: new { value = RouteParameter.Optional }
             );
-
+            //routeTemplate: "api/{controller}/{ext}/{filename}",
+            
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-            //routeTemplate: "api/{controller}/{ext}/{filename}"
+            
         }
     }
 }

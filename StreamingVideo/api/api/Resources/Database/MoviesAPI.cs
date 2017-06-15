@@ -90,7 +90,7 @@ namespace api.Resources
                                     if (apiResult.id != 0) { info = await client.GetStringAsync("http://api.themoviedb.org/3/movie/" + apiResult.id + "?api_key=" + apikey); }
                                     else { return new Movie_Info(); }
                                     countAPICalls++;
-                                    return Create.MovieInfo(JsonConvert.DeserializeObject<CustomClasses.MovieInfoToJSON>(info), id);
+                                    return Create.MovieInfo(JsonConvert.DeserializeObject<CustomClasses.JSONToMovieInfo>(info), id);
                                 }
                                 else
                                 {
@@ -141,7 +141,7 @@ namespace api.Resources
 
         public static class Create
         {
-            public static Movie_Info MovieInfo(CustomClasses.MovieInfoToJSON data, int id)
+            public static Movie_Info MovieInfo(CustomClasses.JSONToMovieInfo data, int id)
             {
                 return new Movie_Info()
                 {
