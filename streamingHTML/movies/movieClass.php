@@ -100,7 +100,8 @@ class Movies {
                     <div class='movie_data'>
                         <div class='id' style='display:none'>".$movie["guid"]."</div>
                         <div class='title' style='min-width: 200px;'>
-                            <p>".$movie["Movie_Info"]["title"]."</p><p style='font-style: italic;'>(".date_format(new DateTime($movie["Movie_Info"]["release_date"]), 'Y').")</p>
+                            <p>".$movie["Movie_Info"]["title"]."</p>
+                            <p style='font-style: italic;'>(".date_format(new DateTime($movie["Movie_Info"]["release_date"]), 'Y').")</p>
                             <p>".$movie["Movie_Info"]["tagline"]."</p>
                             <p>";
                         $genres = array();

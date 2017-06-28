@@ -29,7 +29,7 @@ $data['profilePage']    = $data['serverRoot'].'/profile/index.php';
 $lib = [
     'lib'       => [
                     'root' => '../lib/',
-                    'items' => ['Login.js','Menu.js','Modal.js','Movie.js']
+                    'items' => ['Login.js','Menu.js','Modal.js','Movie.js', 'Extensions.js']
                    ],
     'website'   => [
                     'root' => '../website/',
@@ -73,7 +73,7 @@ $modal = array(
             array("type" => "date","placeholder" => "Birthday","name"  => "birthday","onblur" => $modalJsAction,"isRequired" => true),
             array("type" => "text","placeholder" => "Display name","name"  => "display_name","onblur" => $modalJsAction,"isRequired" => true),
         ),
-        "submit" => array( "type" => "submit","id" => "login-button","class" => "preventSubmit","text" => "Login")
+        "submit" => array( "type" => "submit","id" => "login-button","class" => "preventSubmit","text" => "Register")
     )
 );
 

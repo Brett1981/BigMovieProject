@@ -69,7 +69,7 @@ namespace api.Resources
                                         DateTime jsonDate = Convert.ToDateTime(jsonData.results[i].release_date);
                                         if (date.Year != 1 && date != null)
                                         {
-                                            if (jsonDate.Year == date.Year || jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
+                                            if (jsonDate.Year == date.Year && jsonData.results[i].title.Contains(data.Groups["title"].Value.Replace('.', ' ')))
                                             {
                                                 apiResult = new CustomClasses.Random.results()
                                                 {

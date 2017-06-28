@@ -41,6 +41,12 @@ $(document).ready(function(){
         //resize menu 
         Menu.windowResize();
         //search list for phones is different
+        if($(window).width() > 1024){
+            $('.search-list').css('width','100%');
+        }
+        else{
+            $('.search-list').css('width','');
+        }
         if($(window).width() < 420){
             $('.search-list').css('right','-60px');
         }

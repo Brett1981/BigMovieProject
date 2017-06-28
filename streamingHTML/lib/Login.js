@@ -3,6 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var div = "<div>"   , span  = "<span>"  , 
+    img     = "<img>"   , 
+    a       = "<a>"     , p     = "<p>"     , i = "<i>",
+    li      = "<li>"    , ul    = "<ul>"    ;
 
 var Login = new function(){
     this.url        = "../login/client/client.php?login";
@@ -67,11 +71,13 @@ var Login = new function(){
         var req = Login.post(data,call);
         req.done(function(info){
             //console.log(info);
-            var json =  JSON.parse(info);
-            var arr = {response : json, data : data};
-            if(json['response'] == 'success'){ 
-                if(call == Login.url){ Login.completed(arr,Login.url);  }
-                else { Login.completed(arr,Login.regUrl);}
+            if(Extensions.JSONCheck(info)){
+                var json =  JSON.parse(info);
+                var arr = {response : json, data : data};
+                if(json['response'] == 'success'){ 
+                    if(call == Login.url){ Login.completed(arr,Login.url);  }
+                    else { Login.completed(arr,Login.regUrl);}
+                }
             }
             else{ 
                 if(call == Login.url){ Login.failed(arr,Login.url);  }
@@ -79,6 +85,10 @@ var Login = new function(){
             }
             return false;
         });
+        req.fail(function(xhr,status,error){
+            if(call == Login.url){ Login.failed(arr,Login.url);  }
+            else { Login.failed(arr,Login.regUrl);}
+        })
     };
     
     //on failed call
@@ -99,7 +109,11 @@ var Login = new function(){
             if(type === Login.regUrl){
                 //set UI for new registered user
                 Login.showLoader(false);
-                $('#loginModal .modal-status').html("<a>Registration Successfull</a><a>You can now login</a>");
+                $('#loginModal .modal-status').empty();
+                $('#loginModal .modal-status').append(
+                    $(a).text("Registration Successfull"),
+                    $(a).text("You can now login")
+                    );
                 //poprav za login status
                 
             }

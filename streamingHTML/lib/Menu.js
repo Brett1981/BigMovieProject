@@ -35,7 +35,7 @@ var Menu = new function(){
         this.toggle = function(item){
             
             $(item).toggleClass('open');
-            var w =$(document).width();
+            var w = $(document).width();
             if(w < 1025){
                 $('.hamburger-menu-top').toggle();
             }

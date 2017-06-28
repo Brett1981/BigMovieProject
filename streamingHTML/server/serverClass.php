@@ -143,7 +143,7 @@ class Server {
     }
     //GET: return movies from search
     public static function MovieSearch($data){
-        return Server::Get(self::$apiUrl['video']."search/",$data);
+        return Server::Get(self::$apiUrl['video']."search/", str_replace(' ', '$', $data));
     }
     //GET: top 10
     public static function GetTop10(){

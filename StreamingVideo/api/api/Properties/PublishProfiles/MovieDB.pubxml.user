@@ -10,19 +10,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="api.csproj">
-      <publishTime>03/29/2017 13:29:38</publishTime>
+      <publishTime>05/28/2017 00:35:47</publishTime>
     </File>
     <File Include="api.csproj.user">
-      <publishTime>03/29/2017 13:29:38</publishTime>
+      <publishTime>05/28/2017 00:35:47</publishTime>
+    </File>
+    <File Include="API_Settings.cs">
+      <publishTime>04/11/2017 17:50:45</publishTime>
     </File>
     <File Include="ApplicationInsights.config">
       <publishTime>02/16/2017 11:07:31</publishTime>
     </File>
     <File Include="App_Data/MDBSQL.mdf">
-      <publishTime>03/30/2017 18:53:52</publishTime>
+      <publishTime>04/10/2017 11:37:02</publishTime>
     </File>
     <File Include="App_Data/MDBSQL_log.ldf">
-      <publishTime>03/30/2017 18:53:52</publishTime>
+      <publishTime>04/10/2017 11:37:02</publishTime>
     </File>
     <File Include="App_Start/BundleConfig.cs">
       <publishTime>02/16/2017 11:07:31</publishTime>
@@ -40,7 +43,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:31</publishTime>
     </File>
     <File Include="App_Start/WebApiConfig.cs">
-      <publishTime>02/16/2017 11:07:31</publishTime>
+      <publishTime>06/06/2017 21:27:46</publishTime>
     </File>
     <File Include="Areas/HelpPage/ApiDescriptionExtensions.cs">
       <publishTime>02/16/2017 11:07:31</publishTime>
@@ -196,10 +199,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="bin/api.dll">
-      <publishTime>03/29/2017 19:29:57</publishTime>
+      <publishTime>06/19/2017 16:31:45</publishTime>
     </File>
     <File Include="bin/api.pdb">
-      <publishTime>03/29/2017 19:29:57</publishTime>
+      <publishTime>06/19/2017 16:31:45</publishTime>
     </File>
     <File Include="bin/ApplicationInsights.config">
       <publishTime>02/16/2017 11:07:31</publishTime>
@@ -209,6 +212,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/EntityFramework.SqlServer.dll">
       <publishTime>02/16/2017 11:07:36</publishTime>
+    </File>
+    <File Include="bin/MediaToolkit.dll">
+      <publishTime>02/05/2016 22:12:02</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
       <publishTime>02/16/2017 11:07:36</publishTime>
@@ -370,22 +376,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:33</publishTime>
     </File>
     <File Include="Controllers/AdministrationController.cs">
-      <publishTime>03/28/2017 17:51:05</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Controllers/DatabaseController.cs">
-      <publishTime>03/28/2017 17:47:34</publishTime>
+      <publishTime>04/11/2017 11:29:07</publishTime>
     </File>
     <File Include="Controllers/HomeController.cs">
       <publishTime>02/16/2017 11:07:33</publishTime>
+    </File>
+    <File Include="Controllers/MovieController.cs">
+      <publishTime>05/27/2017 21:20:57</publishTime>
     </File>
     <File Include="Controllers/MoviesController.cs">
       <publishTime>03/28/2017 17:14:18</publishTime>
     </File>
     <File Include="Controllers/UserController.cs">
-      <publishTime>03/29/2017 11:15:58</publishTime>
+      <publishTime>05/17/2017 19:22:48</publishTime>
     </File>
     <File Include="Controllers/VideoController.cs">
-      <publishTime>03/29/2017 11:22:41</publishTime>
+      <publishTime>06/18/2017 16:54:04</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>02/16/2017 11:07:33</publishTime>
@@ -409,10 +418,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:33</publishTime>
     </File>
     <File Include="History_API.cs">
-      <publishTime>02/16/2017 11:07:33</publishTime>
+      <publishTime>04/11/2017 17:50:45</publishTime>
     </File>
     <File Include="History_User.cs">
-      <publishTime>02/16/2017 11:07:33</publishTime>
+      <publishTime>04/11/2017 17:50:45</publishTime>
     </File>
     <File Include="MDBADO.edmx.diagram">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -447,14 +456,32 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Models/IdentityModels.cs">
       <publishTime>02/16/2017 11:07:33</publishTime>
     </File>
+    <File Include="MovieDatabaseModel.Context.cs">
+      <publishTime>06/04/2017 15:45:12</publishTime>
+    </File>
+    <File Include="MovieDatabaseModel.Context.tt">
+      <publishTime>04/11/2017 10:39:06</publishTime>
+    </File>
+    <File Include="MovieDatabaseModel.cs">
+      <publishTime>06/04/2017 15:45:16</publishTime>
+    </File>
+    <File Include="MovieDatabaseModel.Designer.cs">
+      <publishTime>05/29/2017 20:46:39</publishTime>
+    </File>
+    <File Include="MovieDatabaseModel.edmx.diagram">
+      <publishTime>06/04/2017 15:45:05</publishTime>
+    </File>
+    <File Include="MovieDatabaseModel.tt">
+      <publishTime>04/11/2017 10:39:06</publishTime>
+    </File>
     <File Include="Movie_Data.cs">
-      <publishTime>02/16/2017 11:07:33</publishTime>
+      <publishTime>05/29/2017 20:46:39</publishTime>
     </File>
     <File Include="Movie_Info.cs">
-      <publishTime>02/16/2017 11:07:33</publishTime>
+      <publishTime>05/28/2017 01:01:25</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>05/28/2017 00:35:46</publishTime>
     </File>
     <File Include="Project_Readme.html">
       <publishTime>02/16/2017 11:07:35</publishTime>
@@ -463,46 +490,58 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="Properties/PublishProfiles/MovieDB.pubxml">
-      <publishTime>03/30/2017 19:03:00</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Properties/Resources.Designer.cs">
-      <publishTime>03/23/2017 09:22:52</publishTime>
+      <publishTime>04/04/2017 16:55:27</publishTime>
     </File>
     <File Include="Properties/Resources.resx">
-      <publishTime>03/23/2017 09:22:52</publishTime>
+      <publishTime>04/04/2017 16:55:27</publishTime>
     </File>
     <File Include="Properties/Settings.Designer.cs">
-      <publishTime>03/23/2017 11:01:18</publishTime>
+      <publishTime>04/04/2017 16:55:27</publishTime>
     </File>
     <File Include="Properties/Settings.settings">
-      <publishTime>03/23/2017 11:01:18</publishTime>
+      <publishTime>04/04/2017 16:55:27</publishTime>
     </File>
     <File Include="Providers/ApplicationOAuthProvider.cs">
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="Resources/Auth/Auth.cs">
-      <publishTime>03/21/2017 11:16:54</publishTime>
+      <publishTime>04/11/2017 15:14:11</publishTime>
     </File>
     <File Include="Resources/Classes/CustomClasses.cs">
-      <publishTime>03/28/2017 13:38:30</publishTime>
+      <publishTime>06/15/2017 17:54:48</publishTime>
     </File>
     <File Include="Resources/Database/Database.cs">
-      <publishTime>03/29/2017 13:33:58</publishTime>
+      <publishTime>05/29/2017 23:21:59</publishTime>
+    </File>
+    <File Include="Resources/Database/Email.cs">
+      <publishTime>05/10/2017 17:50:38</publishTime>
     </File>
     <File Include="Resources/Database/History.cs">
-      <publishTime>03/28/2017 21:05:07</publishTime>
+      <publishTime>04/11/2017 11:23:51</publishTime>
     </File>
     <File Include="Resources/Database/MoviesAPI.cs">
-      <publishTime>03/29/2017 11:19:17</publishTime>
+      <publishTime>06/18/2017 17:29:36</publishTime>
+    </File>
+    <File Include="Resources/Database/Processing.cs">
+      <publishTime>06/18/2017 17:55:07</publishTime>
+    </File>
+    <File Include="Resources/Database/Settings.cs">
+      <publishTime>04/11/2017 11:35:19</publishTime>
     </File>
     <File Include="Resources/Database/Streaming.cs">
-      <publishTime>03/29/2017 13:29:19</publishTime>
+      <publishTime>06/12/2017 21:56:12</publishTime>
     </File>
     <File Include="Resources/Enum/MovieEnum.cs">
       <publishTime>03/17/2017 14:27:58</publishTime>
     </File>
     <File Include="Resources/Functions/Functions.cs">
-      <publishTime>03/28/2017 17:51:00</publishTime>
+      <publishTime>04/03/2017 21:19:31</publishTime>
+    </File>
+    <File Include="Resources/Global/Global.cs">
+      <publishTime>03/31/2017 23:58:48</publishTime>
     </File>
     <File Include="Resources/Global/MovieGlobal.cs">
       <publishTime>03/24/2017 23:24:35</publishTime>
@@ -601,31 +640,34 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="Session_Guest.cs">
-      <publishTime>02/19/2017 15:14:56</publishTime>
+      <publishTime>04/11/2017 17:50:45</publishTime>
     </File>
     <File Include="Session_Play.cs">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>04/11/2017 17:50:45</publishTime>
+    </File>
+    <File Include="Settings.cs">
+      <publishTime>04/03/2017 21:54:20</publishTime>
     </File>
     <File Include="Startup.cs">
-      <publishTime>03/28/2017 17:51:56</publishTime>
+      <publishTime>05/28/2017 00:28:45</publishTime>
     </File>
     <File Include="User_Groups.cs">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>04/11/2017 17:50:45</publishTime>
     </File>
     <File Include="User_Info.cs">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>04/11/2017 18:08:30</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="Views/Movies/Details.cshtml">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Views/Movies/Edit.cshtml">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>03/31/2017 23:44:06</publishTime>
     </File>
     <File Include="Views/Movies/Index.cshtml">
-      <publishTime>02/16/2017 11:07:35</publishTime>
+      <publishTime>03/31/2017 23:40:22</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>02/16/2017 11:07:35</publishTime>
@@ -640,7 +682,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/16/2017 11:07:35</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/30/2017 19:03:03</publishTime>
+      <publishTime>06/27/2017 16:56:14</publishTime>
     </File>
     <File Include="Web.Debug.config">
       <publishTime>02/16/2017 11:07:35</publishTime>

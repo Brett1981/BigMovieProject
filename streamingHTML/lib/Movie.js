@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 
-
+var div = "<div>"   , span  = "<span>"  , 
+    img     = "<img>"   , 
+    a       = "<a>"     , p     = "<p>"     , i = "<i>",
+    li      = "<li>"    , ul    = "<ul>"    ;
 var Movie = new function(){
     this.id = null;
     
@@ -37,56 +40,63 @@ var Movie = new function(){
         return $.get("../website/get.php?id="+data, function(){})
     }
     
-    this.createModalView = function(data,objects){
-        objects.mh[0].innerHTML = "<p>"+data.Movie_Info.original_title+" ("+data.Movie_Info.release_date.substring(0,4)+")</p>";
-        objects.mb[0].innerHTML = this.createModalViewDiv(data);
-        
-    }
-    
     this.createModalViewDiv = function(data){
         var minfo = data.Movie_Info;
         var release = minfo.release_date.split('T');
-        var mDiv = "";
-              mDiv += "<div class='top-modal-data'>";
-                mDiv += "<div class='left-modal-data'><img alt='poster' src='https://image.tmdb.org/t/p/w300" + minfo.poster_path +"'/></div>";
+        
+        //header
+        $(".modal-movie-header h2")
+            .empty()
+            .append(
+                $(p)
+                .text( minfo.original_title + " ("+ release[0].substring(0,4)+")")
+                );
 
-                mDiv += "<div class='right-modal-data'>";
-                  mDiv += "<div>"
-                          + "<p>"+minfo.tagline+"</p>"
-                        + "</div>";
-                  mDiv += "<div>"
-                          + "<a href='"+minfo.homepage+"'>"
-                            + "<i class='material-icons' style='font-size:32px;color:darkviolet'>link</i>"
-                            + "<p>More information</p>"
-                          + "</a>"
-
-                          + "<a href='http://www.imdb.com/title/"+minfo.imdb_id+"'>"
-                            + "<i class='material-icons' style='font-size:32px;color:darkviolet'>movie</i>"
-                            + "<p>IMDb</p>"
-                          + "</a>"
-
-                       +  "</div>";
-                  mDiv += "<div>"
-                          + "<div>"
-                            + "<p> Release date: "+release[0]+"</p>"
-                          + "</div>"
-
-                          + "<div>"
-                            + "<p>"+"</p>"
-                          + "</div>"
-
-                          + "<div>"
-                          + "</div>"
-                       + "</div>";
-                mDiv +="</div>";
-              mDiv += "</div>";
-                mDiv += "<a class='bottom-modal-data' href='#'"; mDiv += 'onclick="watch(\''+data.guid+'\')">';
-                  mDiv   += "<div class='bottom-modal-data-div'>"
-                          + "<p>Play</p>"
-                          + "<i class='material-icons' style='font-size:32px; color:white;'>play_circle_outline</i>"
-                        + "</div>"
-                      + "</a>";
-        return mDiv;
+        //body
+        var top = $();
+        var bottom = $();
+        $(".modal-movie-body").empty();
+        top =  $(div).addClass("top-modal-data").append(
+                    $(div).addClass("left-modal-data").append(
+                        $(img).attr({
+                            alt : 'poster', 
+                            src : 'https://image.tmdb.org/t/p/w300' + minfo.poster_path
+                        })
+                    ),
+                    $(div).addClass("right-modal-data").append(
+                        $(div).append(
+                            $(p).text(minfo.tagline)
+                        ),
+                        $(div).append(
+                            $(div).append(
+                                $(p).text("Release date: "+release[0])
+                            )
+                        ),
+                        $(div).append(
+                            $(a).attr("href",minfo.homepage).append(
+                                $(i).addClass("material-icons").attr("style","font-size:32px;color:darkviolet").text("link"),
+                                $(p).text("More information")
+                            ),
+                            $(a).attr("href",'http://www.imdb.com/title/'+minfo.imdb_id).append(
+                                $(i).addClass("material-icons").attr("style","font-size:32px;color:darkviolet").text("movie"),
+                                $(p).text("iMDB")
+                            )
+                        ),
+                    ),
+                );
+        bottom = $(a).addClass("bottom-modal-data").attr({
+                        href: '#',
+                        onclick: 'watch(\"'+data.guid+'"\)'
+                    }).append(
+                        $(div).addClass("bottom-modal-data-div").append(
+                            $(p).text("Play"),
+                            $(i).addClass("material-icons").attr({
+                                style:'font-size:32px; color:white;'
+                            }).text("play_circle_outline")
+                        )
+                    );
+        $(".modal-movie-body").append($(top));
+        $(".modal-movie-body").append($(bottom));
     }
     
     this.createModalArray = function(header,body){
@@ -96,19 +106,17 @@ var Movie = new function(){
     this.modalView = function(data){
         if(data !== null)
         {
-            var mview = this.createModalArray($('.modal-movie-header').children('h2'),$('.modal-movie-body'));
             var m = this.getMovieData(data);
             m.done(function(data){
                 var d = JSON.parse(data);
-                console.log(d);
                 if(d != null){
-                    Movie.createModalView(d,mview);
+                    Movie.createModalViewDiv(d);
                     Movie.show();
+                    return;
                 }
-                else{
-                    alert("No movie was found! Contact the site's administrator!");
-                    Movie.hide();
-                }
+                alert("No movie was found! Contact the site's administrator!");
+                Movie.close();
+                return;
             })
             .fail(function(data){
                 alert(data);
@@ -140,8 +148,10 @@ var Search = new function(){
     };*/
     
     this.get = function(item){
-        var m = $.get("../website/get.php?contains="+item,function(){});
+        //console.log("../website/get.php?contains="+encodeURIComponent(item.trim()));
+        var m = $.get("../website/get.php?contains="+encodeURIComponent(item.trim()),function(){});
         m.done(function(data){
+            //console.log(data);
             if(data.length > 0){
                 Search.create(JSON.parse(data));
             }
@@ -162,20 +172,23 @@ var Search = new function(){
     
     this.newLiElement = function(data){
         if(data !== null){
-            var k = "'";
             console.log(data);
-            var h =  "<li>"
-                    + "<a href='#' ";
-                        h += 'onclick="Movie.view(\''+data.guid+'\')">';
-                        h += "<img alt='poster' class='thumb' src='"+Search.urlImages+data.Movie_Info.poster_path+"' width='92'/>"
-                        + "<span class='info'>"
-                            + "<p>"+data.Movie_Info.title+"</p>"
-                            + "<p>"+Search.setGenres(data.Movie_Info.genres)+"</p>"
-                        + "</span>"
-                        + "<p style='display:none;' id='mid'>"+data.guid+"</p>"
-                    + "</a>"
-                 + "</li>"
-            return h;
+            return $(li).append(
+                $(a).attr({
+                    href: '#',
+                    onclick: 'Movie.view(\"'+data.guid+'"\)'
+                }).append(
+                    $(img).attr({
+                        alt: 'poster',
+                        src: Search.urlImages+data.Movie_Info.poster_path,
+                        width: '92px'
+                    }).addClass("thumb"),
+                    $(span).addClass("info").append(
+                        $(p).text(data.Movie_Info.title),
+                        $(p).text(Search.setGenres(data.Movie_Info.genres))
+                    )
+                )
+            );
         }
     }
     

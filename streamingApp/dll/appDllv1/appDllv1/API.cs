@@ -292,9 +292,6 @@ namespace appDllv1
 
             }
 
-            
-
-
             public class Create
             {
                 public static StringContent HttpContent<T>(object data)

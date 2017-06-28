@@ -300,8 +300,10 @@ namespace api.Resources
                 /// <returns>MovieData</returns>
                 public static async Task<Movie_Data> ByModel(DatabaseUserModels data)
                 {
+
                     var user = await db.User_Info.Where(x => x.unique_id == data.user_id).FirstOrDefaultAsync();
                     var movie = await db.Movie_Data.Where(x => x.guid == data.movie_id).FirstOrDefaultAsync();
+
                     if (user != null)
                     {
 

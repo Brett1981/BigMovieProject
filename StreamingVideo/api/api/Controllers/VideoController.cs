@@ -206,6 +206,8 @@ namespace api.Controllers
         [HttpGet, ActionName("Search")]
         public async Task<IHttpActionResult> Search([FromUri]string value)
         {
+            if (value.Contains('$'))
+                value = value.Replace('$', ' ');
             return Ok(await Database.Movie.Get.ByName(value));
         }
         
