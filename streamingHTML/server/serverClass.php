@@ -16,7 +16,7 @@ class Server {
     private static $client      = null;
     
     public static $debug        = false;
-    public static $serverIp     = '213.143.88.175';
+    public static $serverIp     = '82.192.38.213';
     public static $serverPort   = '53851';
     public static $httpType     = 'http';
     private static $apiUrl      = ["user" => "/api/user/", "video" => "/api/video/"];

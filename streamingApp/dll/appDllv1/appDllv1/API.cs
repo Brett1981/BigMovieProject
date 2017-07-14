@@ -122,7 +122,7 @@ namespace appDllv1
                     { "Edit"                ,"/api/administration/Edit" },
                     { "NewUser"             ,"/api/Administration/NewUser" },
                     { "RemoveUser"          ,"/api/Administration/RemoveUser" },
-                    { "GetAllUsers"         ,"/api/Administration/GetAllUsers" }
+                    { "GetAllUsers"         ,"/api/Administration/GetAllUsers" },
                 };
 
 
@@ -170,6 +170,7 @@ namespace appDllv1
                 {
                     return await client.PostAsync($"{conAddress}{Do["GetAllUsers"]}", content);
                 }
+
             }
 
             private static Dictionary<string, string> Do = new Dictionary<string, string>() {
@@ -345,13 +346,33 @@ namespace appDllv1
                 /// <summary>
                 /// Edited movie data send to API 
                 /// </summary>
-                /// <param name="user">Auth.User</param>
                 /// <param name="data">Movie.Data</param>
                 /// <returns>HttpResponseMessage</returns>
                 public static async Task<HttpResponseMessage> Movie(Movie.Data data)
                 {
                     return await Administration.Edit(Create.HttpContent<Objects.Communication.Edit>(new Objects.Communication.Edit() { auth = GlobalVar.GlobalAuthUser, movie = data }));
                 }
+
+                /// <summary>
+                /// Edited user data send to API 
+                /// </summary>
+                /// <param name="user">User.Info</param>
+                /// <param name="data">User.Groups</param>
+                /// <returns>HttpResponseMessage</returns>
+                public static async Task<HttpResponseMessage> User(User.Info user, User.Groups group = null)
+                {
+                    if (user == null)
+                        return null;
+                    return await Administration.Edit(
+                        Create.HttpContent<Objects.Communication.Edit>(
+                            new Objects.Communication.Edit()
+                            {
+                                user = user,
+                                groups = group,
+                                auth = GlobalVar.GlobalAuthUser
+                            }));
+                }
+
 
             }
 

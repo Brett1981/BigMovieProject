@@ -34,28 +34,31 @@ namespace MovieDB_Windows_app.Views
                                Encoding.ASCII.GetBytes(passwordTextBox.Text))
                 }
             );
-            if (login != null && login.StatusCode == System.Net.HttpStatusCode.OK)
+            if (login != null)
             {
-                var user = JsonConvert.DeserializeObject<User.Info>(await login.Content.ReadAsStringAsync());
-                if (user.unique_id != null)
+                if(login.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Main m = new Main(user);
-                    this.Hide();
-                    m.Show();
+                    var user = JsonConvert.DeserializeObject<User.Info>(await login.Content.ReadAsStringAsync());
+                    if (user.unique_id != null)
+                    {
+                        Main m = new Main(user);
+                        this.Hide();
+                        m.Show();
+                    }
                 }
-            }
-            else
-            {
-                if(login != null) { 
-                    if (login.StatusCode == System.Net.HttpStatusCode.Unauthorized
-                    || login.StatusCode == System.Net.HttpStatusCode.NotFound)
-                        MessageBox.Show("Username or password is incorrect!");
+                else
+                {
+                    var error = (login.StatusCode == System.Net.HttpStatusCode.Unauthorized) ? "You are not authorized to access this application!" : "";
+                    error = (login.StatusCode == System.Net.HttpStatusCode.NotFound && error == "") ? "Username or password is incorrect!" : error;
+                    error = (error == "") ? "Something went wrong!" : error;
+                    MessageBox.Show(error);
+                }
 
-                    loginButton.Text = prevButtonText;
-                    loginButton.Enabled = true;
-                }
-                
+                loginButton.Text = prevButtonText;
+                loginButton.Enabled = true;
+
             }
+            
         }
 
         private void Login_Load(object sender, EventArgs e)

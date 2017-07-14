@@ -9,7 +9,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="APIip" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">213.143.88.175</Value>
+      <Value Profile="(Default)">31.15.206.170</Value>
     </Setting>
     <Setting Name="APIport" Type="System.String" Scope="Application">
       <Value Profile="(Default)">53851</Value>
@@ -27,7 +27,7 @@
       <Value Profile="(Default)">streaming</Value>
     </Setting>
     <Setting Name="WEBip" Type="System.String" Scope="User">
-      <Value Profile="(Default)">213.143.88.175</Value>
+      <Value Profile="(Default)">31.15.206.170</Value>
     </Setting>
   </Settings>
 </SettingsFile>

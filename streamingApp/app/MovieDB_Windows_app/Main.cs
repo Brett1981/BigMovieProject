@@ -307,5 +307,14 @@ namespace MovieDB_Windows_app
             Views.Settings s = new Views.Settings();
             s.Show();
         }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GlobalVar.GlobalData = null;
+            this.Hide();
+            Views.Login login = new Views.Login();
+            login.ShowDialog();
+
+        }
     }
 }

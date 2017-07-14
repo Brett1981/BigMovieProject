@@ -157,54 +157,41 @@ namespace api.Controllers
         {
             if (await Resources.Database.User.Check.IsAdmin(data.auth))
             {
-                if (data != null)
+
+                List<object> tasks = new List<object>();
+                if (data.api != null || data.api != null)
                 {
-                    if (data.auth != null && data.auth.unique_id.Length > 0 && data.auth.username.Length > 0)
+                    //Edit settings
+                    if (await Resources.Settings.Edit.All(data.api))
                     {
-                        var u = await Resources.Database.User.Get.ByGuid(data.auth.unique_id);
-                        if (u != null
-                            && u.User_Groups.type == "administrator"
-                            && u.unique_id == data.auth.unique_id
-                            && data.auth.username == u.username
-                            )
-                        {
-                            List<object> tasks = new List<object>();
-                            if (data.api.disks != null || data.api.settings != null)
-                            {
-                                //Edit settings
-                                if (await Resources.Settings.Edit.All(data.api))
-                                {
-                                    Global.GlobalMovieDisksList = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Disks);
-                                    Global.GlobalServerSettings = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Settings);
-                                    tasks.Add(data.api);
-                                }
-                            }
-                            if (data.movie != null)
-                            {
-                                //edit movie
-                                if (await Resources.Database.Movie.Edit.Movie(data.movie))
-                                {
-                                    tasks.Add(data.movie);
-                                }
-                            }
-                            if (data.user != null)
-                            {
-                                //edit user data
-                                if (await Resources.Database.User.Edit.Data(data.user))
-                                {
-                                    tasks.Add(data.user);
-                                }
-                            }
-
-
-                            if (tasks.Count > 0)
-                            {
-                                return Ok(tasks);
-                            }
-                        }
+                        Global.GlobalMovieDisksList = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Disks);
+                        Global.GlobalServerSettings = await Resources.Settings.Get.ToObject(Resources.Settings.Type.Settings);
+                        tasks.Add(data.api);
                     }
                 }
-                return BadRequest();
+                if (data.movie != null)
+                {
+                    //edit movie
+                    if (await Resources.Database.Movie.Edit.Movie(data.movie))
+                    {
+                        tasks.Add(data.movie);
+                    }
+                }
+                if (data.user != null)
+                {
+                    //edit user data
+                    if (await Resources.Database.User.Edit.Data(data.user,data.groups))
+                    {
+                        tasks.Add(data.user);
+                    }
+                }
+
+
+                if (tasks.Count > 0)
+                {
+                    return Ok(tasks);
+                }
+
             }
             return Unauthorized();
         }
@@ -284,6 +271,7 @@ namespace api.Controllers
             return Unauthorized();
             
         }
+
 
     }
 }

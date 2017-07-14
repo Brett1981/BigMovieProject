@@ -20,7 +20,7 @@ namespace MovieDB_Windows_app.Views
         private List<DataGridViewRow> UserDataGridRows = new List<DataGridViewRow>();
 
         private Dictionary<string, User.Groups> groupDict;
-
+        private bool Init = false;
         public Users()
         {
             InitializeComponent();
@@ -35,6 +35,7 @@ namespace MovieDB_Windows_app.Views
 
         private void CreateDataGridRows()
         {
+            Init = true;
             if (dataGridView1.Rows.Count > 0)
             {
                 dataGridView1.Rows.Clear();
@@ -84,10 +85,45 @@ namespace MovieDB_Windows_app.Views
                         };
                         dataGridView1.Columns.Add(bttn);
                         dataGridView1.CellClick += DataGridView1_CellClick;
+                        dataGridView1.CellValueChanged +=
+                            new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
+                        dataGridView1.CurrentCellDirtyStateChanged +=
+                            new EventHandler(dataGridView1_CurrentCellDirtyStateChanged);
                     }
                     SetDataGridUserRow(item);
                 }
             }
+            Init = false;
+        }
+
+        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (this.dataGridView1.IsCurrentCellDirty)
+            {
+                // This fires the cell value changed handler below
+                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] is DataGridViewComboBoxCell && !Init)
+            {
+                DataGridViewComboBoxCell cb = (DataGridViewComboBoxCell)dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var group = (User.Groups)cb.Value;
+                if (group != null)
+                {
+                    var user = UsersData.users.Where(x => x.unique_id == (string)dataGridView1.Rows[e.RowIndex].Cells["unique_id"].Value).FirstOrDefault();
+                    // do stuff
+                    if(user != null)
+                    {
+                        //send to API
+                        API.Communication.Edit.User(user, group);
+                    }
+                    dataGridView1.Invalidate();
+                }
+            }
+            
         }
 
         private void SetDataGridUserRow(User.Info user)
@@ -164,14 +200,14 @@ namespace MovieDB_Windows_app.Views
                             break;
                         case "select group":
                             //implementacija spremembe groupe uporabniku
-                            ;
+                            ChangeUserGroup(column,item);
                             break;
                         default:
                             dataGridStatusLabel.Text = "Caution: ";
                             dataGridDescriptionLabel.Text = "The selected item cannot be edited for security reasons!";
                             ; break;
                     }
-                    Debug.WriteLine("Not implemented cellclick");
+                    //Debug.WriteLine("Not implemented cellclick");
                 }
             }
             catch(Exception ex)
@@ -185,6 +221,12 @@ namespace MovieDB_Windows_app.Views
         {
             dataGridDescriptionLabel.Text = "";
             dataGridStatusLabel.Text = "";
+        }
+
+        private void ChangeUserGroup(string cell, DataGridViewCell data)
+        {
+            var x = cell;
+            var y = data;
         }
 
         private async void addUser_Click(object sender, EventArgs e)

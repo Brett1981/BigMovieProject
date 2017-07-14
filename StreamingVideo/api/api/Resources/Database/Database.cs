@@ -803,17 +803,33 @@ namespace api.Resources
                 /// </summary>
                 /// <param name="user">User_Info</param>
                 /// <returns>bool</returns>
-                public static async Task<bool> Data(User_Info user)
+                public static async Task<bool> Data(User_Info user, User_Groups group)
                 {
                     var u = await Get.ByGuid(user.unique_id);
                     if(u != null && u.username == user.username)
                     {
-                        if(user.User_Groups != null)
+                        if(group != null && u.User_Groups != group)
                         {
                             try
                             {
+                                User_Info tmp = new User_Info()
+                                {
+                                    birthday = u.birthday,
+                                    display_name = u.display_name,
+                                    email = u.email,
+                                    last_logon = u.last_logon,
+                                    password = u.password,
+                                    profile_created = u.profile_created,
+                                    profile_image = u.profile_image,
+                                    unique_id = u.unique_id,
+                                    username = u.username
+                                };
                                 db.User_Info.Remove(u);
-                                db.User_Info.Add(user);
+
+                                //edit tmp user group
+                                tmp.group = group.Id;
+
+                                db.User_Info.Add(tmp);
                                 await db.SaveChangesAsync();
                                 return true;
                             }

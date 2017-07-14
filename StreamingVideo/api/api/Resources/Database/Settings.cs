@@ -42,8 +42,10 @@ namespace api.Resources
 
             private static async Task<List<CustomClasses.API.Settings>> FromDatabaseToObject(Type item)
             {
-                var setting = await db.API_Settings.Where(x => x.name == item.ToString())
-                   .FirstOrDefaultAsync();
+                var setting = await db.API_Settings
+                    .Where(x => x.name == item.ToString())
+                    .FirstOrDefaultAsync();
+                    
                 return JsonConvert.DeserializeObject<List<CustomClasses.API.Settings>>(setting.value);
             }
             private static async Task<string> FromDatabaseToString(Type item)

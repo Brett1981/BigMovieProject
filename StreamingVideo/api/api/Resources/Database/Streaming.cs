@@ -112,7 +112,7 @@ namespace api.Resources
 
             var contentRange = new ContentRangeHeaderValue(start, end, totalLength);
 
-            // We are now ready to produce partial content.
+            // PartialContent creator
             response.StatusCode = HttpStatusCode.PartialContent;
 
             response.Content = await Create.PartialContent(start, end);
@@ -220,15 +220,13 @@ namespace api.Resources
 
             public static async Task<PushStreamContent> PartialContent(long start,long end)
             {
-                //temp fix
                 await Task.Delay(0);
-                //
                 return new PushStreamContent(async (outputStream, httpContent, transpContext)
                 =>
                 {
                     try
                     {
-                        using (outputStream) // Copy the file to output stream in indicated range.
+                        using (outputStream) 
                         using (Stream inputStream = MovieFileInfo.OpenRead())
                         {
                             await WriteToOutputStream(inputStream, outputStream, start, end);
@@ -265,7 +263,6 @@ namespace api.Resources
                         try
                         {
                             await inputStream.CopyToAsync(outputStream, ReadStreamBufferSize);
-                            //inputStream.CopyTo(outputStream, MediaLibrary.ReadStreamBufferSize);
                         }
                         catch (Exception e)
                         {

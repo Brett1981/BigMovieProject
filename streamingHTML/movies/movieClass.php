@@ -16,7 +16,7 @@ class Movies {
     private static $data_partial;
     private static $html_partial;
     
-    private static $UrlImages = "https://image.tmdb.org/t/p/w160";
+    private static $UrlImages = "http://image.tmdb.org/t/p/w160";
     private static $ImageOnClickCall = "View(this);";
 
     public static function createMovieList($movies, $type){
@@ -53,30 +53,34 @@ class Movies {
 
     //all
     private static function All($movies){
-
+        
         self::$data_all = $movies;
+        //Razdelimo seznam v dva dela
+        //Zadnje dodani filmi
         self::$data_lastAdded = Movies::LastAdded($movies);
+        //Najbolj ogledani filmi
         self::$data_mostViewed = Movies::MostViewed($movies);
 
+        //kreiramo div element z razredom in naslovom za zadnje dodane filme
         self::$html_lastAddedTitle = "<div class='last-added title'><a>Latest movies</a><hr></div>";
+        //kreiramo div element z razredom in naslovom za najbolj ogledane filme
         self::$html_mostViewedTitle = "<div class='most-viewed title'><a>Popular movies</a><hr></div>";
-
-        /*self::$html_all = "<div class='movies'>";*/
+        //element div pripnemo starševskem elemenu
         self::$html_lastAdded = "<div class='seperator-movies'>".self::$html_lastAddedTitle."<div class='fp-movies'>";
         self::$html_mostViewed = "<div class='seperator-movies'>".self::$html_mostViewedTitle."<div class='fp-movies'>";
 
+        //Vsakemu filmu kreiramo potrebne html elemente
         foreach(self::$data_lastAdded as $item){
             self::$html_lastAdded .= Movies::movieToHtmlTopView($item);
         }
+        //Vsakemu filmu kreiramo potrebne html elemente
         foreach(self::$data_mostViewed as $item){
             self::$html_mostViewed .= Movies::movieToHtmlTopView($item);
         }
-        /*foreach(self::$data_all as $item){
-            self::$html_all .= Movies::movieToHtml($item);
-        }
-        self::$html_all .= "</div>";*/
+        //
         self::$html_lastAdded .= "</div></div>";
         self::$html_mostViewed .= "</div></div>";
+        //vrnemo celoten html odsek in pripnemo v html dokument
         return self::$html_mostViewed.self::$html_lastAdded;
     }
 

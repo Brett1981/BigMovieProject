@@ -60,7 +60,7 @@ var Movie = new function(){
                     $(div).addClass("left-modal-data").append(
                         $(img).attr({
                             alt : 'poster', 
-                            src : 'https://image.tmdb.org/t/p/w300' + minfo.poster_path
+                            src : 'http://image.tmdb.org/t/p/w300' + minfo.poster_path
                         })
                     ),
                     $(div).addClass("right-modal-data").append(
@@ -132,7 +132,7 @@ var Movie = new function(){
 }
 
 var Search = new function(){
-    this.urlImages = "https://image.tmdb.org/t/p/w92";
+    this.urlImages = "http://image.tmdb.org/t/p/w92";
     /*this.genres = {
         All               : 'index.php?showall',
         Action            : 'action',
