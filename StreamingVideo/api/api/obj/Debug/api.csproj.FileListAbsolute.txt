@@ -457,3 +457,4 @@ C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.pdb
 C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.Properties.Resources.resources
 C:\BigMovieProject\StreamingVideo\api\api\obj\Debug\api.csproj.GenerateResource.Cache
 C:\BigMovieProject\StreamingVideo\api\api\bin\MediaToolkit.dll
+C:\BigMovieProject\streamingVideo\api\api\obj\Debug\api.csproj.CoreCompileInputs.cache

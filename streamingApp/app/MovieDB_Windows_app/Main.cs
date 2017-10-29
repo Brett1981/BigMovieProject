@@ -109,10 +109,18 @@ namespace MovieDB_Windows_app
                     Text    = "",
                     Tag     = data[i]
                 };
-                if(data[i].Movie_Info.poster_path != null)
+                if(data[i].Movie_Info != null)
                 {
-                    bttn.BackgroundImage = await GetImage(data[i].Movie_Info.poster_path);
+                    if (data[i].Movie_Info.poster_path != null)
+                    {
+                        bttn.BackgroundImage = await GetImage(data[i].Movie_Info.poster_path);
+                    }
                 }
+                else
+                {
+                    bttn.Enabled = false;
+                }
+                
                
                 bttn.MouseUp += new MouseEventHandler(button_mouse_Click);
                 bttns.Add(bttn);

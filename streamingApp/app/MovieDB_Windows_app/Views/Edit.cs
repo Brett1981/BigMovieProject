@@ -80,12 +80,19 @@ namespace MovieDB_Windows_app.Views
         {
             if (c is TextBox || c is CheckBox)
             {
-                string p = "";
-                p = (type == "movie") ? GetMoviePropertie(item).ToString() : GetMovieInfoPropertie(item).ToString();
-                if (c is CheckBox)
-                    ((CheckBox)c).Checked = (p.ToLower() == "true") ? true : false;
-                else
-                    c.Text = p;
+                try
+                {
+                    string p = "";
+                    p = (type == "movie") ? GetMoviePropertie(item).ToString() : GetMovieInfoPropertie(item).ToString();
+                    if (c is CheckBox)
+                        ((CheckBox)c).Checked = (p.ToLower() == "true") ? true : false;
+                    else
+                        c.Text = p;
+                }
+                catch(NullReferenceException ex)
+                {
+                    MessageBox.Show("Napaka-> " + ex.Message);
+                }
 
             }
 
